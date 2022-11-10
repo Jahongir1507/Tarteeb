@@ -10,15 +10,15 @@ using Local = Tarteeb.Api.Models.Tasks;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
-    public partial class StorageBroker
+    public partial class StorageBroker 
     {
         public DbSet<Local.Task> Tasks { get; set; }
 
-        public async ValueTask<Local.Task> InsertShelterAsync(Local.Task task)
+        public async ValueTask<T> InsertShelterAsync(T task)
         {
             using var broker = new StorageBroker(this.configuration);
 
-            EntityEntry<Local.Task> taskEntityEntry =
+            EntityEntry<T> taskEntityEntry =
                 await broker.AddAsync(task);
 
             await broker.SaveChangesAsync();

@@ -18,8 +18,7 @@ namespace Tarteeb.Api.Models.Tasks
         public DateTimeOffset UpdatedDate { get; set; }
         public Guid CreatedUserId { get; set; }
         public Guid UpdatedUserId { get; set; }
-        public Priority Priority { get; set; } // enum High, Medium, Low
-        public DateTimeOffset Deadline { get; set; }
+       
 
     }
 }

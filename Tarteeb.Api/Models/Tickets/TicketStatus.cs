@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-namespace Tarteeb.Api.Models.Tasks
+namespace Tarteeb.Api.Models.Tickets
 {
-    public enum TaskStatus
+    public enum TicketStatus
     {
         UNKNOWN,
         TODO,

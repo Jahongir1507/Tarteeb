@@ -4,12 +4,12 @@
 //=================================
 
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Tasks;
+using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        public DbSet<Ticket> Ticket { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }

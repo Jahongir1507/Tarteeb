@@ -14,16 +14,7 @@ namespace Tarteeb.Api.Brokers.Storages
     {
         public DbSet<Local.Task> Tasks { get; set; }
 
-        public async ValueTask<T> InsertShelterAsync(T task)
-        {
-            using var broker = new StorageBroker(this.configuration);
-
-            EntityEntry<T> taskEntityEntry =
-                await broker.AddAsync(task);
-
-            await broker.SaveChangesAsync();
-
-            return taskEntityEntry.Entity;
-        }
+        public async ValueTask<Local.Task> InsertTaskAsync(Local.Task task) =>
+            await InsertAsync(task);
     }
 }

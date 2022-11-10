@@ -5,12 +5,14 @@
 
 
 
+using System.Reflection.Emit;
 using System.Threading.Tasks;
+using Local = Tarteeb.Api.Models.Tasks;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
-    public partial interface IStorageBroker<T> where T : class
+    public partial interface IStorageBroker 
     {
-        ValueTask<T> InsertTaskAsync(T entity);
+        public ValueTask<Local.Task> InsertTaskAsync(Local.Task student);
     }
 }

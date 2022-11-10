@@ -1,6 +1,14 @@
-﻿namespace Tarteeb.Api.Models.Tasks
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+namespace Tarteeb.Api.Models.Tickets
 {
-    public class Priority
+    public enum Priority
     {
+        High,
+        Medium,
+        Low
     }
 }

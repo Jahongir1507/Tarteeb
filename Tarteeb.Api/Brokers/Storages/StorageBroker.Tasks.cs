@@ -4,12 +4,26 @@
 //=================================
 
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Threading.Tasks;
+using Local = Tarteeb.Api.Models.Tasks;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Local.Task> Tasks { get; set; }
+
+        public async ValueTask<Local.Task> InsertShelterAsync(Local.Task task)
+        {
+            using var broker = new StorageBroker(this.configuration);
+
+            EntityEntry<Local.Task> taskEntityEntry =
+                await broker.AddAsync(task);
+
+            await broker.SaveChangesAsync();
+
+            return taskEntityEntry.Entity;
+        }
     }
 }

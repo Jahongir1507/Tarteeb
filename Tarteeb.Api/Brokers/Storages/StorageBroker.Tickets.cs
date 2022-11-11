@@ -5,10 +5,8 @@
 
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
- using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Hosting;
-using Local = Tarteeb.Api.Models.Tickets;
  
+  
 using Tarteeb.Api.Models.Tickets;
  
 namespace Tarteeb.Api.Brokers.Storages

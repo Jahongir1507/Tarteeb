@@ -5,12 +5,21 @@
 
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Tasks;
-
+ using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Hosting;
+using Local = Tarteeb.Api.Models.Tickets;
+ 
+using Tarteeb.Api.Models.Tickets;
+ 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
         public DbSet<Ticket> Tickets { get; set; }
-    }
+
+        public async ValueTask<Ticket> InsertTicketAsync(Ticket ticket) =>
+            await InsertAsync(ticket);
+      
+
+     }
 }

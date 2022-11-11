@@ -20,9 +20,14 @@ namespace Tarteeb.Api.Brokers.Storages
             this.Database.Migrate();
         }
 
-        public ValueTask<Models.Tasks.Task> InsertTaskAsync(Models.Tasks.Task task)
+        public async ValueTask<T> InsertAsync<T>(T @object)
         {
-            throw new System.NotImplementedException();
+            var broker = new StorageBroker(this.configuration);
+
+            this.Entry(@object).State = EntityState.Added;
+            await broker.SaveChangesAsync();
+
+            return @object;
         }
       
 

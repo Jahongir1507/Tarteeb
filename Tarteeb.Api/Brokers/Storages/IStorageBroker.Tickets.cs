@@ -4,12 +4,13 @@
 //=================================
 
 using System.Threading.Tasks;
-using Local = Tarteeb.Api.Models.Tasks;
+using Tarteeb.Api.Models.Tickets;
+using Local = Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
-        ValueTask<Local.Task> InsertTaskAsync(Local.Task task);
+        ValueTask<Ticket> InsertTicketAsync(Ticket ticket);
     }
 }

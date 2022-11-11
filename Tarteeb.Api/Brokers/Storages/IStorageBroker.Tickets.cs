@@ -5,8 +5,7 @@
 
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
-using Local = Tarteeb.Api.Models.Tickets;
-
+ 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker

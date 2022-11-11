@@ -20,5 +20,7 @@ namespace Tarteeb.Api.Models.Tickets
         public DateTimeOffset UpdatedDate { get; set; }
         public Guid CreatedUserId { get; set; }
         public Guid UpdatedUserId { get; set; }
+       
+
     }
 }

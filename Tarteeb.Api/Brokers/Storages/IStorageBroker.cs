@@ -3,14 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-namespace Tarteeb.Api.Models.Tickets
+namespace Tarteeb.Api.Brokers.Storages
 {
-    public enum TicketStatus
-    {
-        UNKNOWN,
-        TODO,
-        INPROGRESS,
-        DONE
+    public partial interface IStorageBroker
+    { 
     }
-
 }

@@ -29,7 +29,7 @@ namespace Tarteeb.Api.Brokers.Storages
 
             return @object;
         }
-      
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -6,7 +6,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Tickets;
- 
+
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
@@ -15,7 +15,5 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Ticket> InsertTicketAsync(Ticket ticket) =>
             await InsertAsync(ticket);
-      
-
-     }
+    }
 }

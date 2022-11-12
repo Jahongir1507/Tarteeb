@@ -7,8 +7,8 @@ namespace Tarteeb.Api.Models.Tickets
 {
     public enum Priority
     {
-        HIGH,
+        LOW,
         MEDIUM,
-        LOW
+        HIGH
     }
 }

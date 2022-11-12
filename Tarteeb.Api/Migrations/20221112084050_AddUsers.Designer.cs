@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarteeb.Api.Brokers.Storages;
 
@@ -11,9 +12,10 @@ using Tarteeb.Api.Brokers.Storages;
 namespace Tarteeb.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    partial class StorageBrokerModelSnapshot : ModelSnapshot
+    [Migration("20221112084050_AddUsers")]
+    partial class AddUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

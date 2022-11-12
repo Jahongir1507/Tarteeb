@@ -12,7 +12,7 @@ namespace Tarteeb.Api.Models.Tickets
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public Priority Priority { get; set; } 
+        public Priority Priority { get; set; }
         public DateTimeOffset Deadline { get; set; }
         public Guid? AssigneeId { get; set; }
         public TicketStatus Status { get; set; }
@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Models.Tickets
         public DateTimeOffset UpdatedDate { get; set; }
         public Guid CreatedUserId { get; set; }
         public Guid UpdatedUserId { get; set; }
-       
+
 
     }
 }

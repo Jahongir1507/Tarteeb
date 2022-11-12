@@ -11,5 +11,6 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Ticket> InsertTicketAsync(Ticket ticket);
+        ValueTask<Ticket> UpdateTicketAsync(Ticket student);
     }
 }

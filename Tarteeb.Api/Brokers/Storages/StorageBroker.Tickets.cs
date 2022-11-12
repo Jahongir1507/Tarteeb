@@ -15,7 +15,7 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Ticket> InsertTicketAsync(Ticket ticket) =>
             await InsertAsync(ticket);
-        public async ValueTask<Ticket> UpdateTickettAsync(Ticket ticket) =>
+        public async ValueTask<Ticket> UpdateTicketAsync(Ticket ticket) =>
             await UpdateAsync(ticket);
     }
 }

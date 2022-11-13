@@ -17,9 +17,8 @@ namespace Tarteeb.Api.Brokers.Storages
         public async ValueTask<Ticket> InsertTicketAsync(Ticket ticket) =>
             await InsertAsync(ticket);
       
-        public IQueryable<Ticket> SelectAllTickets()
-        {
-            return SelectAll<Ticket>();
-        }
+        public IQueryable<Ticket> SelectAllTickets() =>
+            SelectAll<Ticket>();
+        
      }
 }

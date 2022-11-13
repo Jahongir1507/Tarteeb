@@ -39,7 +39,6 @@ namespace Tarteeb.Api.Brokers.Storages
             return broker.Set<T>();
         }
        
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =

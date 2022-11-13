@@ -29,7 +29,7 @@ namespace Tarteeb.Api
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
-                    name: "v1", 
+                    name: "v1",
                     info: new OpenApiInfo { Title = "Tarteeb.Api", Version = "v1" });
             });
         }
@@ -42,7 +42,7 @@ namespace Tarteeb.Api
                 app.UseSwagger();
 
                 app.UseSwaggerUI(config => config.SwaggerEndpoint(
-                    url: "/swagger/v1/swagger.json", 
+                    url: "/swagger/v1/swagger.json",
                     name: "Tarteeb.Api v1"));
             }
 

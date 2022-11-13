@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Tickets;
@@ -16,6 +17,9 @@ namespace Tarteeb.Api.Brokers.Storages
         public async ValueTask<Ticket> InsertTicketAsync(Ticket ticket) =>
             await InsertAsync(ticket);
       
-
+        public IQueryable<Ticket> SelectAllTickets()
+        {
+            return SelectAll<Ticket>();
+        }
      }
 }

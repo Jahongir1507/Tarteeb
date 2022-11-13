@@ -3,8 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -20,17 +22,23 @@ namespace Tarteeb.Api.Brokers.Storages
             this.Database.Migrate();
         }
 
-        public async ValueTask<T> InsertAsync<T>(T @object)
+        private async ValueTask<T> InsertAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
 
-            this.Entry(@object).State = EntityState.Added;
+            broker.Entry(@object).State = EntityState.Added;
             await broker.SaveChangesAsync();
 
             return @object;
         }
 
+        private IQueryable<T> SelectAll<T>() where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
 
+            return broker.Set<T>();
+        }
+       
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =

@@ -4,7 +4,6 @@
 //=================================
 
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
  
@@ -13,7 +12,6 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Ticket> InsertTicketAsync(Ticket ticket);
-
         IQueryable<Ticket> SelectAllTickets();
     }
 }

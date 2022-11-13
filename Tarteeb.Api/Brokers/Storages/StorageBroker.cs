@@ -6,7 +6,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

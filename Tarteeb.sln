@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tarteeb.Api", "Tarteeb.Api\Tarteeb.Api.csproj", "{B9288356-F87C-4D2F-835C-43C8E0D1F379}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tarteeb.Api.Infrastructure.Build", "Tarteeb.Api.Infrastructure.Build\Tarteeb.Api.Infrastructure.Build.csproj", "{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tarteeb.Api.Infrastructure.Build", "Tarteeb.Api.Infrastructure.Build\Tarteeb.Api.Infrastructure.Build.csproj", "{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tarteeb.Api.Tests.Unit", "Tarteeb.Api.Tests.Unit\Tarteeb.Api.Tests.Unit.csproj", "{3498A3E3-475F-4442-9B9F-60C572DC9B67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3498A3E3-475F-4442-9B9F-60C572DC9B67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3498A3E3-475F-4442-9B9F-60C572DC9B67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3498A3E3-475F-4442-9B9F-60C572DC9B67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3498A3E3-475F-4442-9B9F-60C572DC9B67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

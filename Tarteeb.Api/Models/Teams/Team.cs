@@ -10,11 +10,9 @@ namespace Tarteeb.Api.Models.Teams
 {
     public class Team
     {
-        public Guid Id{ get; set; }
-        public string TeamName{ get; set; }
+        public Guid Id { get; set; }
+        public string TeamName { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-//        public List<Guid> TeamMembers { get; set; }
-//        public List<Guid> TeamTickets { get; set; }
     }
 }

@@ -3,13 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Linq;
-using System.Threading.Tasks;
 using EFxceptions;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Tarteeb.Api.Models.Tickets;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
@@ -55,7 +53,7 @@ namespace Tarteeb.Api.Brokers.Storages
 
             return @object;
         }
-       
+
         private async ValueTask<T> UpdateAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);

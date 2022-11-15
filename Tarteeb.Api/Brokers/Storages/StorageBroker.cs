@@ -3,11 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
+using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Tarteeb.Api.Brokers.Storages
 {

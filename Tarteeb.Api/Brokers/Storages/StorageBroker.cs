@@ -6,7 +6,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -39,6 +38,13 @@ namespace Tarteeb.Api.Brokers.Storages
             return broker.Set<T>();
         }
 
+        private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+
+            return await broker.FindAsync<T>(objectIds);
+        }
+
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
@@ -47,7 +53,7 @@ namespace Tarteeb.Api.Brokers.Storages
 
             return @object;
         }
-       
+
         private async ValueTask<T> UpdateAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);

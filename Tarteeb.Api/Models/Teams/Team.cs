@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Collections.Generic;
 
 namespace Tarteeb.Api.Models.Teams
 {

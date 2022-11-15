@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,9 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public IQueryable<Ticket> SelectAllTickets() =>
             SelectAll<Ticket>();
+        
+        public async ValueTask<Ticket> SelectTicketByIdAsync(Guid id) =>
+            await SelectAsync<Ticket>(id);
 
         public async ValueTask<Ticket> UpdateTicketAsync(Ticket ticket) =>
             await UpdateAsync(ticket);

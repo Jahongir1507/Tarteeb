@@ -9,6 +9,7 @@ using EFxceptions;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
@@ -37,6 +38,13 @@ namespace Tarteeb.Api.Brokers.Storages
             var broker = new StorageBroker(this.configuration);
 
             return broker.Set<T>();
+        }
+
+        private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+
+            return await broker.FindAsync<T>(objectIds);
         }
 
         private async ValueTask<T> DeleteAsync<T>(T @object)

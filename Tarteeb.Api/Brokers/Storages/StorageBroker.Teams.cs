@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Teams;
@@ -18,5 +19,9 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Team> UpdateTeamAsync(Team team) =>
             await UpdateAsync(team);
+
+        public async ValueTask<Team> DeleteTeamAsync(Team team) =>
+            await DeleteAsync(team);
+              
     }
 }

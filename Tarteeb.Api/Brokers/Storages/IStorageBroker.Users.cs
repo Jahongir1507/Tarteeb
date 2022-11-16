@@ -11,5 +11,6 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<User> UpdateUserAsync(User user);
+        ValueTask<User> DeleteUserAsync(User user); 
     }
 }

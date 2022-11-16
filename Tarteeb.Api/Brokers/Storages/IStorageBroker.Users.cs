@@ -4,16 +4,12 @@
 //=================================
 
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
-    public partial class StorageBroker
+    public partial interface IStorageBroker
     {
-        public DbSet<User> Users { get; set; }
-
-        public async ValueTask<User> UpdateUserAsync(User user) =>
-            await UpdateAsync(user);
+        ValueTask<User> UpdateUserAsync(User user);
     }
 }

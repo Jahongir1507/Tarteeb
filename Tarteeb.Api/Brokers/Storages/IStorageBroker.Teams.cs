@@ -10,6 +10,7 @@ namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
+        ValueTask<Team> InsertTeamAsync(Team team);
         ValueTask<Team> UpdateTeamAsync(Team team);
     }
 }

@@ -14,6 +14,9 @@ namespace Tarteeb.Api.Brokers.Storages
     {
         public DbSet<Team> Teams { get; set; }
 
+        public async ValueTask<Team> InsertTeamAsync(Team team) =>
+            await InsertAsync(team);
+
         public async ValueTask<Team> UpdateTeamAsync(Team team) =>
             await UpdateAsync(team);
     }

@@ -3,10 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {

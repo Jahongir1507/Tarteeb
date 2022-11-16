@@ -5,14 +5,19 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
         public DbSet<User> Users { get; set; }
+
+        public IQueryable<User> SelectAllUsers() =>
+            SelectAll<User>();
 
         public async ValueTask<User> SelectUserByIdAsync(Guid id) =>
             await SelectAsync<User>(id);

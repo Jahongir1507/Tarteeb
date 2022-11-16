@@ -5,12 +5,14 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
+       IQueryable<User> SelectAllUsers();
         ValueTask<User> SelectUserByIdAsync(Guid id);
 
         ValueTask<User> UpdateUserAsync(User user);

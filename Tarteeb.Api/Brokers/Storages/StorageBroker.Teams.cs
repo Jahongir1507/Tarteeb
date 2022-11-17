@@ -17,7 +17,6 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Team> InsertTeamAsync(Team team) =>
             await InsertAsync(team);
-
         public async ValueTask<Team> SelectTeamById(Guid id) =>
             await SelectTeamById(id);
         public async ValueTask<Team> UpdateTeamAsync(Team team) =>

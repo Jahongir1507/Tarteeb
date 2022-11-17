@@ -16,5 +16,7 @@ namespace Tarteeb.Api.Brokers.Storages
         ValueTask<User> SelectUserByIdAsync(Guid id);
 
         ValueTask<User> UpdateUserAsync(User user);
+
+        ValueTask<User> DeleteUserAsync(User user);
     }
 }

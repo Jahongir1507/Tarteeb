@@ -12,9 +12,9 @@ namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
-       IQueryable<User> SelectAllUsers();
+        ValueTask<User> InsertUserAsync(User user);
+        IQueryable<User> SelectAllUsers();
         ValueTask<User> SelectUserByIdAsync(Guid id);
-
         ValueTask<User> UpdateUserAsync(User user);
 
         ValueTask<User> DeleteUserAsync(User user);

@@ -14,6 +14,6 @@ namespace Tarteeb.Api.Brokers.Storages
         ValueTask<Team> InsertTeamAsync(Team team);
         IQueryable<Team> SelectAllTeams();
         ValueTask<Team> UpdateTeamAsync(Team team);
-        ValueTask<Team> DeleteTeamAsync(Team team)
+        ValueTask<Team> DeleteTeamAsync(Team team);
     }
 }

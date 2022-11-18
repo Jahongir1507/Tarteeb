@@ -26,6 +26,5 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Team> DeleteTeamAsync(Team team) =>
             await DeleteAsync(team);
-      
     }
 }

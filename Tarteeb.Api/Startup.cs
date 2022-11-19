@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 
 namespace Tarteeb.Api
@@ -24,7 +25,7 @@ namespace Tarteeb.Api
         {
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
-            services.AddTransient<IStorageBroker, StorageBroker>();
+            RegisterBrokers(services);
 
             services.AddSwaggerGen(config =>
             {
@@ -52,6 +53,12 @@ namespace Tarteeb.Api
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());
+        }
+
+        private static void RegisterBrokers(IServiceCollection services)
+        {
+            services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
         }
     }
 }

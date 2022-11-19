@@ -10,7 +10,7 @@ using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {
-    public class TicketService : ITicketService
+    public partial class TicketService : ITicketService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -18,12 +18,17 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         public TicketService(
             IStorageBroker storageBroker,
             ILoggingBroker loggingBroker)
-        { 
+        {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Ticket> AddTicketAsync(Ticket ticket) =>
-           await this.storageBroker.InsertTicketAsync(ticket);
+        public ValueTask<Ticket> AddTicketAsync(Ticket ticket) =>
+        TryCatch(async () =>
+        {
+            ValidateTicketNotNull(ticket);
+
+            return await this.storageBroker.InsertTicketAsync(ticket);
+        });
     }
 }

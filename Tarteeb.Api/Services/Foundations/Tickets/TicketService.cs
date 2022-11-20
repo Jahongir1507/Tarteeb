@@ -23,6 +23,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         }
 
         public async ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
-           throw new NotImplementedException(); 
+          await storageBroker.SelectTicketByIdAsync(ticketId);
     }
 }

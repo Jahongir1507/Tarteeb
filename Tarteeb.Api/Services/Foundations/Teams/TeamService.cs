@@ -13,8 +13,8 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public class TeamService :ITeamService
     {
-        public readonly IStorageBroker storageBroker;
-        public readonly IloggingBroker loggingBroker;
+        private readonly IStorageBroker storageBroker;
+        private readonly ILoggingBroker loggingBroker;
 
         public TeamService(IStorageBroker storageBroker, ILoggingBroker loggingBroker)
         {

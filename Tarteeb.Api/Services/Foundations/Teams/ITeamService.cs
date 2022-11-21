@@ -3,10 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Threading.Tasks;
+using Tarteeb.Api.Models;
+
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public interface ITeamService
     {
-        ValuaTask<Team> AddTeamAsync(Team team);
+        ValueTask<Team> AddTeamAsync(Team team);
     }
 }

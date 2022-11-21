@@ -21,7 +21,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<User> AddUserAsync(User user) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<User> AddUserAsync(User user) =>
+            await storageBroker.InsertUserAsync(user);
     }
 }

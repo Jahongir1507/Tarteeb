@@ -10,7 +10,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public partial class TicketService
     {
-
         private static void ValidateTicketNotNull(Ticket ticket)
         {
             if (ticket is null)

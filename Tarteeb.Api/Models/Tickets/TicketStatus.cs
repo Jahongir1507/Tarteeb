@@ -12,5 +12,4 @@ namespace Tarteeb.Api.Models.Tickets
         INPROGRESS,
         DONE
     }
-
 }

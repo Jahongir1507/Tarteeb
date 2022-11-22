@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw CreateAndLogValidationException(nullTicketException);
             }
-            catch(InvalidTicketException invalidTicketException)
+            catch (InvalidTicketException invalidTicketException)
             {
                 throw CreateAndLogValidationException(invalidTicketException);
             }

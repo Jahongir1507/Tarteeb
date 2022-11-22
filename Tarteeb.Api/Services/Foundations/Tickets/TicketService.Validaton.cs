@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Tarteeb.Api.Models.Tickets.Exceptions;
-using Tarteeb.Api.Models.Tickets;
 using System;
+using Tarteeb.Api.Models.Tickets;
+using Tarteeb.Api.Models.Tickets.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {
@@ -52,13 +52,13 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             }
         }
 
-        private static void Validate(params(dynamic Rule,string Parameter)[] validations)
+        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidTicketException = new InvalidTicketException();
 
-            foreach((dynamic rule, string parametr) in validations)
+            foreach ((dynamic rule, string parametr) in validations)
             {
-                if(rule.Condition)
+                if (rule.Condition)
                 {
                     invalidTicketException.UpsertDataList(
                         key: parametr,

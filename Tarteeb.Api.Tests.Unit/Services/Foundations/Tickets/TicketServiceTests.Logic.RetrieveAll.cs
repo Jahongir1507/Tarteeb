@@ -3,14 +3,9 @@
 // Free to use to bring order in your workplace
 //==================================================
 
-
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Xunit;
 
@@ -34,12 +29,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             IQueryable<Ticket> actualTicket = this.ticketService.RetriveAllTickets();
 
             //then
-            actualTicket.Should()
-                        .BeEquivalentTo(expextedTickets);
+            actualTicket.Should().BeEquivalentTo(expextedTickets);
 
-            this.storageBrokerMock.Verify(broker => broker.SelectAllTickets(), Times.Once);
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectAllTickets(), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();            
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

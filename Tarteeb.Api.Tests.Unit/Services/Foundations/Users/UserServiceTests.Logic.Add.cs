@@ -38,6 +38,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
               broker.InsertUserAsync(inputUser), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

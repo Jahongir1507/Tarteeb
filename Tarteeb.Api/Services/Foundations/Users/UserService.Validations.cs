@@ -3,13 +3,19 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Threading.Tasks;
+using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
-    public interface IUserService
+    public partial class UserService
     {
-        ValueTask<User> AddUserAsync(User user);
+        private static void ValidateUserNotNull(User user)
+        {
+            if (user is null)
+            {
+                throw new NullUserException();
+            }
+        }
     }
 }

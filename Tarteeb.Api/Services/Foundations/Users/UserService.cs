@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Tickets;
+using Tarteeb.Api.Models.Users.Exceptions;
+using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -21,7 +24,23 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<User> AddUserAsync(User user) =>
-            await storageBroker.InsertUserAsync(user);
+        public ValueTask<User> AddUserAsync(User user) =>
+         TryCatch(async () =>
+         {
+             ValidateUserNotNull(user);
+
+             return await this.storageBroker.InsertUserAsync(user);
+         });
+
+        private UserValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var userValidationException =
+                new UserValidationException(exception);
+
+            this.loggingBroker.LogError(userValidationException);
+
+            return userValidationException;
+        }
+        
     }
 }

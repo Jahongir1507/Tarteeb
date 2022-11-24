@@ -6,6 +6,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -37,6 +38,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Ticket CreateRandomTicket() =>
             CreateTicketFiller().Create();

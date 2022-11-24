@@ -4,6 +4,7 @@
 //=================================
 
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xeptions;
@@ -28,6 +29,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw CreateAndLogValidationException(invalidTicketException);
             }
+            catch(SqlException sqlException)
+            {
+                var failedTicketStorageException = new FailedTicketStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTicketStorageException);
+            }
         }
 
         private TicketValidationException CreateAndLogValidationException(Xeption exception)
@@ -36,6 +43,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             this.loggingBroker.LogError(ticketValidationException);
 
             return ticketValidationException;
+        }
+
+        private TicketDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var ticketDependencyException = new TicketDependencyException(exception);
+            this.loggingBroker.LogCritical(ticketDependencyException);
+
+            return ticketDependencyException;
         }
     }
 }

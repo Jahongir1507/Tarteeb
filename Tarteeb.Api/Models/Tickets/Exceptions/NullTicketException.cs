@@ -9,8 +9,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
 {
     public class NullTicketException : Xeption
     {
-        public NullTicketException()
-            : base(message: "Ticket is null.")
+        public NullTicketException() : base(message: "Ticket is null.")
         { }
     }
 }

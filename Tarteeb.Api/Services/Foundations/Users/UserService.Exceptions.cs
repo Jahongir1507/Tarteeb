@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -21,14 +22,22 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
             catch (NullUserException nullUserException)
             {
-                var userValidationException =
-                    new UserValidationException(nullUserException);
-
-                this.loggingBroker.LogError(userValidationException);
-
-                throw userValidationException;
-             
+                throw CreateAndLogValidationException(nullUserException);
             }
+            catch (InvalidUserException invalidUserException)
+            {
+                throw CreateAndLogValidationException(invalidUserException);
+            }
+        }
+
+        private UserValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var userValidationException =
+                new UserValidationException(exception);
+
+            this.loggingBroker.LogError(userValidationException);
+
+            return userValidationException;
         }
     }
 }

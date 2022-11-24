@@ -3,19 +3,69 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Tarteeb.Api.Models.Users.Exceptions;
+using System;
 using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Users.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
     public partial class UserService
     {
+        private static void ValidateUser(User user)
+        {
+            ValidateUserNotNull(user);
+
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+        }
+
+        private static dynamic IsInvalid(Guid id) => new
+        {
+            Condition = id == default,
+            Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(string text) => new
+        {
+            Condition = string.IsNullOrWhiteSpace(text),
+            Message = "Text is required"
+        };
+
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Value is required"
+        };
+
         private static void ValidateUserNotNull(User user)
         {
             if (user is null)
             {
                 throw new NullUserException();
             }
+        }
+
+        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        {
+            var invalidUserException = new InvalidUserException();
+
+            foreach ((dynamic rule, string parameter) in validations)
+            {
+                if (rule.Condition)
+                {
+                    invalidUserException.UpsertDataList(
+                        key: parameter,
+                        value: rule.Message);
+                }
+            }
+
+            invalidUserException.ThrowIfContainsErrors();
         }
     }
 }

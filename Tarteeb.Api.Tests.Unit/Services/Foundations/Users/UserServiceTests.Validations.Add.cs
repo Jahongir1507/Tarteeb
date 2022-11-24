@@ -81,10 +81,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 values: "Value is required");
 
             invalidUserException.AddData(
-                key: nameof(User.ManagerId),
-                values: "Id is required");
-
-            invalidUserException.AddData(
                 key: nameof(User.Email),
                 values: "Text is required");
 

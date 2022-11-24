@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -28,19 +29,9 @@ namespace Tarteeb.Api.Services.Foundations.Users
          TryCatch(async () =>
          {
              ValidateUserNotNull(user);
+             ValidateUser(user);
 
              return await this.storageBroker.InsertUserAsync(user);
          });
-
-        private UserValidationException CreateAndLogValidationException(Xeption exception)
-        {
-            var userValidationException =
-                new UserValidationException(exception);
-
-            this.loggingBroker.LogError(userValidationException);
-
-            return userValidationException;
-        }
-        
     }
 }

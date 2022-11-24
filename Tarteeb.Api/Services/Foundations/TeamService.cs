@@ -21,9 +21,7 @@ namespace Tarteeb.Api.Services.Foundations
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Team> AddTeamAsync(Team team)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async ValueTask<Team> AddTeamAsync(Team team) =>
+            await this.storageBroker.InsertTeamAsync(team);
     }
 }

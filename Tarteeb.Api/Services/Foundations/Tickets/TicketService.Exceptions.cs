@@ -39,12 +39,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
         private TicketValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var TicketValidationException =
+            var ticketValidationException =
                 new TicketValidationException(exception);
 
-            this.loggingBroker.LogError(TicketValidationException);
+            this.loggingBroker.LogError(ticketValidationException);
 
-            return TicketValidationException;
+            return ticketValidationException;
         }
 
         private TicketDependencyException CreateAndLogCriticalDependencyException(Xeption exception)

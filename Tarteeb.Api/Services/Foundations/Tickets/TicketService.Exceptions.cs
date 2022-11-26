@@ -39,7 +39,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             catch(DuplicateKeyException duplicateKeyException)
             {
                var failedTicketDependencyValidationException =
-                    new FailedTicketDependencyValidationException(duplicateKeyException);
+                    new AlreadyExistsTicketException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
             }

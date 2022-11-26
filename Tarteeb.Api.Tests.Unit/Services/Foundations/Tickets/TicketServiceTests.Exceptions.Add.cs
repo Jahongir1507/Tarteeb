@@ -60,7 +60,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
             var failedTicketDependencyValidationException = 
-                new FailedTicketDependencyValidationException(duplicateKeyException);
+                new AlreadyExistsTicketException(duplicateKeyException);
 
             var expectedTicketDependencyValidationException =
                 new TicketDependencyValidationException(failedTicketDependencyValidationException);

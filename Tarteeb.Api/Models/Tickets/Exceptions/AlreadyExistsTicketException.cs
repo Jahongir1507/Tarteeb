@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Tickets.Exceptions
 {
-    public class FailedTicketDependencyValidationException : Xeption
+    public class AlreadyExistsTicketException : Xeption
     {
-        public FailedTicketDependencyValidationException(Exception innerException)
-            : base(message: "Failed ticket dependency validation error occurred, fix the errors and try again.",
+        public AlreadyExistsTicketException(Exception innerException)
+            : base(message: "Ticket already exists.",
                   innerException)
         { }
     }

@@ -41,7 +41,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                var failedTicketDependencyValidationException =
                     new FailedTicketDependencyValidationException(duplicateKeyException);
 
-                throw CreateAndDependensyValidationException(failedTicketDependencyValidationException);
+                throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             return ticketDependencyException;
         }
 
-        private TicketDependencyValidationException CreateAndDependensyValidationException(Xeption exception)
+        private TicketDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var ticketDependencyValidationException = new TicketDependencyValidationException(exception);
             this.loggingBroker.LogError(ticketDependencyValidationException);

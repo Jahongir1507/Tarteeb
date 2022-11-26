@@ -28,9 +28,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             this.loggingBroker = loggingBroker;
         }
 
-        public IQueryable<Ticket> RetriveAllTickets()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Ticket> RetriveAllTickets() =>
+            this.storageBroker.SelectAllTickets();       
     }
 }

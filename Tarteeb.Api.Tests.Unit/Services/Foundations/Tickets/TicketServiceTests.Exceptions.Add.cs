@@ -135,6 +135,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var expectedTicketServiceException =
                 new TicketServiceException(failedTicketServiceException);
 
+            this.storageBrokerMock.Setup(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()))
+                .ThrowsAsync(serviceException);
+
             // when
             ValueTask<Ticket> addTicketTask =
                 this.ticketService.AddTicketAsync(someTicket);
@@ -152,7 +155,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTicketAsync(It.IsAny<Ticket>()),
-                    Times.Never);
+                    Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xeptions;
@@ -42,6 +43,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                     new AlreadyExistsTicketException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
+            }
+            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTickedException = new LockedTicketException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTickedException);
             }
         }
 

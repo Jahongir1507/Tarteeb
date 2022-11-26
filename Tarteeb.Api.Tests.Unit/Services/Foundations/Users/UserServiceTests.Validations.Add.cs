@@ -4,6 +4,7 @@
 //=================================
 
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Moq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
@@ -106,6 +107,40 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateRandomUser();
+            SqlException sqlException = CreateSqlException();
+            var failedUserStorageException = new FailedUserStorageException(sqlException);
+
+            var expectedUserDependencyException =
+                new UserDependencyException(failedUserStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+            broker.InsertUserAsync(It.IsAny<User>())).ThrowsAsync(sqlException);
+
+            //when
+            ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
+
+            UserDependencyException actualUserDependencyException =
+                await Assert.ThrowsAsync<UserDependencyException>(addUserTask.AsTask);
+
+            //then
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+            broker.InsertUserAsync(It.IsAny<User>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+            broker.LogCritical(It.Is(SameExceptionAs(
+                expectedUserDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

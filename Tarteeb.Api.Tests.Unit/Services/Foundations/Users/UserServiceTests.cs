@@ -3,16 +3,17 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Data.SqlClient;
 using Moq;
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tynamix.ObjectFiller;
 using Xeptions;
-using Xunit.Sdk;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -33,6 +34,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         }
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
            actualException => actualException.SameExceptionAs(expectedExceptoin);
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 

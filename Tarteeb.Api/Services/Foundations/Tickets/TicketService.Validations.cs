@@ -24,7 +24,13 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
-                (Rule:IsNotSame(ticket.CreatedDate,ticket.UpdatedDate,nameof(Ticket.UpdatedDate)),Parameter: nameof(Ticket.CreatedDate)));
+
+                (Rule:IsNotSame(
+                    firstDate: ticket.CreatedDate,
+                    secondDate: ticket.UpdatedDate,
+                    secondDateName: nameof(Ticket.UpdatedDate)),
+
+                Parameter: nameof(Ticket.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new

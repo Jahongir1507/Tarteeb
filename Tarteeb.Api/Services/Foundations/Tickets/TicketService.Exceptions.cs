@@ -51,6 +51,20 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
                 throw CreateAndDependencyValidationException(lockedTickedException);
             }
+            catch(Exception serviceException)
+            {
+                var failedServiceProfileException= new FailedTicketServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedServiceProfileException);
+            }
+        }
+
+        private Exception CreateAndLogServiceException(Xeption exception)
+        {
+            var ticketserviceException = new TicketServiceException(exception);
+            this.loggingBroker.LogError(ticketserviceException);
+
+            return ticketserviceException;
         }
 
         private TicketValidationException CreateAndLogValidationException(Xeption exception)

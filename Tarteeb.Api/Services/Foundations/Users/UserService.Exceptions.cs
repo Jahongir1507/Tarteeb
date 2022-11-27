@@ -3,6 +3,8 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Data.SqlClient;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -28,6 +30,20 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch(SqlException sqlException)
+            {
+                var failedUserStorageException =new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+        }
+
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
+        {
+            var userDependencyException =new UserDependencyException(exeption);
+            this.loggingBroker.LogCritical(userDependencyException);
+
+            return userDependencyException;
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)

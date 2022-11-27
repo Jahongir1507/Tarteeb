@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-
 using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
@@ -14,7 +13,6 @@ using Moq;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -151,7 +149,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketServiceException))),Times.Once);
+                    expectedTicketServiceException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTicketAsync(It.IsAny<Ticket>()),

@@ -89,7 +89,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
               key: nameof(Ticket.UpdatedUserId),
               values: "Id is required");
 
-            var expectedTicketValidationException = 
+            var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
 
             // when

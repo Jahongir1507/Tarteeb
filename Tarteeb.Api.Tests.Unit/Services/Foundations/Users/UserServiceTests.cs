@@ -32,8 +32,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 this.storageBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-           actualException => actualException.SameExceptionAs(expectedExceptoin);
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+           actualException => actualException.SameExceptionAs(expectedException);
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));

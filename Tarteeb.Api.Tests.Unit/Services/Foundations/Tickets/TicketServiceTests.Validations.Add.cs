@@ -117,8 +117,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
             // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset anotherRandomDate = GetRandomDateTime();
-            Ticket randomTicket =  CreateRandomTicket();
+            Ticket randomTicket =  CreateRandomTicket(randomDateTime);
             Ticket invalidTicket = randomTicket;
             invalidTicket.UpdatedDate = anotherRandomDate;
             var invalidTicketException = new InvalidTicketException();
@@ -130,6 +131,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(invalidTicket);
 
@@ -139,12 +143,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.loggingBrokerMock.Verify(broker => broker.LogError(
                 It.Is(SameExceptionAs(expectedTicketValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(
                 It.IsAny<Ticket>()), Times.Never);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

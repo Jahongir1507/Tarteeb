@@ -156,11 +156,44 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         {
             // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            
+            DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
+            Ticket randomInvalidTicket = CreateRandomTicket(invalidRandomDateTime);
+            Ticket invalidTicket = randomInvalidTicket;
+            var invalidTicketException = new InvalidTicketException();
+
+            invalidTicketException.AddData(
+                key: nameof(Ticket.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedTicketValidationException = 
+                new TicketValidationException(invalidTicketException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
+            ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(invalidTicket);
+
+            TicketValidationException actualTicketValidationException =
+                await Assert.ThrowsAsync<TicketValidationException>(addTicketTask.AsTask);
 
             // then
+            actualTicketValidationException.Should().BeEquivalentTo(
+                expectedTicketValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

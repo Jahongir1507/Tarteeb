@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Moq;
+using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Tickets;
@@ -22,6 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
     public partial class TicketServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITicketService ticketService;
 
@@ -29,10 +31,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public TicketServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.ticketService = new TicketService(
                 storageBroker: this.storageBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
@@ -65,13 +69,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static Ticket CreateRandomTicket() =>
-            CreateTicketFiller().Create();
+        private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
+            CreateTicketFiller(dates).Create();
 
-        private static Filler<Ticket> CreateTicketFiller()
+        private static Ticket CreateRandomTicket() =>
+            CreateTicketFiller(GetRandomDateTime()).Create();
+
+        private static Filler<Ticket> CreateTicketFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Ticket>();
-            DateTimeOffset dates = GetRandomDateTime();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);

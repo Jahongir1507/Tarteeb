@@ -9,7 +9,7 @@ namespace Tarteeb.Api.Brokers.DateTimes
 {
     public class DateTimeBroker : IDateTimeBroker
     {
-        DateTimeOffset GetCurrentDateTime() =>
-            DateTimeOffset.UtcNow;
+        public DateTimeOffset GetCurrentDateTime() =>
+             DateTimeOffset.UtcNow;
     }
 }

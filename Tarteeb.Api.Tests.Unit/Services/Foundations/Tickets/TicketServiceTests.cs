@@ -6,6 +6,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
@@ -14,6 +15,7 @@ using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -32,6 +34,23 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.ticketService = new TicketService(
                 storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
         }
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>

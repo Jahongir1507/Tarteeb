@@ -5,6 +5,8 @@
 
 using System;
 using System.Data;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 
@@ -12,7 +14,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public partial class TicketService
     {
-        private static void ValidateTicket(Ticket ticket)
+        private void ValidateTicket(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);
 
@@ -24,6 +26,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
+                (Rule: IsNotRecent(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
 
                 (Rule:IsNotSame(
                     firstDate: ticket.CreatedDate,
@@ -59,6 +62,20 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             Condition = firstDate != secondDate,
             Message = $"Date is not same as {secondDateName}"
         };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
 
         private static void ValidateTicketNotNull(Ticket ticket)
         {

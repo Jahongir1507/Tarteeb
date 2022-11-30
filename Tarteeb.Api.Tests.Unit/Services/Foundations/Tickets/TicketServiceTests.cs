@@ -27,7 +27,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITicketService ticketService;
 
-
         public TicketServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();

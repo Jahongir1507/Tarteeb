@@ -56,8 +56,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             };
         }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-            actualException => actualException.SameExceptionAs(expectedExceptoin);
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();

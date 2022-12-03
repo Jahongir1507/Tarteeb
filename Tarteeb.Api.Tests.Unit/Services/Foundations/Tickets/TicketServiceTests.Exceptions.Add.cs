@@ -124,9 +124,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTime();
-            DateTimeOffset anotherRandomDateTime = GetRandomDateTime();
-            Ticket someTicket = CreateRandomTicket(randomDateTime);
+            Ticket someTicket = CreateRandomTicket();
             var serviceException = new Exception();
 
             var failedTicketServiceException =
@@ -136,10 +134,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketServiceException(failedTicketServiceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).Returns(randomDateTime);
-
-            this.storageBrokerMock.Setup(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()))
-                .ThrowsAsync(serviceException);
+                broker.GetCurrentDateTime()).Throws(serviceException);
 
             // when
             ValueTask<Ticket> addTicketTask =
@@ -161,7 +156,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTicketAsync(It.IsAny<Ticket>()),
-                    Times.Once);
+                    Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

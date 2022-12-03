@@ -71,8 +71,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var expectedTicketDependencyValidationException =
                 new TicketDependencyValidationException(alreadyExistsTicketException);
 
-            this.storageBrokerMock.Setup(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()))
-                .ThrowsAsync(duplicateKeyException);
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
+                .Throws(duplicateKeyException);
 
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(someTicket);
@@ -84,12 +84,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicketDependencyValidationException.Should().BeEquivalentTo(
                 expectedTicketDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(
-                It.IsAny<Ticket>()), Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
                 expectedTicketDependencyValidationException))), Times.Once);
 
+            this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(
+                It.IsAny<Ticket>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

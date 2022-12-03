@@ -6,7 +6,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;

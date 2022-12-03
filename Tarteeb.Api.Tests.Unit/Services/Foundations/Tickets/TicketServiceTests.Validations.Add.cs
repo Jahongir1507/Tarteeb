@@ -119,7 +119,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset anotherRandomDate = GetRandomDateTime();
-            Ticket randomTicket =  CreateRandomTicket(randomDateTime);
+            Ticket randomTicket = CreateRandomTicket(randomDateTime);
             Ticket invalidTicket = randomTicket;
             invalidTicket.UpdatedDate = anotherRandomDate;
             var invalidTicketException = new InvalidTicketException();
@@ -173,7 +173,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 key: nameof(Ticket.CreatedDate),
                 values: "Date is not recent");
 
-            var expectedTicketValidationException = 
+            var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
 
             this.dateTimeBrokerMock.Setup(broker =>

@@ -4,9 +4,6 @@
 //=================================
 
 using System;
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 
@@ -28,7 +25,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
                 (Rule: IsNotRecent(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
 
-                (Rule:IsNotSame(
+                (Rule: IsNotSame(
                     firstDate: ticket.CreatedDate,
                     secondDate: ticket.UpdatedDate,
                     secondDateName: nameof(Ticket.UpdatedDate)),
@@ -58,10 +55,10 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
-        {
-            Condition = firstDate != secondDate,
-            Message = $"Date is not same as {secondDateName}"
-        };
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {

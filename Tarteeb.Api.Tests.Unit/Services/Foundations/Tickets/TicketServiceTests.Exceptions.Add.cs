@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                .Throws(sqlException);
+                    .Throws(sqlException);
 
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(someTicket);
@@ -110,7 +110,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                .Throws(dbUpdateConcurrencyException);
+                    .Throws(dbUpdateConcurrencyException);
 
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(someTicket);

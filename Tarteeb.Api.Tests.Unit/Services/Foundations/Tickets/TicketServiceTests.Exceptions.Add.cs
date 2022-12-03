@@ -29,8 +29,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var expectedTicketDependencyException =
                 new TicketDependencyException(failedTicketStorageException);
 
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertTicketAsync(It.IsAny<Ticket>())).ThrowsAsync(sqlException);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                .Throws(sqlException);
 
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(someTicket);
@@ -41,13 +42,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // then
             actualTicketDependencyException.Should().BeEquivalentTo(expectedTicketDependencyException);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTicketDependencyException))), Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

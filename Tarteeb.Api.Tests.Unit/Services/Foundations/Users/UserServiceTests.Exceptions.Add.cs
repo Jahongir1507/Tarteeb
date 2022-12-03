@@ -80,6 +80,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(
                 It.IsAny<User>()), Times.Once);
 
+            this.loggingBrokerMock.Verify(broker=>
+               broker.LogError(It.Is(SameExceptionAs(
+                  expectedUserDependencyValidationException))),Times.Once);
+
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

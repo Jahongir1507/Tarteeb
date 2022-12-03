@@ -3,8 +3,8 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -30,17 +30,24 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
-                var failedUserStorageException =new FailedUserStorageException(sqlException);
+                var failedUserStorageException = new FailedUserStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedUserDependencyValidationException =
+                    new FailedUserDependencyValidationException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(failedUserDependencyValidationException);
             }
         }
 
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
-            var userDependencyException =new UserDependencyException(exeption);
+            var userDependencyException = new UserDependencyException(exeption);
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
@@ -54,6 +61,16 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
     }
 }

@@ -99,8 +99,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var lockedTicketException = new LockedTicketException(dbUpdateConcurrencyException);
             var expectedTicketDependencyValidationException = new TicketDependencyValidationException(lockedTicketException);
 
-            this.storageBrokerMock.Setup(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()))
-                .ThrowsAsync(dbUpdateConcurrencyException);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                .Throws(dbUpdateConcurrencyException);
 
             // when
             ValueTask<Ticket> addTicketTask = this.ticketService.AddTicketAsync(someTicket);
@@ -111,10 +112,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // then
             actualTicketDependencyValidationException.Should().BeEquivalentTo(expectedTicketDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedTicketDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
@@ -18,10 +19,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async Task ShouldAddTicketAsync()
         {
             // given
-            Ticket randomTicket = CreateRandomTicket();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Ticket randomTicket = CreateRandomTicket(randomDateTime);
             Ticket inputTicket = randomTicket;
             Ticket persistedTicket = inputTicket;
             Ticket expectedTicket = persistedTicket.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertTicketAsync(inputTicket))
@@ -33,9 +38,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // then
             actualTicket.Should().BeEquivalentTo(expectedTicket);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTicketAsync(inputTicket), Times.Once);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

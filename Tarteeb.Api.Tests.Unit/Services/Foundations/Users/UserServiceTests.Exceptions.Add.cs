@@ -10,6 +10,7 @@ using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Models;
 using Xunit;
 using FluentAssertions;
+using EFxceptions.Models.Exceptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -48,5 +49,40 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDuplicateKeyErrorOccurrsandLogItAsync()
+        {
+            //given
+            User someUser = CreateRandomUser();
+            string someMessage = GetRandomString();
+            var duplicatekeyException = new DuplicateKeyException(someMessage);
+
+            var failedUserDependencyValidationException = 
+                new FailedUserDependencyValidationException(duplicatekeyException);
+
+            var expectedUserDependencyValidationException =
+                new UserDependencyValidationException(failedUserDependencyValidationException);
+
+            this.storageBrokerMock.Setup(broker => broker.InsertUserAsync(It.IsAny<User>()))
+                .ThrowsAsync(duplicatekeyException);
+
+            //when
+            ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
+
+            UserDependencyValidationException actualUserDependencyValidationException =
+            await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
+
+            //then
+            actualUserDependencyValidationException.Should().BeEquivalentTo(
+                expectedUserDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(
+                It.IsAny<User>()), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }

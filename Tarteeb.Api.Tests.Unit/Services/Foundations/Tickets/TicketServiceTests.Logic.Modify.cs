@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         {
             //given
             DateTimeOffset randomDate = GetRandomDateTime();
-            Ticket randomTicket = CreateRandomTicket();
+            Ticket randomTicket = CreateRandomTicket(randomDate);
             Ticket inputTicket = randomTicket;
             inputTicket.UpdatedDate = randomDate.AddMinutes(1);
             Ticket storageTicket = inputTicket;
@@ -50,7 +50,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 BeEquivalentTo(expectedTicket);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(inputTicketId), Times.Once);

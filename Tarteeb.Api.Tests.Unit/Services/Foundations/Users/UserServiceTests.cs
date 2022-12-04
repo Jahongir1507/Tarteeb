@@ -3,15 +3,19 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Data.SqlClient;
 using Moq;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -34,6 +38,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
         private static IQueryable<User> CreateRandomUser() =>
             CreateUserFiller().Create(count: GetRandomNumber()).AsQueryable();
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();

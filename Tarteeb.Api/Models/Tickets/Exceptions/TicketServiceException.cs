@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class TicketServiceException : Xeption
     {
         public TicketServiceException(Exception innerException)
-            : base(message: "Profile service error occurred, contact support.", innerException)
+            : base(message: "Ticket service error occurred, contact support.", innerException)
         { }
     }
 }

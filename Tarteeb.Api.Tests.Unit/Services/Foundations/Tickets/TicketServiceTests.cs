@@ -5,12 +5,14 @@
 
 using Moq;
 using System;
+using System.Linq.Expressions;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -41,6 +43,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Filler<Ticket> CreateTicketFiller(DateTimeOffset dates)
         {

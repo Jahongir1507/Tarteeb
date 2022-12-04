@@ -6,6 +6,7 @@
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -48,7 +49,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
               var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
 
-                throw CreateAndDependencyValidationException(lockedUserException);
+              throw CreateAndDependencyValidationException(lockedUserException);
+            }
+            catch(Exception serviceException)
+            {
+                var failedUserServiceException = new FailedUserServiceException(serviceException);
+
+                throw CreateAndServiceException(failedUserServiceException);
             }
         }
 
@@ -78,6 +85,14 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userDependencyValidationException);
 
             return userDependencyValidationException;
+        }
+        private UserServiceException CreateAndServiceException(Xeption exception)
+        {
+            var userServiceException = new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
     }
 }

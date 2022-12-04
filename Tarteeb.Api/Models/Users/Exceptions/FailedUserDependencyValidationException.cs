@@ -6,7 +6,6 @@
 using System;
 using Xeptions;
 
-
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
     public partial class FailedUserDependencyValidationException : Xeption

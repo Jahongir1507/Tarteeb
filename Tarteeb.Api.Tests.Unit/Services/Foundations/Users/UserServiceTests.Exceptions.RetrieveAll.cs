@@ -47,5 +47,40 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            //given
+            string exceptionMessage = GetRandomString();
+            var serviceException= new Exception(exceptionMessage);
+
+            var failedUserServiceException = 
+                new FailedUserServiceException(serviceException);
+
+            var expecteduserServiceException = 
+                new UserServiceException(failedUserServiceException);
+
+            this.storageBrokerMock.Setup(broker=>
+                broker.SelectAllUsers()).Throws(serviceException);
+
+            //when
+            Action retrieveAllUserAction=()=>
+                this.userService.RetrieveAllUsers();
+
+            //then
+            Assert.Throws<UserServiceException> (retrieveAllUserAction);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.SelectAllUsers(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expecteduserServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

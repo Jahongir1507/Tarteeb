@@ -47,6 +47,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        private static string GetRandomString() =>
+             new MnemonicString().GetValue();
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();
 

@@ -70,6 +70,21 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
             CreateTicketFiller(dates).Create();
 
+        private static T GetInvalidEnum<T>()
+        {
+            int randomNumber = GetRandomNumber();
+
+            while (Enum.IsDefined(typeof(T), randomNumber))
+            {
+                randomNumber = GetRandomNumber();
+            }
+
+            return (T)(object)randomNumber;
+        }
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
+
         private static Ticket CreateRandomTicket() =>
             CreateTicketFiller(GetRandomDateTime()).Create();
 

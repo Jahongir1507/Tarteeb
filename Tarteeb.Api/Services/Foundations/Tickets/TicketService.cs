@@ -27,7 +27,11 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Ticket> ModifyTicketAsync(Ticket ticket) =>
-            await this.storageBroker.UpdateTicketAsync(ticket);
+        public async ValueTask<Ticket> ModifyTicketAsync(Ticket ticket)
+        {
+            var maybeTicket = await this.storageBroker.SelectTicketByIdAsync(ticket.Id);
+
+            return await this.storageBroker.UpdateTicketAsync(ticket);
+        }
     }
 }

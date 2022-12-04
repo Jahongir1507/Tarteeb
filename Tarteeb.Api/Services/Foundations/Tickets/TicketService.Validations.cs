@@ -18,7 +18,9 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             Validate(
                 (Rule: IsInvalid(ticket.Id), Parameter: nameof(Ticket.Id)),
                 (Rule: IsInvalid(ticket.Title), Parameter: nameof(Ticket.Title)),
+                (Rule: IsInvalid(ticket.Priority), Parameter: nameof(Ticket.Priority)),
                 (Rule: IsInvalid(ticket.Deadline), Parameter: nameof(Ticket.Deadline)),
+                (Rule: IsInvalid(ticket.Status), Parameter: nameof(Ticket.Status)),
                 (Rule: IsInvalid(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
@@ -51,6 +53,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             Message = "Value is required"
         };
 
+        private static dynamic IsInvalid<T>(T value) => new
+        {
+            Condition = IsEnumInvalid(value),
+            Message = "Value is not recognized"
+        };
+
         private static dynamic IsNotSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
@@ -60,11 +68,21 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Message = $"Date is not same as {secondDateName}"
             };
 
+        private static bool IsEnumInvalid<T>(T value)
+        {
+            bool isDefined = Enum.IsDefined(typeof(T), value);
+
+            return isDefined is false;
+        }
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
             Message = "Date is not recent"
         };
+
+
+
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {

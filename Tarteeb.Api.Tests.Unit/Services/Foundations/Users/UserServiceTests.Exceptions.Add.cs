@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -81,9 +82,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(
                 It.IsAny<User>()), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
-                  expectedUserDependencyValidationException))),Times.Once);
+                  expectedUserDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -97,8 +98,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
-            
-            var expectedUserDependencyValidationException = 
+
+            var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(lockedUserException);
 
             this.storageBrokerMock.Setup(broker => broker.InsertUserAsync(It.IsAny<User>()))
@@ -106,21 +107,59 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
-            
+
             UserDependencyValidationException actualUserDependencyValidationException =
                 await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
 
             //then
             actualUserDependencyValidationException.Should().BeEquivalentTo(expectedUserDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker=>broker.InsertUserAsync(It.IsAny<User>()),Times.Once);
+            this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(It.IsAny<User>()), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>broker.LogError(It.Is(
-                SameExceptionAs(expectedUserDependencyValidationException))),Times.Once);
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+                SameExceptionAs(expectedUserDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
 
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddifServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateRandomUser();
+            var serviceException = new Exception();
+
+            var failedUserServiceException =
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException =
+                new UserServiceException(failedUserServiceException);
+
+            this.storageBrokerMock.Setup(broker => broker.InsertUserAsync(It.IsAny<User>()))
+                .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser);
+
+            UserServiceException actualUserServiceException=
+                await Assert.ThrowsAsync<UserServiceException>(addUserTask.AsTask);
+
+            //then
+            actualUserServiceException.Should().BeEquivalentTo(
+                expectedUserServiceException);
+           
+            this.storageBrokerMock.Verify(broker =>
+               broker.InsertUserAsync(It.IsAny<User>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker=>
+               broker.LogError(It.Is(SameExceptionAs(
+                  expectedUserServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

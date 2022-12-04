@@ -12,7 +12,6 @@ namespace Tarteeb.Api.Models.Users.Exceptions
     {
         public FailedUserStorageException(Exception innerException)
         :base(message: "Failed user storage error occurred, contact support.",innerException)
-        { }
-        
+        { }      
     }
 }

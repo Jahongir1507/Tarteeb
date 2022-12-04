@@ -14,8 +14,6 @@ namespace Tarteeb.Api.Models.Users.Exceptions
         public FailedUserDependencyValidationException(Exception innerException)
             : base(message: "Failed user dependency validation error occurred,fix errors and try again.",
                   innerException) 
-        {
-
-        }
+        { }
     }
 }

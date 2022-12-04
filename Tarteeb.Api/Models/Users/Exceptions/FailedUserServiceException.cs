@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class FailedUserServiceException:Xeption
+    public class FailedUserServiceException : Xeption
     {
         public FailedUserServiceException(Exception innerException)
-        :base(message: "User service error occurred, contact support.",innerException)
-        {}
+        : base(message: "User service error occurred, contact support.", innerException)
+        { }
     }
 }

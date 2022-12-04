@@ -4,6 +4,7 @@
 //=================================
 
 using Microsoft.Data.SqlClient;
+using System;
 using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -28,6 +29,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(exception);
+
+                throw CreateAndLogServiceException(failedUserServiceException);
+            }
         }
 
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -36,6 +44,16 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
+        }
+
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userServiceException =
+                new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
     }
 }

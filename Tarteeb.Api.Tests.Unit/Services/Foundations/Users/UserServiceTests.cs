@@ -35,7 +35,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.userService = new UserService(
                 storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object,
-                dateTimeBroker:this.dateTimeBrokerMock.Object);
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
         private static IQueryable<User> CreateRandomUser() =>

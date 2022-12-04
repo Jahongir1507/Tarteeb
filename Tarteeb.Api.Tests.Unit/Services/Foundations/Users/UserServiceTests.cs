@@ -33,13 +33,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.userService = new UserService(
-                storageBroker: this.storageBrokerMock.Object);
+                storageBroker: this.storageBrokerMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker:this.dateTimeBrokerMock.Object);
         }
 
         private static IQueryable<User> CreateRandomUser() =>
             CreateUserFiller().Create(count: GetRandomNumber()).AsQueryable();
 
-        private static SqlException GetSqlException() =>
+        private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

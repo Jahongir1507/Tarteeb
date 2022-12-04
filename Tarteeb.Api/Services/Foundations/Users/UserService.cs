@@ -17,12 +17,17 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public UserService(IStorageBroker storageBroker)
+        public UserService(
+            IStorageBroker storageBroker,
+            ILoggingBroker loggingBroker,
+            IDateTimeBroker dateTimeBroker)
         {
             this.storageBroker = storageBroker;
+            this.loggingBroker = loggingBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
         public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
+            TryCatch(() => this.storageBroker.SelectAllUsers());
     }
 }

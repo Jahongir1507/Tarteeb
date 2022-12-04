@@ -22,9 +22,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.storageBroker = storageBroker;
         }
 
-        public IQueryable<User> RetrieveAllUsers()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<User> RetrieveAllUsers() =>
+            this.storageBroker.SelectAllUsers();
     }
 }

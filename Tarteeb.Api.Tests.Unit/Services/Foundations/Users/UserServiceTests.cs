@@ -49,11 +49,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
         private static string GetRandomString() =>
              new MnemonicString().GetValue();
+
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
         private static Filler<User> CreateUserFiller()
         {
             var filler = new Filler<User>();

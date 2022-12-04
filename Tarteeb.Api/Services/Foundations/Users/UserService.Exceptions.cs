@@ -5,6 +5,7 @@
 
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -42,6 +43,12 @@ namespace Tarteeb.Api.Services.Foundations.Users
                     new FailedUserDependencyValidationException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedUserDependencyValidationException);
+            }
+            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+              var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedUserException);
             }
         }
 

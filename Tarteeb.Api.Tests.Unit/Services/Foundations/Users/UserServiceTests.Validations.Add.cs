@@ -4,8 +4,8 @@
 //=================================
 
 using FluentAssertions;
-using Microsoft.Data.SqlClient;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -109,6 +109,41 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
-       
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset anotherRandomDate = GetRandomDateTime();
+            User randomUser = CreateRandomUser();
+            User invalidUser = randomUser;
+            invalidUser.UpdatedDate = anotherRandomDate;
+            var invalidUserException = new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: nameof(User.CreatedDate),
+                values: $"Date is not same as {nameof(User.UpdatedDate)}");
+
+            var expectedUserValidationException =
+                new UserValidationException(invalidUserException);
+
+            //when
+            ValueTask<User> addUserTask = this.userService.AddUserAsync(invalidUser);
+
+            UserValidationException actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
+
+            //then
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

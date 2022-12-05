@@ -35,6 +35,21 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Parameter: nameof(Ticket.CreatedDate)));
         }
 
+        private void ValidateTicketOnModify(Ticket ticket)
+        {
+            ValidateTicketNotNull(ticket);
+
+            Validate(
+                (Rule: IsInvalid(ticket.Id), Parameter: nameof(Ticket.Id)),
+                (Rule: IsInvalid(ticket.Title), Parameter: nameof(Ticket.Title)),
+                (Rule: IsInvalid(ticket.Deadline), Parameter: nameof(Ticket.Deadline)),
+                (Rule: IsInvalid(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
+                (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
+                (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
+                (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId))
+                );
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

@@ -86,11 +86,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             invalidTicketException.AddData(
                 key: nameof(Ticket.UpdatedDate),
-                values: new[]
-                {
-                    "Value is required",
-                    "Date is not recent"
-                });
+                values: "Value is required");
 
             invalidTicketException.AddData(
                key: nameof(Ticket.CreatedUserId),
@@ -117,7 +113,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))), 

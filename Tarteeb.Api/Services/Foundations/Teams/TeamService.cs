@@ -10,18 +10,25 @@ using Tarteeb.Api.Models.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
-    public class TeamService : ITeamService
+    public partial class TeamService : ITeamService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public TeamService(IStorageBroker storageBroker, ILoggingBroker loggingBroker)
+        public TeamService(
+            IStorageBroker storageBroker,
+            ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Team> AddTeamAsync(Team team) =>
-            await storageBroker.InsertTeamAsync(team);
+        public ValueTask<Team> AddTeamAsync(Team team) =>
+            TryCatch(async () =>
+            {
+                ValidateTeamNotNull(team);
+
+                return await storageBroker.InsertTeamAsync(team);
+            });
     }
 }

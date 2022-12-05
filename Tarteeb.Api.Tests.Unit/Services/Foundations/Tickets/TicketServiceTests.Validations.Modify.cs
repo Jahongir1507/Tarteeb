@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exception;
 using Xunit;
-using Xunit.Sdk;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -22,9 +20,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         {
             //given
             Ticket nullTicket = null;
-            NullTicketException nullTicketException = new NullTicketException();
+            var nullTicketException = new NullTicketException();
 
-            var expectedTicketValidationException = 
+            var expectedTicketValidationException =
                 new TicketValidationException(nullTicketException);
 
             //when
@@ -44,7 +42,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                     expectedTicketValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTicketAsync(It.IsAny<Ticket>()), Times.Never);

@@ -8,7 +8,7 @@ using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Teams;
 
-namespace Tarteeb.Api.Services.Foundations
+namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public class TeamService : ITeamService
     {
@@ -22,6 +22,6 @@ namespace Tarteeb.Api.Services.Foundations
         }
 
         public async ValueTask<Team> AddTeamAsync(Team team) =>
-            await this.storageBroker.InsertTeamAsync(team);
+            await storageBroker.InsertTeamAsync(team);
     }
 }

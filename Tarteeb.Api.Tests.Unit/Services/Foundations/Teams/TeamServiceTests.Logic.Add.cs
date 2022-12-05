@@ -10,7 +10,7 @@ using Moq;
 using Tarteeb.Api.Models.Teams;
 using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests
     {

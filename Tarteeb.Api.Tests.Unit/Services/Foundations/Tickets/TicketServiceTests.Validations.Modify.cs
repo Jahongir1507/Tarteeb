@@ -8,7 +8,7 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exception;
+using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets

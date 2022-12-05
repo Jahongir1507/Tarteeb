@@ -38,7 +38,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         public ValueTask<Ticket> ModifyTicketAsync(Ticket ticket) =>
         TryCatch(async () =>
         {
-            ValidateTicketIsNotNull(ticket);
+            ValidateTicketNotNull(ticket);
             var maybeTicket = await this.storageBroker.SelectTicketByIdAsync(ticket.Id);
 
             return await this.storageBroker.UpdateTicketAsync(ticket);

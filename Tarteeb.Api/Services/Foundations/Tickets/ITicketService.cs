@@ -10,6 +10,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public interface ITicketService
     {
+        ValueTask<Ticket> AddTicketAsync(Ticket ticket);
         ValueTask<Ticket> ModifyTicketAsync(Ticket ticket);
     }
 }

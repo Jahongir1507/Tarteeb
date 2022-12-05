@@ -27,6 +27,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             this.loggingBroker = loggingBroker;
         }
 
+        public ValueTask<Ticket> AddTicketAsync(Ticket ticket) =>
+        TryCatch(async () =>
+        {
+            ValidateTicket(ticket);
+
+            return await this.storageBroker.InsertTicketAsync(ticket);
+        });
+
         public ValueTask<Ticket> ModifyTicketAsync(Ticket ticket) =>
         TryCatch(async () =>
         {

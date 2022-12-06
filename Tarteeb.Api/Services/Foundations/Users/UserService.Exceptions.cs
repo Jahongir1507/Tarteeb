@@ -45,13 +45,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
                 throw CreateAndDependencyValidationException(failedUserDependencyValidationException);
             }
-            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
-              var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
+                var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
 
-              throw CreateAndDependencyValidationException(lockedUserException);
+                throw CreateAndDependencyValidationException(lockedUserException);
             }
-            catch(Exception serviceException)
+            catch (Exception serviceException)
             {
                 var failedUserServiceException = new FailedUserServiceException(serviceException);
 
@@ -62,6 +62,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
             var userDependencyException = new UserDependencyException(exeption);
+
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
@@ -86,6 +87,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
             return userDependencyValidationException;
         }
+
         private UserServiceException CreateAndServiceException(Xeption exception)
         {
             var userServiceException = new UserServiceException(exception);

@@ -74,8 +74,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 Message = $"Date is not same as {secondDateName}"
             };
 
-
-
         private static void ValidateUserNotNull(User user)
         {
             if (user is null)

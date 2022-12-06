@@ -43,14 +43,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrentDateTime(), Times.Once);
-           
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
+                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogCritical(It.Is(SameExceptionAs(
-                expectedUserDependencyException))), Times.Once);
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedUserDependencyException))), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -86,10 +86,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.dateTimeBrokerMock.Verify(broker =>
                broker.GetCurrentDateTime(), Times.Once);
-            
+
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
-                  expectedUserDependencyValidationException))), Times.Once);
+                   expectedUserDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(
                 It.IsAny<User>()), Times.Never);
@@ -105,15 +105,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             //given
             User someUser = CreateRandomUser();
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
-
             var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
 
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(lockedUserException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-               broker.GetCurrentDateTime())
-                .Throws(dbUpdateConcurrencyException);
+                broker.GetCurrentDateTime())
+                    .Throws(dbUpdateConcurrencyException);
 
             //when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
@@ -158,7 +157,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             ValueTask<User> addUserTask =
                 this.userService.AddUserAsync(someUser);
 
-            UserServiceException actualUserServiceException=
+            UserServiceException actualUserServiceException =
                 await Assert.ThrowsAsync<UserServiceException>(addUserTask.AsTask);
 
             //then
@@ -168,7 +167,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
                   expectedUserServiceException))), Times.Once);
 
@@ -176,8 +175,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

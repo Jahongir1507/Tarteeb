@@ -9,7 +9,6 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Tickets;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -30,8 +29,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
-               broker.InsertUserAsync(inputUser))
-                .ReturnsAsync(persistedUser);
+                broker.InsertUserAsync(inputUser))
+                   .ReturnsAsync(persistedUser);
 
             //when
             User actualUser = await this.userService

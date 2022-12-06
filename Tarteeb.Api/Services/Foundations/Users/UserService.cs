@@ -3,15 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Users.Exceptions;
-using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {

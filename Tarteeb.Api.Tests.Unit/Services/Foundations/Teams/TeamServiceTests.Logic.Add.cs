@@ -24,8 +24,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Team expectedTeam = persistedTeam.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.InsertTeamAsync(inputTeam))
-                .ReturnsAsync(persistedTeam);
+                broker.InsertTeamAsync(inputTeam))
+                    .ReturnsAsync(persistedTeam);
 
             //when
             Team actuaTeam = await this.teamService
@@ -35,7 +35,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actuaTeam.Should().BeEquivalentTo(expectedTeam);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.InsertTeamAsync(inputTeam), Times.Once);
+                broker.InsertTeamAsync(inputTeam), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

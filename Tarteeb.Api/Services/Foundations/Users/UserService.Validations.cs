@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Reflection.Metadata;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 
@@ -22,7 +23,14 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+                
+                (Rule: IsNotSame(
+                    firstDate: user.CreatedDate,
+                    secondDate: user.UpdatedDate,
+                    secondDateName: nameof(User.UpdatedDate)),
+
+                    Parameter: nameof(User.CreatedDate)));       
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -42,6 +50,17 @@ namespace Tarteeb.Api.Services.Foundations.Users
             Condition = date == default,
             Message = "Value is required"
         };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
+
+       
 
         private static void ValidateUserNotNull(User user)
         {

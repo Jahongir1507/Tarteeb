@@ -8,6 +8,7 @@ using Moq;
 using System;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
@@ -20,17 +21,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IUserService userService;
 
         public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userService = new UserService(
-                this.storageBrokerMock.Object,
-                this.loggingBrokerMock.Object);
+               storageBroker: this.storageBrokerMock.Object,
+               dateTimeBroker: this.dateTimeBrokerMock.Object,
+               loggingBroker: this.loggingBrokerMock.Object);
         }
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
            actualException => actualException.SameExceptionAs(expectedException);

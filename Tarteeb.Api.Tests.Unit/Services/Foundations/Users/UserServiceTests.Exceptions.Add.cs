@@ -111,8 +111,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(lockedUserException);
 
-            this.storageBrokerMock.Setup(broker => broker.InsertUserAsync(It.IsAny<User>()))
-                .ThrowsAsync(dbUpdateConcurrencyException);
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTime())
+                .Throws(dbUpdateConcurrencyException);
 
             //when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
@@ -123,14 +124,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             //then
             actualUserDependencyValidationException.Should().BeEquivalentTo(expectedUserDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(It.IsAny<User>()), Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedUserDependencyValidationException))), Times.Once);
 
+            this.storageBrokerMock.Verify(broker => broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-
         }
 
         [Fact]

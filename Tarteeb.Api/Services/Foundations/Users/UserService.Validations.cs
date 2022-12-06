@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Reflection.Metadata;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 
@@ -12,7 +11,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
 {
     public partial class UserService
     {
-        private static void ValidateUser(User user)
+        private void ValidateUser(User user)
         {
             ValidateUserNotNull(user);
 
@@ -24,13 +23,28 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
                 (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
-                
+                (Rule: IsNotRecent(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+
                 (Rule: IsNotSame(
                     firstDate: user.CreatedDate,
                     secondDate: user.UpdatedDate,
                     secondDateName: nameof(User.UpdatedDate)),
 
-                    Parameter: nameof(User.CreatedDate)));       
+                    Parameter: nameof(User.CreatedDate)));
+        }
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -60,7 +74,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 Message = $"Date is not same as {secondDateName}"
             };
 
-       
+
 
         private static void ValidateUserNotNull(User user)
         {

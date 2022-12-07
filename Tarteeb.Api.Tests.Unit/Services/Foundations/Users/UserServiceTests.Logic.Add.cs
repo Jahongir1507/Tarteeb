@@ -43,7 +43,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-              broker.InsertUserAsync(inputUser), Times.Once);
+                broker.InsertUserAsync(inputUser), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

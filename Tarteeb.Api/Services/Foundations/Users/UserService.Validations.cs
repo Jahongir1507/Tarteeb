@@ -69,10 +69,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
-            {
-                Condition = firstDate != secondDate,
-                Message = $"Date is not same as {secondDateName}"
-            };
+        {
+            Condition = firstDate != secondDate,
+            Message = $"Date is not same as {secondDateName}"
+        };
 
         private static void ValidateUserNotNull(User user)
         {

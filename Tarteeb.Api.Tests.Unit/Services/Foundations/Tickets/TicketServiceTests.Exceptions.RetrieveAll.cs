@@ -49,5 +49,41 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+            var failedTicketServiceException= new FailedTicketServiceException(serviceException);
+
+            var expectedTicketServiceException =
+                new TicketServiceException(failedTicketServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllTickets())
+                    .Throws(serviceException);
+
+            // when
+            Action retrieveAllTicketAction = () =>
+                this.ticketService.RetrieveAllTickets();
+
+            // then
+            Assert.Throws<TicketServiceException> (retrieveAllTicketAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTickets(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketServiceException))),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

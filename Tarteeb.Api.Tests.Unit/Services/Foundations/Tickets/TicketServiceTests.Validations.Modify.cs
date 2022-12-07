@@ -6,7 +6,6 @@
 using FluentAssertions;
 using Moq;
 using System;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
@@ -116,7 +115,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))), 
+                broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

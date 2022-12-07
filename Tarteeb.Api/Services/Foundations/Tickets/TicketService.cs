@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -34,5 +35,10 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
             return await this.storageBroker.InsertTicketAsync(ticket);
         });
+
+        public IQueryable<Ticket> RetrieveAllTickets()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

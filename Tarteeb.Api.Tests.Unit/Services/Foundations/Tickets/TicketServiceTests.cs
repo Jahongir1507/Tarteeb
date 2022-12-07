@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -66,6 +67,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static IQueryable<Ticket> CreateRandomTickets()
+        {
+            return CreateTicketFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
 
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
             CreateTicketFiller(dates).Create();

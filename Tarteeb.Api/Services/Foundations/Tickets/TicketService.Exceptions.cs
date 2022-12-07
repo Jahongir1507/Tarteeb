@@ -75,9 +75,9 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             }
             catch (Exception serviException)
             {
-                var failedTicketServiceException = new FailedTicketServiceException(serviException);
+                var failedServiceTicketException = new FailedTicketServiceException(serviException);
 
-                throw CreateAndLogServiceException(failedTicketServiceException);
+                throw CreateAndLogServiceException(failedServiceTicketException);
             }
         }
 

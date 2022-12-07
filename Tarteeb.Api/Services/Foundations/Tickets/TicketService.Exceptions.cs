@@ -73,7 +73,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
                 throw CreateAndLogCriticalDependencyException(failedTicketServiceException);
             }
+            catch (Exception serviException)
+            {
+                var failedTicketServiceException = new FailedTicketServiceException(serviException);
 
+                throw CreateAndLogServiceException(failedTicketServiceException);
+            }
         }
 
         private Exception CreateAndLogServiceException(Xeption exception)

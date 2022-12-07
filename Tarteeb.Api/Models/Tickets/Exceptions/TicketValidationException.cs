@@ -1,4 +1,4 @@
-﻿//=================================
+//=================================
 // Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
 //=================================
@@ -10,8 +10,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class TicketValidationException : Xeption
     {
         public TicketValidationException(Xeption innerException)
-            :base(message:"Ticket validation errors occured, please try again",
-                 innerException)
+            : base(message: "Ticket validation error occured, fix the errors and try again.", innerException)
         { }
     }
 }

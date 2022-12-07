@@ -36,9 +36,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             return await this.storageBroker.InsertTicketAsync(ticket);
         });
 
-        public IQueryable<Ticket> RetrieveAllTickets()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Ticket> RetrieveAllTickets() =>
+            this.storageBroker.SelectAllTickets();
     }
 }

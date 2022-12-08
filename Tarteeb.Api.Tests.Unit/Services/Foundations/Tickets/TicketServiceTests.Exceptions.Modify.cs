@@ -127,6 +127,5 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
-
     }
 }

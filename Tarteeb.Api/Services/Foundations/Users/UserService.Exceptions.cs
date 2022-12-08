@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xeptions;
@@ -17,12 +18,15 @@ namespace Tarteeb.Api.Services.Foundations.Users
     public partial class UserService
     {
         private delegate ValueTask<User> ReturningUserFunction();
+        private delegate IQueryable<User> ReturningUsersFunction();
 
         private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
+        private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
         {
             try
             {
                 return await returningUserFunction();
+                return returningUsersFunction();
             }
             catch (NullUserException nullUserException)
             {
@@ -34,10 +38,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
             catch (SqlException sqlException)
             {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
                 var failedUserStorageException = new FailedUserStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (Exception exception)
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
@@ -53,20 +60,26 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
             catch (Exception serviceException)
             {
+                var failedUserServiceException =
+                    new FailedUserServiceException(exception);
                 var failedUserServiceException = new FailedUserServiceException(serviceException);
 
                 throw CreateAndServiceException(failedUserServiceException);
+                throw CreateAndLogServiceException(failedUserServiceException);
             }
         }
 
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
+            var userDependencyException = new UserDependencyException(exception);
             var userDependencyException = new UserDependencyException(exeption);
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
         }
 
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
         private UserValidationException CreateAndLogValidationException(Xeption exception)
         {
             var userValidationException =
@@ -79,6 +92,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
+            var userServiceException =
+                new UserServiceException(exception);
             var userDependencyValidationException =
                 new UserDependencyValidationException(exception);
 

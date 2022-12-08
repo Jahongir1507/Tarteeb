@@ -4,12 +4,14 @@
 //=================================
 
 using System.Threading.Tasks;
+using System.Linq;
 using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
     public interface IUserService
     {
+        IQueryable<User> RetrieveAllUsers();
         ValueTask<User> AddUserAsync(User user);
     }
 }

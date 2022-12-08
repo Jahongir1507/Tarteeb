@@ -6,6 +6,7 @@
 using Microsoft.Data.SqlClient;
 using Moq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tarteeb.Api.Brokers.DateTimes;
@@ -22,6 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IUserService userService;
@@ -29,11 +31,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userService = new UserService(
-               storageBroker: this.storageBrokerMock.Object,
+                storageBroker: this.storageBrokerMock.Object,
                dateTimeBroker: this.dateTimeBrokerMock.Object,
                loggingBroker: this.loggingBrokerMock.Object);
         }
@@ -46,6 +49,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             int secondsInFuture = new IntRange(
                 min: 0,
                 max: short.MaxValue).GetValue();
+        private static IQueryable<User> CreateRandomUser() =>
+            CreateUserFiller().Create(count: GetRandomNumber()).AsQueryable();
 
             return new TheoryData<int>
             {
@@ -53,31 +58,39 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 secondsInFuture
             };
         }
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
-           actualException => actualException.SameExceptionAs(expectedException);
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static string GetRandomString() =>
-            new MnemonicString().GetValue();
+             new MnemonicString().GetValue();
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static User CreateRandomUser() =>
             CreateUserFiller(GetRandomDateTime()).Create();
+        private static int GetRandomNumber() =>
+           new IntRange(min: 2, max: 10).GetValue();
 
         private static User CreateRandomUser(DateTimeOffset dates) =>
             CreateUserFiller(dates).Create();
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+        private static Filler<User> CreateUserFiller()
         private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {
             var filler = new Filler<User>();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);
+                .OnType<DateTimeOffset>().Use(GetRandomDateTimeOffset());
 
             return filler;
         }

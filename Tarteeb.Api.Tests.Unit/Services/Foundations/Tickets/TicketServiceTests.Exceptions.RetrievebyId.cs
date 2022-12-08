@@ -55,5 +55,48 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedTicketServiceException =
+                new FailedTicketServiceException(serviceException);
+
+            var expectedTicketServiceExcpetion =
+                new TicketServiceException(failedTicketServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
+                .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<Ticket> retrieveCommentByIdTask =
+            this.ticketService.RetrieveTicketByIdAsync(someId);
+
+            TicketServiceException actualCommentServiceException =
+                await Assert.ThrowsAsync<TicketServiceException>(
+                    retrieveCommentByIdTask.AsTask);
+
+            // then
+            actualCommentServiceException.Should().BeEquivalentTo(
+                expectedTicketServiceExcpetion);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedTicketServiceExcpetion))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

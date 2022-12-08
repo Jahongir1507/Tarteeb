@@ -10,8 +10,6 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
     public class TeamValidationException : Xeption
     {
         public TeamValidationException(Xeption innerException)
-            : base(message: "Team validation error occured, fix the errors and try again.",
-                  innerException)
             : base(message: "Team validation error occured, fix the errors and try again.", innerException)
         { }
     }

@@ -5,6 +5,8 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -40,6 +42,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
         private static Team CreateRandomTeam() =>
             CreateTeamFiller().Create();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Filler<Team> CreateTeamFiller()
         {

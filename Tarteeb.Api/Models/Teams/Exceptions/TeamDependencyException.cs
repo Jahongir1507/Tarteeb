@@ -7,11 +7,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class TeamValidationException : Xeption
+    public class TeamDependencyException : Xeption
     {
-        public TeamValidationException(Xeption innerException)
-            : base(message: "Team validation error occured, fix the errors and try again.",
-                  innerException)
+        public TeamDependencyException(Xeption innerException)
+            :base(message: "Team dependency error occurred, contact support.",innerException)
         { }
     }
 }

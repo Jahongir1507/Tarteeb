@@ -47,7 +47,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTicketValidationException))),
-                    Times.Once());
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>()),

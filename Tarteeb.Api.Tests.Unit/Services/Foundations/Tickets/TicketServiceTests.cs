@@ -63,7 +63,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static string GetRandomMessage() =>
-            new MnemonicString(wordCount:GetRandomNumber()).GetValue();
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
@@ -74,8 +74,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static IQueryable<Ticket> CreateRandomTickets()
         {
             return CreateTicketFiller(dates: GetRandomDateTime())
-                .Create(count: GetRandomNumber())
-                    .AsQueryable();
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
 
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>

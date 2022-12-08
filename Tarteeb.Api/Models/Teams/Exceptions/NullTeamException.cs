@@ -9,8 +9,9 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
 {
     public class NullTeamException : Xeption
     {
-        public NullTeamException(): 
+        public NullTeamException() :
             base(message: "Team is null.")
+        public NullTeamException() : base(message: "Team is null.")
         {}
     }
 }

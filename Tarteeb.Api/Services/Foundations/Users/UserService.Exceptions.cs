@@ -7,8 +7,8 @@ using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xeptions;
@@ -21,12 +21,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private delegate IQueryable<User> ReturningUsersFunction();
 
         private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
-        private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
         {
             try
             {
                 return await returningUserFunction();
-                return returningUsersFunction();
             }
             catch (NullUserException nullUserException)
             {
@@ -40,11 +38,9 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 var failedUserStorageException =
                     new FailedUserStorageException(sqlException);
-                var failedUserStorageException = new FailedUserStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
-            catch (Exception exception)
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
@@ -61,25 +57,34 @@ namespace Tarteeb.Api.Services.Foundations.Users
             catch (Exception serviceException)
             {
                 var failedUserServiceException =
-                    new FailedUserServiceException(exception);
-                var failedUserServiceException = new FailedUserServiceException(serviceException);
+                    new FailedUserServiceException(serviceException);
 
-                throw CreateAndServiceException(failedUserServiceException);
                 throw CreateAndLogServiceException(failedUserServiceException);
             }
         }
 
-        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
-        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
+        private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
         {
-            var userDependencyException = new UserDependencyException(exception);
-            var userDependencyException = new UserDependencyException(exeption);
-            this.loggingBroker.LogCritical(userDependencyException);
+            try
+            {
+                return returningUsersFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
 
-            return userDependencyException;
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedUserServiceException);
+            }
         }
 
-        private UserServiceException CreateAndLogServiceException(Xeption exception)
         private UserValidationException CreateAndLogValidationException(Xeption exception)
         {
             var userValidationException =
@@ -88,6 +93,24 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
+        {
+            var userDependencyException = new UserDependencyException(exeption);
+            this.loggingBroker.LogCritical(userDependencyException);
+
+            return userDependencyException;
+        }
+
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userServiceException =
+                new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
 
         private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
@@ -102,12 +125,5 @@ namespace Tarteeb.Api.Services.Foundations.Users
             return userDependencyValidationException;
         }
 
-        private UserServiceException CreateAndServiceException(Xeption exception)
-        {
-            var userServiceException = new UserServiceException(exception);
-            this.loggingBroker.LogError(userServiceException);
-
-            return userServiceException;
-        }
     }
 }

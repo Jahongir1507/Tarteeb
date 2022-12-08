@@ -15,8 +15,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
     public partial class UserService : IUserService
     {
         private readonly IStorageBroker storageBroker;
-        private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
 
         public UserService(
             IStorageBroker storageBroker,
@@ -38,6 +38,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
          });
 
         public IQueryable<User> RetrieveAllUsers() =>
-            TryCatch(() => this.storageBroker.SelectAllUsers());
+        TryCatch(() => this.storageBroker.SelectAllUsers());
     }
 }

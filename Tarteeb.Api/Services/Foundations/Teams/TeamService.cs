@@ -27,6 +27,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             TryCatch(async () =>
             {
                 ValidateTeamNotNull(team);
+                ValidateTeam(team);
 
                 return await storageBroker.InsertTeamAsync(team);
             });

@@ -45,5 +45,63 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnAddIfTeamIsInvalidAndLogItAsync(
+            string invalidString)
+        {
+            //given 
+            Team invalidTeam = new Team
+            {
+                TeamName = invalidString
+            };
+
+            var invalidTeamException = new InvalidTeamException();
+
+            invalidTeamException.AddData(
+                key: nameof(Team.Id),
+                values: "Id is required");
+
+            invalidTeamException.AddData(
+                key: nameof(Team.TeamName),
+                values: "TeamName is required");
+
+            invalidTeamException.AddData(
+                key: nameof(Team.CreatedDate),
+                values: "CreatedDate is required");
+
+            invalidTeamException.AddData(
+                key: nameof(Team.UpdatedDate),
+                values: "UpdatedDate is required");
+
+            var expectedTeamValidationException = 
+                new TeamValidationException(invalidTeamException);
+
+            //when
+
+            ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(invalidTeam);
+
+            TeamValidationException actualTeamValidationException =
+                await Assert.ThrowsAsync<TeamValidationException>(addTeamTask.AsTask);
+
+            //then
+            actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+
+            this.loggingBrokerMock.Verify(broker=>
+                broker.LogError(
+                    It.Is(SameExceptionAs(expectedTeamValidationException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker=>
+                broker.InsertTeamAsync(
+                    It.IsAny<Team>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

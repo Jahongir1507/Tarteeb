@@ -35,8 +35,16 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
             return await this.storageBroker.InsertTicketAsync(ticket);
         });
-        
-        public async ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
-          await storageBroker.SelectTicketByIdAsync(ticketId);
+
+        public ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
+        TryCatch(async () =>
+        {
+            ValidateTicketId(ticketId);
+
+            Ticket maybeTicket = 
+                await this.storageBroker.SelectTicketByIdAsync(ticketId);
+
+            return maybeTicket;
+        });
     }
 }

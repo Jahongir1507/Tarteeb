@@ -62,6 +62,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(
+                key: nameof(User.Id),
+                values: "Id is required");
+
+            invalidUserException.AddData(
                 key: nameof(User.FirstName),
                 values: "Text is required");
 
@@ -70,11 +74,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 values: "Text is required");
 
             invalidUserException.AddData(
-                key: nameof(User.Id),
-                values: "Id is required");
+                key: nameof(User.Email),
+                values: "Text is required");
 
             invalidUserException.AddData(
-                key: nameof(User.UpdatedDate),
+                key: nameof(User.BirthDate),
                 values: "Value is required");
 
             invalidUserException.AddData(
@@ -82,12 +86,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 values: "Value is required");
 
             invalidUserException.AddData(
-                key: nameof(User.BirthDate),
+                key: nameof(User.UpdatedDate),
                 values: "Value is required");
-
-            invalidUserException.AddData(
-                key: nameof(User.Email),
-                values: "Text is required");
 
             var expectedUserValidationException = new UserValidationException(
                 invalidUserException);

@@ -40,10 +40,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                var failedUserDependencyValidationException =
-                    new FailedUserDependencyValidationException(duplicateKeyException);
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
 
-                throw CreateAndDependencyValidationException(failedUserDependencyValidationException);
+                throw CreateAndDependencyValidationException(alreadyExistsUserException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
@@ -62,7 +62,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
             var userDependencyException = new UserDependencyException(exeption);
-
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
@@ -91,7 +90,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private UserServiceException CreateAndServiceException(Xeption exception)
         {
             var userServiceException = new UserServiceException(exception);
-
             this.loggingBroker.LogError(userServiceException);
 
             return userServiceException;

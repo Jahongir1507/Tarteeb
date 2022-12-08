@@ -65,11 +65,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             string someMessage = GetRandomString();
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
-            var failedUserDependencyValidationException =
-                new FailedUserDependencyValidationException(duplicateKeyException);
+            var alreadyExistsUserException =
+                new AlreadyExistsUserException(duplicateKeyException);
 
             var expectedUserDependencyValidationException =
-                new UserDependencyValidationException(failedUserDependencyValidationException);
+                new UserDependencyValidationException(alreadyExistsUserException);
 
             this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(duplicateKeyException);
@@ -150,8 +150,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserServiceException(failedUserServiceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).
-                    Throws(serviceException);
+                broker.GetCurrentDateTime())
+                    .Throws(serviceException);
 
             //when
             ValueTask<User> addUserTask =

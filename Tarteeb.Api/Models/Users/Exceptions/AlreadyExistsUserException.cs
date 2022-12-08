@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class UserDependencyValidationException : Xeption
+    public partial class AlreadyExistsUserException : Xeption
     {
-        public UserDependencyValidationException(Xeption innerException)
-            : base(message: "User dependency validation error occurred, fix the error and try again ", innerException)
+        public AlreadyExistsUserException(Exception innerException)
+            : base(message: "Failed user dependency validation error occurred, fix errors and try again.", innerException) 
         { }
     }
 }

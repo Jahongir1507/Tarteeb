@@ -28,7 +28,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         }
 
         public ValueTask<User> AddUserAsync(User user) =>
-         TryCatch(async () =>
+        TryCatch(async () =>
          {
              ValidateUserNotNull(user);
              ValidateUser(user);

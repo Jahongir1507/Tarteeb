@@ -38,6 +38,13 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
                 throw CreateAndLogCriticalDependencyException(failedTicketStorageException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidTicketReferenceException =
+                    new InvalidTicketReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndDependencyValidationException(invalidTicketReferenceException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var failedTicketDependencyValidationException =
@@ -54,7 +61,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             catch (Exception serviceException)
             {
                 var failedServiceProfileException = new FailedTicketServiceException(serviceException);
-
+                
                 throw CreateAndLogServiceException(failedServiceProfileException);
             }
         }

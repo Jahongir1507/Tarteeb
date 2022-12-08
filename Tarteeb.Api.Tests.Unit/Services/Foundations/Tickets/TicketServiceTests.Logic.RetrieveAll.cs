@@ -22,8 +22,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             IQueryable<Ticket> expectedTickets = storageTickets;
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectAllTickets())
-                .Returns(storageTickets);
+                broker.SelectAllTickets()).Returns(storageTickets);
 
             // when
             IQueryable<Ticket> actualTicket =
@@ -33,11 +32,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicket.Should().BeEquivalentTo(expectedTickets);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllTickets(),
-                    Times.Once);  
+                broker.SelectAllTickets(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -19,14 +19,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         {
             // given
             SqlException sqlException = CreateSqlException();
-            var failedTicketServiceException= new FailedTicketServiceException(sqlException);
-            
+            var failedTicketServiceException = new FailedTicketServiceException(sqlException);
+
             var expectedTicketDependencyException =
                 new TicketDependencyException(failedTicketServiceException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectAllTickets())
-                    .Throws(sqlException);
+                broker.SelectAllTickets()).Throws(sqlException);
 
             // when
             Action retrieveAllTicketAction = () =>
@@ -39,7 +38,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicketDependencyException.Should().BeEquivalentTo(expectedTicketDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllTickets());
+                broker.SelectAllTickets(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(expectedTicketDependencyException))),
@@ -56,30 +55,27 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             // given
             string exceptionMessage = GetRandomMessage();
             var serviceException = new Exception(exceptionMessage);
-            var failedTicketServiceException= new FailedTicketServiceException(serviceException);
+            var failedTicketServiceException = new FailedTicketServiceException(serviceException);
 
             var expectedTicketServiceException =
                 new TicketServiceException(failedTicketServiceException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectAllTickets())
-                    .Throws(serviceException);
+                broker.SelectAllTickets()).Throws(serviceException);
 
             // when
             Action retrieveAllTicketAction = () =>
                 this.ticketService.RetrieveAllTickets();
 
             // then
-            Assert.Throws<TicketServiceException> (retrieveAllTicketAction);
+            Assert.Throws<TicketServiceException>(retrieveAllTicketAction);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllTickets(),
-                    Times.Once);
+                broker.SelectAllTickets(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketServiceException))),
-                    Times.Once);
+                    expectedTicketServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

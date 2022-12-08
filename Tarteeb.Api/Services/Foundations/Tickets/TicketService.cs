@@ -37,9 +37,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         });
 
         public IQueryable<Ticket> RetrieveAllTickets() =>
-        TryCatch(() =>
-        {
-            return this.storageBroker.SelectAllTickets();
-        });
+        TryCatch(() => this.storageBroker.SelectAllTickets());
     }
 }

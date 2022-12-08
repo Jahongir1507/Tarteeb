@@ -32,6 +32,10 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw CreateAndLogValidationException(invalidTicketException);
             }
+            catch(NotFoundTicketException notfoundTicketException)
+            {
+                throw CreateAndLogValidationException(notfoundTicketException);
+            }
             catch (SqlException sqlException)
             {
                 var failedTicketStorageException = new FailedTicketStorageException(sqlException);

@@ -38,6 +38,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
         private void ValidateTicketId(Guid ticketId) =>
             Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
+
+        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
+        {
+            if(maybeTicket is null)
+            {
+                throw new NotFoundTicketException(ticketId);
+            }
+        }
  
         private static dynamic IsInvalid(Guid id) => new
         {

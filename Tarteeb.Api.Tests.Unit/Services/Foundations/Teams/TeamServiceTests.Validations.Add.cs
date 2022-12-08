@@ -95,7 +95,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     It.Is(SameExceptionAs(expectedTeamValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeamAsync(
                     It.IsAny<Team>()),
                     Times.Never);

@@ -81,9 +81,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             Message = "Date is not recent"
         };
 
-
-
-
         private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();

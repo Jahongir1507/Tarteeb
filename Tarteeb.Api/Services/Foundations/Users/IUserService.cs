@@ -3,13 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-namespace Tarteeb.Api.Models.Tickets
+using System.Linq;
+using Tarteeb.Api.Models;
+
+namespace Tarteeb.Api.Services.Foundations.Users
 {
-    public enum TicketStatus
+    public interface IUserService
     {
-        UNKNOWN,
-        TODO,
-        INPROGRESS,
-        DONE
+        IQueryable<User> RetrieveAllUsers();
     }
 }

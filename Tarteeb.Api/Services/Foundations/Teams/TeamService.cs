@@ -29,7 +29,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 ValidateTeamNotNull(team);
                 ValidateTeam(team);
 
-                return await storageBroker.InsertTeamAsync(team);
+                return await this.storageBroker.InsertTeamAsync(team);
             });
     }
 }

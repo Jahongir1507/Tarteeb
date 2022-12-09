@@ -3,6 +3,8 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Data.SqlClient;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -28,6 +30,17 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 throw CreateAndLogValidationException(invalidTeamException);
             }
+            catch(SqlException sqlException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(sqlException);
+
+                throw CreateAndLogValidationException(sqlException);
+            }
+        }
+
+        private Exception CreateAndLogValidationException(SqlException sqlException)
+        {
+            throw new NotImplementedException();
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)
@@ -36,6 +49,14 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             this.loggingBroker.LogError(teamValidationExpcetion);
 
             return teamValidationExpcetion;
+        }
+
+        private TeamDependencyException CreatAndLogCriticalDepencyException(Xeption exception)
+        {
+            var teamDependencyException = new TeamDependencyException(exception);
+            this.loggingBroker.LogCritical(teamDependencyException);
+
+            return teamDependencyException;
         }
     }
 }

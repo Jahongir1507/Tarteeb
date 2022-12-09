@@ -1,5 +1,4 @@
-﻿//=================================
-// Copyright (c) Coalition of Good-Hearted Engineers
+﻿// Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
 //===============================
 
@@ -40,11 +39,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private static Team CreateRandomTeam() =>
-            CreateTeamFiller().Create();
-
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static Team CreateRandomTeam() =>
+            CreateTeamFiller().Create();
 
         private static Filler<Team> CreateTeamFiller()
         {

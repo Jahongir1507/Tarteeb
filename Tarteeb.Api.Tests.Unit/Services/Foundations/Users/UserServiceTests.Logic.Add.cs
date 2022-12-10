@@ -33,8 +33,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                    .ReturnsAsync(persistedUser);
 
             //when
-            User actualUser = await this.userService
-                .AddUserAsync(inputUser);
+            User actualUser = await this.userService.AddUserAsync(inputUser);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);

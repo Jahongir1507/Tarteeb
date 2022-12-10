@@ -115,8 +115,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private UserDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
-            var userServiceException =
-                new UserServiceException(exception);
             var userDependencyValidationException =
                 new UserDependencyValidationException(exception);
 
@@ -124,6 +122,5 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
             return userDependencyValidationException;
         }
-
     }
 }

@@ -15,8 +15,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
     public partial class UserService : IUserService
     {
         private readonly IStorageBroker storageBroker;
-        private readonly ILoggingBroker loggingBroker;
         private readonly IDateTimeBroker dateTimeBroker;
+        private readonly ILoggingBroker loggingBroker;
 
         public UserService(
             IStorageBroker storageBroker,
@@ -30,14 +30,19 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         public ValueTask<User> AddUserAsync(User user) =>
         TryCatch(async () =>
-         {
-             ValidateUserNotNull(user);
-             ValidateUser(user);
+        {
+            NotNullValidateUser(user);
 
-             return await this.storageBroker.InsertUserAsync(user);
-         });
+            return await this.storageBroker.InsertUserAsync(user);
+        });
 
         public IQueryable<User> RetrieveAllUsers() =>
         TryCatch(() => this.storageBroker.SelectAllUsers());
+
+        private void NotNullValidateUser(User user)
+        {
+            ValidateUserNotNull(user);
+            ValidateUser(user);
+        }
     }
 }

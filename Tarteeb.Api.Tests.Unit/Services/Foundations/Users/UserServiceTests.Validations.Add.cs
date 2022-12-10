@@ -59,6 +59,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             {
                 FirstName = invalidString
             };
+
             var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(

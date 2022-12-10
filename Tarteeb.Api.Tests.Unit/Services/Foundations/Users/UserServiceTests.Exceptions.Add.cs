@@ -30,8 +30,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserDependencyException(failedUserStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).
-                    Throws(sqlException);
+                broker.GetCurrentDateTime())
+                    .Throws(sqlException);
 
             //when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
@@ -45,16 +45,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedUserDependencyException))), Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]

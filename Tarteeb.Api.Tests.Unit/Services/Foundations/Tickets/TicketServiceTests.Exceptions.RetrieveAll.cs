@@ -67,8 +67,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             Action retrieveAllTicketAction = () =>
                 this.ticketService.RetrieveAllTickets();
 
+            TicketServiceException actualTicketServiceException =
+                Assert.Throws<TicketServiceException>(retrieveAllTicketAction);
+
             // then
-            Assert.Throws<TicketServiceException>(retrieveAllTicketAction);
+            actualTicketServiceException.Should().BeEquivalentTo(expectedTicketServiceException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllTickets(), Times.Once);

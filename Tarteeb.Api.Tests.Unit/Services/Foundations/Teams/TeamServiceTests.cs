@@ -13,6 +13,7 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Teamss;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -33,13 +34,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.teamService = new TeamService(
-                storageBroker: this.storageBrokerMock.Object);
+                  storageBroker: this.storageBrokerMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
         private static IQueryable<Team> CreateRandomTeam() =>
             CreateTeamFiller().Create(count: GetRandomNumber()).AsQueryable();
 
-        private static SqlException GetSqlException() =>
+        private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

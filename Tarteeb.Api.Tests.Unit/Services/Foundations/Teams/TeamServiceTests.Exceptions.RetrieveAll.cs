@@ -1,12 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using Microsoft.Data.SqlClient;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tarteeb.Api.Models.Teams.Excaptions;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Teams.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
@@ -17,10 +17,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
         public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
         {
             //given
-            SqlException sqlException = GetSqlException();
+            SqlException sqlException = CreateSqlException();
 
             var failedTeamStorageException =
-                new FaildTeamStorageException(sqlException);
+                new FailedTeamStorageException(sqlException);
 
             var expectedTeamDependencyException =
                 new TeamDependencyException(failedTeamStorageException);
@@ -36,12 +36,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
             //then
             Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
 
+            this.storageBrokerMock.Verify(broker =>
+              broker.SelectAllTeams());
+
             this.loggingBrokerMock.Verify(broker =>
                  broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

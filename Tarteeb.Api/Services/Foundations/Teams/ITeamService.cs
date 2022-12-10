@@ -6,10 +6,10 @@
 using System.Linq;
 using Tarteeb.Api.Models.Teams;
 
-namespace Tarteeb.Api.Services.Foundations.Teamss
+namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public interface ITeamService
     {
-        IQueryable<Team>RetrieveAllTeams(); 
+        IQueryable<Team> RetrieveAllTeams();
     }
 }

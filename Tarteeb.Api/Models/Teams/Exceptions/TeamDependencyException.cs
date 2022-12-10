@@ -5,7 +5,7 @@
 
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Teams.Excaptions
+namespace Tarteeb.Api.Models.Teams.Exceptions
 {
     public class TeamDependencyException: Xeption
     {

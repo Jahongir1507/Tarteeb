@@ -6,11 +6,11 @@
 using System;
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Teams.Excaptions
+namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class FaildTeamStorageException: Xeption
+    public class FailedTeamStorageException: Xeption
     {
-        public FaildTeamStorageException(Exception innerException)
+        public FailedTeamStorageException(Exception innerException)
         : base(message: "Failed ticket storage error occurred, contact support.", innerException)
         { }
     }

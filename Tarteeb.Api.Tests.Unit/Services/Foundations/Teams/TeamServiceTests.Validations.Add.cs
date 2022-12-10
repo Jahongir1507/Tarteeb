@@ -71,11 +71,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             invalidTeamException.AddData(
                 key: nameof(Team.CreatedDate),
-                values: "CreatedDate is required");
+                values: "Value is required");
 
             invalidTeamException.AddData(
                 key: nameof(Team.UpdatedDate),
-                values: "UpdatedDate is required");
+                values: "Value is required");
 
             var expectedTeamValidationException = 
                 new TeamValidationException(invalidTeamException);

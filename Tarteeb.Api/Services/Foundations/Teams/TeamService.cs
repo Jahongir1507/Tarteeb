@@ -24,12 +24,12 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         }
 
         public ValueTask<Team> AddTeamAsync(Team team) =>
-            TryCatch(async () =>
+           TryCatch(async () =>
             {
-                ValidateTeamNotNull(team);
-                ValidateTeam(team);
+               ValidateTeamNotNull(team);
+               ValidateTeam(team);
 
-                return await this.storageBroker.InsertTeamAsync(team);
+               return await this.storageBroker.InsertTeamAsync(team);
             });
     }
 }

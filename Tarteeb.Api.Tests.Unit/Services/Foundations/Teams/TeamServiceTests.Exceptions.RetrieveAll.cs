@@ -47,5 +47,40 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            //given
+            string exceptionMessage = GetRandomString();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedTeamServiceException =
+               new FailedTeamServiceException(serviceException);
+
+            var expectedteamServiceException =
+                new TeamServiceException(failedTeamServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllTeams()).Throws(serviceException);
+
+            //when
+            Action retrieveAllTeamAction = () =>
+                this.teamService.RetrieveAllTeams();
+
+            //then
+            Assert.Throws<TeamServiceException>(retrieveAllTeamAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTeams(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedteamServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

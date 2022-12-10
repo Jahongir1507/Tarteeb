@@ -6,12 +6,12 @@
 using System;
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Users.Exceptions
+namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class FailedTeamServiceException : Xeption
+    public class FailedTeamServiceException: Xeption
     {
         public FailedTeamServiceException(Exception innerException)
-        : base(message: "User service error occurred, contact support.", innerException)
+        : base(message: "Team service error occurred, contact support.", innerException)
         { }
     }
 }

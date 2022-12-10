@@ -56,7 +56,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var serviceException = new Exception(exceptionMessage);
 
             var failedUserServiceException =
-                new FailedUserServiceException(serviceException);
+                new FailedTeamServiceException(serviceException);
 
             var expecteduserServiceException =
                 new UserServiceException(failedUserServiceException);

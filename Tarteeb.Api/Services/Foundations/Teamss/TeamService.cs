@@ -16,9 +16,8 @@ namespace Tarteeb.Api.Services.Foundations.Teamss
         {
             this.storageBroker = storageBroker;
         }
-        public IQueryable<Team> RetrieveAllTeams()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Team> RetrieveAllTeams() =>
+            this.storageBroker.SelectAllTeams();
+        
     }
 }

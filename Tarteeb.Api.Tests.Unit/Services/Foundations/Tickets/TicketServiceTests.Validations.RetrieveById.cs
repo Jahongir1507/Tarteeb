@@ -38,20 +38,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 this.ticketService.RetrieveTicketByIdAsync(invalidTicketId);
 
             TicketValidationException actualTicketValidationException =
-                await Assert.ThrowsAsync<TicketValidationException>(
-                    retrieveTicketByIdTask.AsTask);
+                await Assert.ThrowsAsync<TicketValidationException>(retrieveTicketByIdTask.AsTask);
 
             //then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketValidationException))),
-                    Times.Once);
+                    expectedTicketValidationException))),Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),
-                Times.Never);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -71,8 +68,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketValidationException(notFoundTicketValidationException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(noTicket);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTicket);
 
             //when
             ValueTask<Ticket> retrieveByIdTicketTask =

@@ -3,11 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
@@ -30,16 +30,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketDependencyException(failedTicketStorageException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
-                .ThrowsAsync(sqlException);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ThrowsAsync(sqlException);
 
             //when
             ValueTask<Ticket> retrieveTicketByIdTask =
                 this.ticketService.RetrieveTicketByIdAsync(someId);
 
             TicketDependencyException actualTicketDependencyException =
-                await Assert.ThrowsAsync<TicketDependencyException>(
-                    retrieveTicketByIdTask.AsTask);
+                await Assert.ThrowsAsync<TicketDependencyException>(retrieveTicketByIdTask.AsTask);
 
             //then
             actualTicketDependencyException.Should().BeEquivalentTo(expectedTicketDependencyException);
@@ -70,29 +68,24 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketServiceException(failedTicketServiceException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
-                .ThrowsAsync(serviceException);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
 
             //when
-            ValueTask<Ticket> retrieveCommentByIdTask =
+            ValueTask<Ticket> retrieveTicketById =
             this.ticketService.RetrieveTicketByIdAsync(someId);
 
             TicketServiceException actualCommentServiceException =
-                await Assert.ThrowsAsync<TicketServiceException>(
-                    retrieveCommentByIdTask.AsTask);
+                await Assert.ThrowsAsync<TicketServiceException>(retrieveTicketById.AsTask);
 
             // then
-            actualCommentServiceException.Should().BeEquivalentTo(
-                expectedTicketServiceExcpetion);
+            actualCommentServiceException.Should().BeEquivalentTo(expectedTicketServiceExcpetion);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),
-                    Times.Once);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
-                   expectedTicketServiceExcpetion))),
-                        Times.Once);
+                   expectedTicketServiceExcpetion))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

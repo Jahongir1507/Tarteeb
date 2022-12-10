@@ -26,8 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             Ticket expectedTicket = storedTicket.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-              broker.SelectTicketByIdAsync(randomTicketId))
-                .ReturnsAsync(storedTicket);
+              broker.SelectTicketByIdAsync(randomTicketId)).ReturnsAsync(storedTicket);
 
             //when
             Ticket actualTicket =
@@ -37,11 +36,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicket.Should().BeEquivalentTo(expectedTicket);
 
             this.storageBrokerMock.Verify(broker => 
-                broker.SelectTicketByIdAsync(inputTicketId),
-                Times.Once);
+                broker.SelectTicketByIdAsync(inputTicketId),Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

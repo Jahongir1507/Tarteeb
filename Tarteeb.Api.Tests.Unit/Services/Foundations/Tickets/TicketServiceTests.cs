@@ -98,6 +98,4 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             return filler;
         }
     }
- 
 }
-

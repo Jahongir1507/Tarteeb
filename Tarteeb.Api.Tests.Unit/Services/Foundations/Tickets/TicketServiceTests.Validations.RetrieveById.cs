@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfNotFoundAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfTicketNotFoundAndLogItAsync()
         {
             //given
             Guid someTicketId = Guid.NewGuid();

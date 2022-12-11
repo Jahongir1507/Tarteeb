@@ -4,6 +4,7 @@
 //=================================
 
 using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -29,5 +30,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         public IQueryable<User> RetrieveAllUsers() =>
             TryCatch(() => this.storageBroker.SelectAllUsers());
+        
+        public ValueTask<User>ModifyUserAsync(User user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

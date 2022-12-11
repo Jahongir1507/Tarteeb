@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -33,6 +34,19 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             ValidateTicket(ticket);
 
             return await this.storageBroker.InsertTicketAsync(ticket);
+        });
+
+        public ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
+        TryCatch(async () =>
+        {
+            ValidateTicketId(ticketId);
+
+            Ticket maybeTicket = 
+                await this.storageBroker.SelectTicketByIdAsync(ticketId);
+
+            ValidateStorageTicket(maybeTicket, ticketId);
+
+            return maybeTicket;
         });
     }
 }

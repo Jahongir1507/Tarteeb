@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 
@@ -35,6 +36,17 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Parameter: nameof(Ticket.CreatedDate)));
         }
 
+        private void ValidateTicketId(Guid ticketId) =>
+            Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
+
+        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
+        {
+            if(maybeTicket is null)
+            {
+                throw new NotFoundTicketException(ticketId);
+            }
+        }
+ 
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

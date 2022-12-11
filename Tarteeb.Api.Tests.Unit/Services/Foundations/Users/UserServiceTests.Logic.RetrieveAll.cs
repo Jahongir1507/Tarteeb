@@ -22,7 +22,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             IQueryable<User> expectedUser = storageUsers;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllUsers()).Returns(storageUsers);
+                broker.SelectAllUsers()).Returns(storageUsers);
 
             //when
             IQueryable<User> actualUser = this.userService.RetrieveAllUsers();

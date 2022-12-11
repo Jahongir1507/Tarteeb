@@ -16,6 +16,7 @@ using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -45,8 +46,29 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                     .AsQueryable();
         } 
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
+        private static User CreateRandomUser() =>
+            CreateUserFiller(dates: GetRandomDateTime()).Create();
+
         private static User CreateRandomUser(DateTimeOffset dates) =>
             CreateUserFiller(dates).Create();
+
         private static int GetRandomNegativeNumber() =>
             -1 * new IntRange(min: 2, max: 10).GetValue();
 
@@ -61,14 +83,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             return randomUser;
         }
 
-        private static SqlException CreateSqlException() =>
-            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
-
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
         private static string GetRandomString() =>
              new MnemonicString().GetValue();
+
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();

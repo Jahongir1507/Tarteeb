@@ -5,17 +5,17 @@
 
 using System;
 using System.Linq.Expressions;
+using Moq;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
-using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tynamix.ObjectFiller;
-using Xeptions;
 using Xunit;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {

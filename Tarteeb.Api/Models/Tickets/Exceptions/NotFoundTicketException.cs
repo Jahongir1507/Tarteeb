@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Tickets.Exceptions
 {
-    public class TicketDependencyValidationException : Xeption
+    public class NotFoundTicketException : Xeption
     {
-        public TicketDependencyValidationException(Xeption innerException)
-            : base(message: "Ticket dependency validation error occurred, fix the errors and try again.", innerException)
+        public NotFoundTicketException(Guid ticketId)
+            : base(message:$"Couldn't find ticket with id: {ticketId}.")
         { }
     }
 }

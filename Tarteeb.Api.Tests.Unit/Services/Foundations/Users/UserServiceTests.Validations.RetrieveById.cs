@@ -30,7 +30,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             // when
             ValueTask<User> retrieveUserByIdTask =
-                this.userService.RetrieveUserAsync(invlidUserId);
+                this.userService.RetrieveUserByIdAsync(invlidUserId);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(retrieveUserByIdTask.AsTask);

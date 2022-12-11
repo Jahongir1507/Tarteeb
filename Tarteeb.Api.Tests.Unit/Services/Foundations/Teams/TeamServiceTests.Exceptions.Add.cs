@@ -4,11 +4,13 @@
 //=================================
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -45,6 +47,43 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))),Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldTrowDependencyValidationExceptionOnAddIfDuplicateErrorOccursAndLogItAsync()
+        {
+            // given
+            Team someTeam = CreateRandomTeam();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var failedTeamDependencyValidationException =
+                new FailedTeamDependencyValidationException(duplicateKeyException);
+
+            var expectedTeamDependencyValidationException =
+                new TeamValidationException(failedTeamDependencyValidationException);
+
+            this.storageBrokerMock.Setup(broker => broker.InsertTeamAsync(It.IsAny<Team>()))
+                .ThrowsAsync(duplicateKeyException);
+
+            // when
+            ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
+
+            TeamDependencyValidationException actualTeamDependencyValidationException =
+                await Assert.ThrowsAsync<TeamDependencyValidationException>(addTeamTask.AsTask);
+
+            // then
+            actualTeamDependencyValidationException.Should().BeEquivalentTo(
+                expectedTeamDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(
+                It.IsAny<Team>()),Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
+                expectedTeamDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         private static dynamic IsInvalid(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
-            Message = "TeamName is required"
+            Message = "Text is required"
         };
 
         private static dynamic IsInvalid(DateTimeOffset date) => new

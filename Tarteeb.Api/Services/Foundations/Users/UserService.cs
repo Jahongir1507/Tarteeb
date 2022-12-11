@@ -48,6 +48,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
             User maybeUser =
                 await this.storageBroker.SelectUserByIdAsync(userId);
 
+            ValidateStorageUser(maybeUser, userId);
+
             return maybeUser;
         });
     }

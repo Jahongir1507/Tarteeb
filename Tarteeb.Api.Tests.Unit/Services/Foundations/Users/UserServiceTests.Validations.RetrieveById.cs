@@ -56,10 +56,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             Guid someUserId = Guid.NewGuid();
             User noUser = null;
 
-            var notFoundUserValidationEception = new NotFoundUserException(someUserId);
+            var notFoundUserValidationException = new NotFoundUserException(someUserId);
 
             var expectedValidationException =
-                new UserValidationException(notFoundUserValidationEception);
+                new UserValidationException(notFoundUserValidationException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noUser);
@@ -76,7 +76,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualValidationException.Should().BeEquivalentTo(expectedValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedValidationException))), Times.Once);

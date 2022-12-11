@@ -6,6 +6,7 @@
 using System;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -35,6 +36,14 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private void ValidateUserId(Guid userId) =>
             Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
+
+        private void ValidateStorageUser(User maybeUser, Guid userId)
+        {
+            if(maybeUser is null)
+            {
+                throw new NotFoundUserException(userId);
+            }
+        }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {

@@ -54,7 +54,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             string invalidString)
         {
             //given 
-            Team invalidTeam = new Team
+            var invalidTeam = new Team
             {
                 TeamName = invalidString
             };

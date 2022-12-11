@@ -3,8 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xeptions;
@@ -34,6 +35,11 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
                 throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
             }
+        }
+
+        private Exception CreateAndLogValidationException(SqlException sqlException)
+        {
+            throw new NotImplementedException();
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)

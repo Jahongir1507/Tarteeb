@@ -3,13 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Threading.Tasks;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models;
-using System;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -40,9 +40,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         public IQueryable<User> RetrieveAllUsers() =>
         TryCatch(() => this.storageBroker.SelectAllUsers());
 
-        public ValueTask<User> RetrieveUserAsync(Guid userId)
-        {
-            throw new NotImplementedException();
-        }
+        public async ValueTask<User> RetrieveUserAsync(Guid userId) =>
+            await storageBroker.SelectUserByIdAsync(userId);
     }
 }

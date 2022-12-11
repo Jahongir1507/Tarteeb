@@ -33,6 +33,11 @@ namespace Tarteeb.Api.Services.Foundations.Users
                     Parameter: nameof(User.CreatedDate)));
         }
 
+        private void ValidationUserOnMadify(User user)
+        {
+            ValidateUserNotNull(user);
+        }
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),

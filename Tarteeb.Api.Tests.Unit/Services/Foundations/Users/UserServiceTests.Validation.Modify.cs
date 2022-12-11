@@ -96,21 +96,25 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             //when
             ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(invalidUser);
 
-            UserValidationException actualUserValidationException =
-                await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
-
             //then
-            actualUserValidationException.Should().BeEquivalentTo(
-                expectedUserValidationException);
+            await Assert.ThrowsAsync<UserValidationException>(()=>
+               modifyUserTask.AsTask());
+            
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker=>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))),Times.Once);
+                    expectedUserValidationException))),
+                        Times.Once);
 
             this.storageBrokerMock.Verify(broker=>
-                broker.InsertUserAsync(It.IsAny<User>()), Times.Never);
+                broker.InsertUserAsync(It.IsAny<User>()),
+                    Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }

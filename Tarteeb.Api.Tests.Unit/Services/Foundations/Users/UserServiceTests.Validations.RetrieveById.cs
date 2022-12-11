@@ -49,5 +49,42 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfUserIsNotFoundAndLogItAsync()
+        {
+            // given
+            Guid someUserId = Guid.NewGuid();
+            User noUser = null;
+
+            var notFoundUserValidationEception = new NotFoundUserException(someUserId);
+
+            var expectedValidationException =
+                new UserValidationException(notFoundUserValidationEception);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noUser);
+
+            // when
+            ValueTask<User> retrieveByIdUserTask =
+                this.userService.RetrieveUserByIdAsync(someUserId);
+
+            UserValidationException actualValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(
+                    retrieveByIdUserTask.AsTask);
+
+            // then
+            actualValidationException.Should().BeEquivalentTo(expectedValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }

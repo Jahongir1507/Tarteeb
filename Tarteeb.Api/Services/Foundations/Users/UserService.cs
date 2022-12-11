@@ -31,18 +31,12 @@ namespace Tarteeb.Api.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user) =>
         TryCatch(async () =>
         {
-            NotNullValidateUser(user);
+            ValidateUser(user);
 
             return await this.storageBroker.InsertUserAsync(user);
         });
 
         public IQueryable<User> RetrieveAllUsers() =>
         TryCatch(() => this.storageBroker.SelectAllUsers());
-
-        private void NotNullValidateUser(User user)
-        {
-            ValidateUserNotNull(user);
-            ValidateUser(user);
-        }
     }
 }

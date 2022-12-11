@@ -29,7 +29,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(randomUserId)).ReturnsAsync(storedUser);
 
             // when
-            User actualUser = await this.userService.RetrieveUserAsync(inputUserId);
+            User actualUser = await this.userService.RetrieveUserByIdAsync(inputUserId);
 
             // then
             actualUser.Should().BeEquivalentTo(exectedUser);

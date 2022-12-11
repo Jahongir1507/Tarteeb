@@ -10,8 +10,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class TicketDependencyValidationException : Xeption
     {
         public TicketDependencyValidationException(Xeption innerException)
-            : base(message: "Ticket dependency validation error occurred, fix the errors and try again.",
-                  innerException)
+            : base(message: "Ticket dependency validation error occurred, fix the errors and try again.", innerException)
         { }
     }
 }

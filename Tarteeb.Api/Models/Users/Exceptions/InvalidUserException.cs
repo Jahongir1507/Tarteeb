@@ -3,15 +3,14 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class FailedUserServiceException : Xeption
+    public class InvalidUserException : Xeption
     {
-        public FailedUserServiceException(Exception innerException)
-            : base(message: "Failed user service occured, please contact support", innerException)
+        public InvalidUserException()
+          : base(message: "User is invalid.")
         { }
     }
 }

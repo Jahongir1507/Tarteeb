@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class FailedUserServiceException : Xeption
+    public partial class AlreadyExistsUserException : Xeption
     {
-        public FailedUserServiceException(Exception innerException)
-            : base(message: "Failed user service occured, please contact support", innerException)
+        public AlreadyExistsUserException(Exception innerException)
+            : base(message: "Failed user dependency validation error occurred, fix errors and try again.", innerException) 
         { }
     }
 }

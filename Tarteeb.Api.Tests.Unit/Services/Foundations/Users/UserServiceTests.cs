@@ -22,20 +22,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IUserService userService;
 
         public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userService = new UserService(
                 storageBroker: this.storageBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object,
-                dateTimeBroker: this.dateTimeBrokerMock.Object);
+                dateTimeBroker: this.dateTimeBrokerMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object);
         }
 
         private static IQueryable<User> CreateRandomUsers()
@@ -59,8 +59,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 randomUser.CreatedDate.AddDays(randomDaysInPast);
             
             return randomUser;
-
-
         }
 
         private static SqlException CreateSqlException() =>
@@ -86,7 +84,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
-        }
-        
+        }  
     }
 }

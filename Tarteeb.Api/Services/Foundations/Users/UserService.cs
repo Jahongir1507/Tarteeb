@@ -31,9 +31,11 @@ namespace Tarteeb.Api.Services.Foundations.Users
         public IQueryable<User> RetrieveAllUsers() =>
             TryCatch(() => this.storageBroker.SelectAllUsers());
         
-        public ValueTask<User>ModifyUserAsync(User user)
+        public async ValueTask<User>ModifyUserAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var maybeUser= await this.storageBroker.SelectUserByIdAsync(user.Id);
+
+            return await this.storageBroker.UpdateUserAsync(user);
         }
     }
 }

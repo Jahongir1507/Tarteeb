@@ -28,10 +28,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             User exceptedUser = updatedUser.DeepClone();
             Guid userId = inputUser.Id;
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDate);
-
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(storageUser);
@@ -47,10 +43,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             //then
             actualUser.Should().BeEquivalentTo(exceptedUser);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
-
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(userId),
                     Times.Once);
@@ -59,7 +51,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.UpdateUserAsync(inputUser),
                     Times.Once);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

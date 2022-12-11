@@ -67,15 +67,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             invalidTeamException.AddData(
                 key: nameof(Team.TeamName),
-                values: "TeamName is required");
+                    values: "Text is required");
 
             invalidTeamException.AddData(
                 key: nameof(Team.CreatedDate),
-                values: "CreatedDate is required");
+                values: "Value is required");
 
             invalidTeamException.AddData(
                 key: nameof(Team.UpdatedDate),
-                values: "UpdatedDate is required");
+                values: "Value is required");
 
             var expectedTeamValidationException = 
                 new TeamValidationException(invalidTeamException);
@@ -91,14 +91,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
 
             this.loggingBrokerMock.Verify(broker=>
-                broker.LogError(
-                    It.Is(SameExceptionAs(expectedTeamValidationException))),
-                    Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamValidationException))),Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertTeamAsync(
-                    It.IsAny<Team>()),
-                    Times.Never);
+                broker.InsertTeamAsync(It.IsAny<Team>()),Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

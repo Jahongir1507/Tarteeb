@@ -36,7 +36,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {
-            Condition = date = default,
+            Condition = date == default,
             Message = "Value is required"
         };
 

@@ -4,6 +4,7 @@
 //=================================
 
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xeptions;
@@ -14,7 +15,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
     {
         private delegate ValueTask<Team> ReturningTeamFunction();
 
-        private async ValueTask<Team> TryCatch(ReturningTeamFunction returningTeamFunction)
+        private async ValueTask<Team> TryCatch(ReturningTeamFunction returningTeamFunction      )
         {
             try
             {
@@ -27,6 +28,11 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             catch(InvalidTeamException invalidTeamException)
             {
                 throw CreateAndLogValidationException(invalidTeamException);
+            }catch(SqlException sqlException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
             }
         }
 
@@ -36,6 +42,14 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             this.loggingBroker.LogError(teamValidationExpcetion);
 
             return teamValidationExpcetion;
+        }
+
+        private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var teamDependencyException = new TeamDependencyException(exception);
+            this.loggingBroker.LogCritical(teamDependencyException);
+
+            return teamDependencyException;
         }
     }
 }

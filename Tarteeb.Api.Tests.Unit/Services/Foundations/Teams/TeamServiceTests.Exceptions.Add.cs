@@ -10,7 +10,6 @@ using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
-using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -60,11 +59,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             string someMessage = GetRandomString();
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
-            var failedTeamDependencyValidationException =
-                new FailedTeamDependencyValidationException(duplicateKeyException);
+            var alreadyExistsTicketException =
+                new AlreadyExistsTeamException(duplicateKeyException);
 
             var expectedTeamDependencyValidationException =
-                new TeamValidationException(failedTeamDependencyValidationException);
+                new TeamDependencyValidationException(alreadyExistsTicketException);
 
             this.storageBrokerMock.Setup(broker => broker.InsertTeamAsync(It.IsAny<Team>()))
                 .ThrowsAsync(duplicateKeyException);

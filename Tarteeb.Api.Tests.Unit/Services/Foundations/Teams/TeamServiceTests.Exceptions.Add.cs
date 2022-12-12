@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -83,6 +84,38 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
                 expectedTeamDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            Team someTeam = CreateRandomTeam();
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+            var lockedTeamException = new LockedTeamException(dbUpdateConcurrencyException);
+
+            var expectedTeamDependencyValidationException = 
+                new TeamDependencyValidationException(lockedTeamException);
+
+            this.storageBrokerMock.Setup(broker=>broker.InsertTeamAsync(It.IsAny<Team>()))
+                .ThrowsAsync(dbUpdateConcurrencyException);
+            
+            //when
+            ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
+            var actualTeamDependencyValidationException =
+                await Assert.ThrowsAsync<TeamDependencyValidationException>(addTeamTask.AsTask);
+
+            //then
+            actualTeamDependencyValidationException.Should()
+                .BeEquivalentTo(expectedTeamDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(It.IsAny<Team>()),Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+                SameExceptionAs(expectedTeamDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

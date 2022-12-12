@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Linq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -23,6 +24,13 @@ namespace Tarteeb.Api.Services.Foundations.Teamss
 
                 throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedTeamServiceException =
+                    new FailedTeamServiceException(exception);
+
+                throw CreateAndLogServiceException(failedTeamServiceException);
+            }
         }
 
         private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -31,6 +39,15 @@ namespace Tarteeb.Api.Services.Foundations.Teamss
             this.loggingBroker.LogCritical(teamDependencyException);
 
             return teamDependencyException;
+        }
+        private TeamServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var teamServiceException =
+                new TeamServiceException(exception);
+
+            this.loggingBroker.LogError(teamServiceException);
+
+            return teamServiceException;
         }
     }
 }

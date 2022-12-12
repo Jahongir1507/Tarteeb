@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+////using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -70,20 +70,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
         {
             // given
-            Ticket someTicket =
-                CreateRandomTicket();
-
-            Ticket foreignKeyConflictedTicket =
-                someTicket;
-
-            string randomString =
-                GetRandomString();
-
-            string exceptionMessage =
-                randomString;
+            Ticket someTicket = CreateRandomTicket();
+            string someMessage = GetRandomString();
 
             var foreignKeyConstraintConflictException =
-                new ForeignKeyConstraintConflictException(exceptionMessage);
+                new ForeignKeyConstraintConflictException(someMessage);
 
             var invalidTicketReferenceException =
                 new InvalidTicketReferenceException(foreignKeyConstraintConflictException);
@@ -97,35 +88,33 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             // when
             ValueTask<Ticket> modifyTicketTask =
-                this.ticketService.ModifyTicketAsync(foreignKeyConflictedTicket);
+                this.ticketService.ModifyTicketAsync(someTicket);
 
             TicketDependencyValidationException actualTicketDependencyValidationException =
-                await Assert.ThrowsAsync<TicketDependencyValidationException>(
-                    modifyTicketTask.AsTask);
+                await Assert.ThrowsAsync<TicketDependencyValidationException>(modifyTicketTask.AsTask);
 
             // then
             actualTicketDependencyValidationException.Should()
                 .BeEquivalentTo(ticketDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(foreignKeyConflictedTicket.Id),
-                    Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(ticketDependencyValidationException))),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateTicketAsync(foreignKeyConflictedTicket),
+                broker.SelectTicketByIdAsync(someTicket.Id),
+                    Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateTicketAsync(someTicket),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

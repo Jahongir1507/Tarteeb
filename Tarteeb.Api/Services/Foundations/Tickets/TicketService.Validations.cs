@@ -46,8 +46,21 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
-                (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId))
-                );
+                (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)));
+        }
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -88,20 +101,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             bool isDefined = Enum.IsDefined(typeof(T), value);
 
             return isDefined is false;
-        }
-
-        private dynamic IsNotRecent(DateTimeOffset date) => new
-        {
-            Condition = IsDateNotRecent(date),
-            Message = "Date is not recent"
-        };
-
-        private bool IsDateNotRecent(DateTimeOffset date)
-        {
-            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
-            TimeSpan timeDifference = currentDateTime.Subtract(date);
-
-            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static void ValidateTicketNotNull(Ticket ticket)

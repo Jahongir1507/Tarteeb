@@ -45,11 +45,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
-        private Exception CreateAndLogValidationException(SqlException sqlException)
-        {
-            throw new NotImplementedException();
-        }
-
         private TeamValidationException CreateAndLogValidationException(Xeption exception)
         {
             var teamValidationExpcetion = new TeamValidationException(exception);

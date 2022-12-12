@@ -9,7 +9,7 @@ using System.Linq;
 using Tarteeb.Api.Models.Teams;
 using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests
     {
@@ -22,7 +22,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
             IQueryable<Team> expectedTeam = storageTeams;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllTeams()).Returns(storageTeams);
+                broker.SelectAllTeams()).Returns(storageTeams);
 
             //when
             IQueryable<Team> actualTeam = this.teamService.RetrieveAllTeams();
@@ -34,8 +34,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
                 broker.SelectAllTeams(), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class FailedTeamServiceException : Xeption
+    public class FailedUserServiceException : Xeption
     {
-        public FailedTeamServiceException(Exception innerException)
+        public FailedUserServiceException(Exception innerException)
         : base(message: "User service error occurred, contact support.", innerException)
         { }
     }

@@ -9,7 +9,7 @@ using System;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests
     {
@@ -26,8 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
                 new TeamDependencyException(failedTeamStorageException);
 
             this.storageBrokerMock.Setup(broker =>
-               broker.SelectAllTeams())
-                   .Throws(sqlException);
+               broker.SelectAllTeams()).Throws(sqlException);
 
             //when
             Action retrieveAllTeamsAction = () =>
@@ -36,16 +35,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
             //then
             Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
 
-            this.storageBrokerMock.Verify(broker =>
-              broker.SelectAllTeams());
+            this.storageBrokerMock.Verify(broker => broker.SelectAllTeams());
 
             this.loggingBrokerMock.Verify(broker =>
                  broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -53,6 +51,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
         {
             //given
             string exceptionMessage = GetRandomString();
+
             var serviceException = new Exception(exceptionMessage);
 
             var failedTeamServiceException =
@@ -79,8 +78,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
                     expectedteamServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

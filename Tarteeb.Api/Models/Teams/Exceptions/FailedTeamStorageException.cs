@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
     public class FailedTeamStorageException: Xeption
     {
         public FailedTeamStorageException(Exception innerException)
-        : base(message: "Failed ticket storage error occurred, contact support.", innerException)
+            : base(message: "Failed ticket storage error occurred, contact support.", innerException)
         { }
     }
 }

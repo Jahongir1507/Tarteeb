@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             catch (Exception exception)
             {
                 var failedUserServiceException =
-                    new FailedTeamServiceException(exception);
+                    new FailedUserServiceException(exception);
 
                 throw CreateAndLogServiceException(failedUserServiceException);
             }

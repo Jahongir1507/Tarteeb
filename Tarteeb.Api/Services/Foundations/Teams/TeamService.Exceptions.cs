@@ -5,7 +5,7 @@ using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xeptions;
 
-namespace Tarteeb.Api.Services.Foundations.Teamss
+namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public partial class TeamService
     {
@@ -35,7 +35,9 @@ namespace Tarteeb.Api.Services.Foundations.Teamss
 
         private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var teamDependencyException = new TeamDependencyException(exception);
+            var teamDependencyException = 
+                new TeamDependencyException(exception);
+
             this.loggingBroker.LogCritical(teamDependencyException);
 
             return teamDependencyException;

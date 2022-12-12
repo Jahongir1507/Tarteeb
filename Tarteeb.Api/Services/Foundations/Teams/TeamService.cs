@@ -8,9 +8,8 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Services.Foundations.Teams;
 
-namespace Tarteeb.Api.Services.Foundations.Teamss
+namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public partial class TeamService : ITeamService
     {
@@ -20,14 +19,14 @@ namespace Tarteeb.Api.Services.Foundations.Teamss
 
         public TeamService(
             IStorageBroker storageBroker,
-            ILoggingBroker loggingBroker,
-            IDateTimeBroker dateTimeBroker)
+            IDateTimeBroker dateTimeBroker,
+            ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
+            this.loggingBroker = loggingBroker;
         }
         public IQueryable<Team> RetrieveAllTeams() =>
-            TryCatch(()=>this.storageBroker.SelectAllTeams());
+            TryCatch(() => this.storageBroker.SelectAllTeams());
     }
 }

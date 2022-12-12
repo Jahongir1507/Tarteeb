@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
+using Tarteeb.Api.Services.Foundations.Tickets;
 
 namespace Tarteeb.Api
 {
@@ -27,6 +28,7 @@ namespace Tarteeb.Api
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
+            services.AddTransient<ITicketService, TicketService>();
 
             services.AddSwaggerGen(config =>
             {

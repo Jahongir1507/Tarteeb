@@ -44,7 +44,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyException))), Times.Once);
+                broker.LogCritical(It.Is(SameExceptionAs(expectedUserDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

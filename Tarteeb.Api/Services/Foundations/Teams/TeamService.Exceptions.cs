@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xeptions;
@@ -42,6 +43,12 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 var alreadyExistsTeamException = new AlreadyExistsTeamException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(alreadyExistsTeamException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTeamException = new LockedTeamException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTeamException);
             }
         }
 

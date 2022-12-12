@@ -17,7 +17,7 @@ using Tarteeb.Api.Services.Foundations.Teams;
 using Tynamix.ObjectFiller;
 using Xeptions;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teamss
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests
     {

@@ -3,36 +3,38 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
-using System.Linq.Expressions;
-using Moq;
-using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
+using Moq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Services.Foundations.Tickets;
+using Tarteeb.Api.Models;
+using Tarteeb.Api.Services.Foundations.Users;
 using Tynamix.ObjectFiller;
-using Xunit;
 using Xeptions;
+using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
-    public partial class TicketServiceTests
+    public partial class UserServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ITicketService ticketService;
+        private readonly IUserService userService;
 
-        public TicketServiceTests()
+        public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this.ticketService = new TicketService(
+            this.userService = new UserService(
                 storageBroker: this.storageBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
@@ -55,42 +57,40 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             };
         }
 
+        private static User CreateRandomUser() =>
+            CreateUserFiller(dates: GetRandomDateTime()).Create();
+
+        private static IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(dates: GetRandomDateTimeOffset()).
+                Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
+
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
-
-        private static DateTimeOffset GetRandomDateTime() =>
-            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-
-        private static string GetRandomString() =>
-            new MnemonicString().GetValue();
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
-            CreateTicketFiller(dates).Create();
+        private static string GetRandomString() =>
+             new MnemonicString().GetValue();
 
-        private static T GetInvalidEnum<T>()
-        {
-            int randomNumber = GetRandomNumber();
-
-            while (Enum.IsDefined(typeof(T), randomNumber))
-            {
-                randomNumber = GetRandomNumber();
-            }
-
-            return (T)(object)randomNumber;
-        }
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNumber() =>
-            new IntRange(min: 2, max: 99).GetValue();
+           new IntRange(min: 2, max: 10).GetValue();
 
-        private static Ticket CreateRandomTicket() =>
-            CreateTicketFiller(GetRandomDateTime()).Create();
+        private static User CreateRandomUser(DateTimeOffset dates) =>
+            CreateUserFiller(dates).Create();
 
-        private static Filler<Ticket> CreateTicketFiller(DateTimeOffset dates)
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {
-            var filler = new Filler<Ticket>();
+            var filler = new Filler<User>();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);

@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 
@@ -11,7 +12,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public partial class TicketService
     {
-        private void ValidateTicket(Ticket ticket)
+        private void ValidateTicketOnAdd(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);
 
@@ -35,6 +36,17 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Parameter: nameof(Ticket.CreatedDate)));
         }
 
+        private void ValidateTicketId(Guid ticketId) =>
+            Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
+
+        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
+        {
+            if(maybeTicket is null)
+            {
+                throw new NotFoundTicketException(ticketId);
+            }
+        }
+ 
         private void ValidateTicketOnModify(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);
@@ -47,20 +59,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)));
-        }
-
-        private dynamic IsNotRecent(DateTimeOffset date) => new
-        {
-            Condition = IsDateNotRecent(date),
-            Message = "Date is not recent"
-        };
-
-        private bool IsDateNotRecent(DateTimeOffset date)
-        {
-            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
-            TimeSpan timeDifference = currentDateTime.Subtract(date);
-
-            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -101,6 +99,20 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             bool isDefined = Enum.IsDefined(typeof(T), value);
 
             return isDefined is false;
+        }
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static void ValidateTicketNotNull(Ticket ticket)

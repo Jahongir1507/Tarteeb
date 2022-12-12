@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public partial class TicketService
     {
+        private delegate IQueryable<Ticket> ReturningTicketsFunction();
         private delegate ValueTask<Ticket> ReturningTicketFunction();
 
         private async ValueTask<Ticket> TryCatch(ReturningTicketFunction returningTicketFunction)
@@ -60,6 +62,26 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 var failedServiceProfileException = new FailedTicketServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedServiceProfileException);
+            }
+        }
+
+        private IQueryable<Ticket> TryCatch(ReturningTicketsFunction returningTicketsFunction)
+        {
+            try
+            {
+                return returningTicketsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTicketServiceException = new FailedTicketServiceException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTicketServiceException);
+            }
+            catch (Exception serviException)
+            {
+                var failedServiceTicketException = new FailedTicketServiceException(serviException);
+
+                throw CreateAndLogServiceException(failedServiceTicketException);
             }
         }
 

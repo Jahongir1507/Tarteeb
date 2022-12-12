@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Moq;
 using System.Runtime.Serialization;
@@ -61,11 +62,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static IQueryable<Ticket> CreateRandomTickets()
+        {
+            return CreateTicketFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
             CreateTicketFiller(dates).Create();

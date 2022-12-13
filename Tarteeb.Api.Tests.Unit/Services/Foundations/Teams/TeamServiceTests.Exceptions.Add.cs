@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Tickets;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -136,6 +137,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var expectedTeamServiceException =
                 new TeamServiceException(failedTeamServiceException);
 
+            this.storageBrokerMock.Setup(broker => broker.InsertTeamAsync(It.IsAny<Team>()))
+                .ThrowsAsync(serviceException);
+
             //when
             ValueTask<Team> addTeamTask =
                 this.teamService.AddTeamAsync(someTeam);
@@ -146,13 +150,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //then
             actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeamServiceException))),Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertTeamAsync(It.IsAny<Team>()),
-                    Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

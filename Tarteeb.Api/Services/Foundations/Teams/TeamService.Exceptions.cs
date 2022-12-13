@@ -54,11 +54,8 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 var failedTeamServiceException = new FailedTeamServiceException(serviceException);
                 
-                throw  CreateAndLogServiceException(failedTeamServiceException);
+                throw CreateAndLogServiceException(failedTeamServiceException);
             }
-
-
-
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)

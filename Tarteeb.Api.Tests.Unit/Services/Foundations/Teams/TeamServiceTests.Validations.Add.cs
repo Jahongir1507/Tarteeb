@@ -114,7 +114,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             invalidTeamException.AddData(
                 key: nameof(Team.CreatedDate),
-                values: $"Date is not same as{nameof(Team.UpdatedDate)}.");
+                values: $"Date is not same as {nameof(Team.UpdatedDate)}.");
 
             var expectedTeamValidationException = 
                 new TeamValidationException(invalidTeamException);
@@ -131,8 +131,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker => broker.LogError(
                 It.Is(SameExceptionAs(expectedTeamValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker=> broker.InsertTeamAsync(
-                It.IsAny<Team>()),Times.Once);
+            this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(
+                It.IsAny<Team>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

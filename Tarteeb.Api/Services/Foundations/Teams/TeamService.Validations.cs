@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 
@@ -19,7 +20,10 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.Id), Parameter: nameof(Team.Id)),
                 (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
-                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)));
+                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
+                (Rule: IsInvalid(team.UpdatedUserId), Parameter: nameof(Team.UpdatedUserId)),
+                (Rule: IsNotSame(team.CreatedDate, team.UpdatedDate, nameof(Team.UpdatedDate)),
+                Parameter: nameof(Team.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -39,6 +43,15 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             Condition = date == default,
             Message = "Value is required"
         };
+
+        private static dynamic IsNotSame
+            (DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}."
+            };
 
         private static void ValidateTeamNotNull(Team team)
         {

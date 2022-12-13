@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
 using Moq;
+using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Teams;
@@ -14,23 +15,44 @@ using Tarteeb.Api.Services.Foundations;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests 
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITeamService teamService;
 
         public TeamServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.dateTimeBrokerMock= new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.teamService = new TeamService(
                 this.storageBrokerMock.Object,
+                this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
+        }
+
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
         }
 
         private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedExceptoin) =>
@@ -45,13 +67,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static Team CreateRandomTeam() =>
-            CreateTeamFiller().Create();
+        private static Team CreateRandomTeam(DateTimeOffset dates) =>
+        CreateTeamFiller(dates).Create();
 
-        private static Filler<Team> CreateTeamFiller()
+        private static Team CreateRandomTeam() =>
+            CreateTeamFiller(GetRandomDateTime()).Create();
+
+        private static Filler<Team> CreateTeamFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Team>();
-            DateTimeOffset dates = GetRandomDateTime();
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);

@@ -137,5 +137,49 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
+            int invalidSeconds)
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
+            Team randomInvalidTeam = CreateRandomTeam(invalidRandomDateTime);
+            Team invalidTeam = randomInvalidTeam;
+            var invalidTeamException = new InvalidTeamException();
+
+            invalidTeamException.AddData(
+                key: nameof(Team.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedTeamValidationException =
+                new TeamValidationException(invalidTeamException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(invalidTeam);
+
+            TeamValidationException actualTeamValidationException =
+                await Assert.ThrowsAsync<TeamValidationException>(addTeamTask.AsTask);
+
+            // then
+
+            actualTeamValidationException.Should().BeEquivalentTo(
+                expectedTeamValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Never);
+        }
     }
 }

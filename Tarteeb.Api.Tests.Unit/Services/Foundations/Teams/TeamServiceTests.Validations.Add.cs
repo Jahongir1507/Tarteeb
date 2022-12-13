@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -96,6 +97,42 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeamAsync(It.IsAny<Team>()),Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset anotherRandomDate = GetRandomDateTime();
+            Team randomTeam = CreateRandomTeam();
+            Team invalidTeam = randomTeam;
+            invalidTeam.UpdatedDate = anotherRandomDate;
+            var invalidTeamException = new InvalidTeamException();
+
+            invalidTeamException.AddData(
+                key: nameof(Team.CreatedDate),
+                values: $"Date is not same as{nameof(Team.UpdatedDate)}.");
+
+            var expectedTeamValidationException = 
+                new TeamValidationException(invalidTeamException);
+
+            //when
+            ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(invalidTeam);
+
+            TeamValidationException actualTeamValidationException =
+                await Assert.ThrowsAsync<TeamValidationException>(addTeamTask.AsTask);
+
+            //then
+            actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(
+                It.Is(SameExceptionAs(expectedTeamValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker=> broker.InsertTeamAsync(
+                It.IsAny<Team>()),Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

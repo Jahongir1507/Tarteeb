@@ -147,8 +147,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SomeExceptionAs
-                    (expectedTeamServiceException))),Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamServiceException))),Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeamAsync(It.IsAny<Team>()),

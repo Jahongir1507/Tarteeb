@@ -6,6 +6,7 @@
 using System;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -31,6 +32,17 @@ namespace Tarteeb.Api.Services.Foundations.Users
                     secondDateName: nameof(User.UpdatedDate)),
 
                     Parameter: nameof(User.CreatedDate)));
+        }
+
+        private void ValidateUserId(Guid userId) =>
+            Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
+
+        private void ValidateStorageUser(User maybeUser, Guid userId)
+        {
+            if(maybeUser is null)
+            {
+                throw new NotFoundUserException(userId);
+            }
         }
 
         private void ValidationUserOnMadify(User user)
@@ -83,10 +95,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
-        {
-            Condition = firstDate != secondDate,
-            Message = $"Date is not same as {secondDateName}"
-        };
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
 
         private static void ValidateUserNotNull(User user)
         {

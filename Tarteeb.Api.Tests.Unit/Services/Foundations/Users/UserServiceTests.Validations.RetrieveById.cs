@@ -55,7 +55,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             // given
             Guid someUserId = Guid.NewGuid();
             User noUser = null;
-
             var notFoundUserValidationException = new NotFoundUserException(someUserId);
 
             var expectedValidationException =
@@ -85,6 +84,5 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
-
     }
 }

@@ -71,11 +71,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             ValueTask<User> retrieveUserById =
                 this.userService.RetrieveUserByIdAsync(someId);
 
-            UserServiceException actualCommentServiceException =
+            UserServiceException actualUserServiceException =
                 await Assert.ThrowsAsync<UserServiceException>(retrieveUserById.AsTask);
 
             // then
-            actualCommentServiceException.Should().BeEquivalentTo(expectedUserServiceExcpetion);
+            actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceExcpetion);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);

@@ -45,7 +45,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
                 (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
-
         }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
@@ -84,11 +83,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
-            {
-                Condition = firstDate != secondDate,
-                Message = $"Date is not same as {secondDateName}"
-            };
-
+        {
+            Condition = firstDate != secondDate,
+            Message = $"Date is not same as {secondDateName}"
+        };
 
         private static void ValidateUserNotNull(User user)
         {

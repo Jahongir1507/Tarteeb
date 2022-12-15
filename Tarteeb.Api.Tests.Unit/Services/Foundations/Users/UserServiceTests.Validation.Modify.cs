@@ -3,16 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tarteeb.Api.Models.Users.Exceptions;
-using Tarteeb.Api.Models;
-using Xunit;
 using Moq;
-using FluentAssertions;
+using System.Threading.Tasks;
+using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Users.Exceptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -29,18 +24,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserValidationException(nullUserException);
 
             //when
-            ValueTask<User>modifyUserTask=
+            ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(nullUser);
 
             //then
             await Assert.ThrowsAsync<UserValidationException>(() =>
                 modifyUserTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))),Times.Once());
+                    expectedUserValidationException))), Times.Once());
 
-            this.storageBrokerMock.Verify(broker=>
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(It.IsAny<User>()), Times.Never());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -60,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 FirstName = invalidText
             };
 
-            var invalidUserException=new InvalidUserException();
+            var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.Id),
@@ -92,24 +87,24 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException = new UserValidationException(
                 invalidUserException);
-               
+
             //when
             ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(invalidUser);
 
             //then
-            await Assert.ThrowsAsync<UserValidationException>(()=>
+            await Assert.ThrowsAsync<UserValidationException>(() =>
                modifyUserTask.AsTask());
-            
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrentDateTime(),
-                    Times.Never);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserValidationException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker=>
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(It.IsAny<User>()),
                     Times.Never);
 

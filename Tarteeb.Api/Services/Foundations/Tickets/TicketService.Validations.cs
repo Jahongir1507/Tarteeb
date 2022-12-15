@@ -6,6 +6,7 @@
 using Azure.Messaging;
 using System;
 using System.Reflection.Metadata;
+using System.Data;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -14,7 +15,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 {
     public partial class TicketService
     {
-        private void ValidateTicket(Ticket ticket)
+        private void ValidateTicketOnAdd(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);
 
@@ -38,6 +39,17 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Parameter: nameof(Ticket.CreatedDate)));
         }
 
+        private void ValidateTicketId(Guid ticketId) =>
+            Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
+
+        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
+        {
+            if(maybeTicket is null)
+            {
+                throw new NotFoundTicketException(ticketId);
+            }
+        }
+ 
         private void ValidateTicketOnModify(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);

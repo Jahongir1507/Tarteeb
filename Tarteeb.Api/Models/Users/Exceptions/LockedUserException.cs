@@ -6,12 +6,12 @@
 using System;
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Tickets.Exceptions
+namespace Tarteeb.Api.Models.Users.Exceptions
 {
-    public class NotFoundTicketException : Xeption
+    public class LockedUserException : Xeption
     {
-        public NotFoundTicketException(Guid ticketId)
-            : base(message:$"Couldn't find ticket with id: {ticketId}.")
+        public LockedUserException(Exception innerException)
+            : base(message: "User is locked, please try again.", innerException)
         { }
     }
 }

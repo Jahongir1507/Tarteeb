@@ -85,6 +85,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
 
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
         private static Ticket CreateRandomTicket() =>
             CreateTicketFiller(GetRandomDateTime()).Create();
 

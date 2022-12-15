@@ -3,9 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Azure.Messaging;
 using System;
+using System.Reflection.Metadata;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {
@@ -46,9 +49,24 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.CreatedDate), Parameter: nameof(Ticket.CreatedDate)),
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
-                (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId))
-                );
+                (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
+
+                (Rule: IsSame(
+                    firstDate: ticket.UpdatedDate,
+                    secondDate: ticket.CreatedDate,
+                    secondDateName: nameof(ticket.CreatedDate)),
+
+                 Parameter: nameof(ticket.UpdatedDate)));
         }
+
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is same as {secondDateName}"
+            };
 
         private static dynamic IsInvalid(Guid id) => new
         {

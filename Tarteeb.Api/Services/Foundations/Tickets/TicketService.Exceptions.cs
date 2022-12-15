@@ -38,19 +38,19 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
                 throw CreateAndLogCriticalDependencyException(failedTicketStorageException);
             }
-            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
-            {
-                var invalidTicketReferenceException =
-                    new InvalidTicketReferenceException(foreignKeyConstraintConflictException);
-
-                throw CreateAndDependencyValidationException(invalidTicketReferenceException);
-            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var failedTicketDependencyValidationException =
                      new AlreadyExistsTicketException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(failedTicketDependencyValidationException);
+            }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidTicketReferenceException =
+                    new InvalidTicketReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndDependencyValidationException(invalidTicketReferenceException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {

@@ -107,6 +107,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             
             //when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
+
             var actualTeamDependencyValidationException =
                 await Assert.ThrowsAsync<TeamDependencyValidationException>(addTeamTask.AsTask);
 
@@ -121,7 +122,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-
         }
 
         [Fact]

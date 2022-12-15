@@ -167,7 +167,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 await Assert.ThrowsAsync<TeamValidationException>(addTeamTask.AsTask);
 
             // then
-
             actualTeamValidationException.Should().BeEquivalentTo(
                 expectedTeamValidationException);
 

@@ -21,9 +21,9 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
                 (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
-                (Rule: IsInvalid(team.UpdatedUserId), Parameter: nameof(Team.UpdatedUserId)),
                 (Rule: IsNotSame(team.CreatedDate, team.UpdatedDate, nameof(Team.UpdatedDate)),
-                Parameter: nameof(Team.CreatedDate)));
+                Parameter: nameof(Team.CreatedDate)),
+                (Rule: IsInvalid(team.UpdatedUserId), Parameter: nameof(Team.UpdatedUserId)));
         }
 
         private static dynamic IsInvalid(Guid id) => new

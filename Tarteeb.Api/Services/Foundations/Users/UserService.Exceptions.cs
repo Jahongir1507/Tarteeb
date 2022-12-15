@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
@@ -33,6 +34,10 @@ namespace Tarteeb.Api.Services.Foundations.Users
             catch (InvalidUserException invalidUserException)
             {
                 throw CreateAndLogValidationException(invalidUserException);
+            }
+            catch(NotFoundUserException notFoundUserException)
+            {
+                throw CreateAndLogValidationException(notFoundUserException);
             }
             catch (SqlException sqlException)
             {

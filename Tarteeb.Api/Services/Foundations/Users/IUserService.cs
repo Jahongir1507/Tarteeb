@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 using Tarteeb.Api.Models;
+using System;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -13,5 +14,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
     {
         ValueTask<User> AddUserAsync(User user);
         IQueryable<User> RetrieveAllUsers();
+        ValueTask<User> RetrieveUserByIdAsync(Guid userId);
     }
 }

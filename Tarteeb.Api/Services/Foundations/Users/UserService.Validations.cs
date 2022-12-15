@@ -44,15 +44,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
-                (Rule: IsNotRecent(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
 
-                (Rule: IsNotSame(
-                    firstDate: user.CreatedDate,
-                    secondDate: user.UpdatedDate,
-                    secondDateName: nameof(User.UpdatedDate)),
-
-                 Parameter: nameof(User.CreatedDate)));
         }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

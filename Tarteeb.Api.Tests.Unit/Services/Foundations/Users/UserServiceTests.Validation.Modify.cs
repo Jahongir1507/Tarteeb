@@ -3,7 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using FluentAssertions;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -110,6 +112,54 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsNotSameAsCreateDateAndLogItAsync()
+        {
+            //given
+            DateTimeOffset randomDatetime = GetRandomDateTime();
+            User randomUser = CreateRandomUser(randomDatetime);
+            User invalidUser = randomUser;
+
+            var invalidUserException =
+                new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: nameof(User.UpdatedDate),
+                values: $"Date is not  same as {nameof(User.CreatedDate)}");
+
+            var expectedUserValidationException =
+                new UserValidationException(invalidUserException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTime())
+                  .Returns(randomDatetime);
+
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(invalidUser);
+
+            UserServiceException actualUserServiceException =
+               await Assert.ThrowsAsync<UserServiceException>(modifyUserTask.AsTask);
+
+            //then
+
+            actualUserServiceException.Should().BeEquivalentTo(expectedUserValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                   expectedUserValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+               broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }

@@ -39,6 +39,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

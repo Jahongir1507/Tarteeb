@@ -106,8 +106,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
             //given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
             DateTimeOffset anotherRandomDate = GetRandomDateTime();
-            Team randomTeam = CreateRandomTeam();
+            Team randomTeam = CreateRandomTeam(randomDateTime);
             Team invalidTeam = randomTeam;
             invalidTeam.UpdatedDate = anotherRandomDate;
             var invalidTeamException = new InvalidTeamException();
@@ -119,6 +120,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var expectedTeamValidationException = 
                 new TeamValidationException(invalidTeamException);
 
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
             //when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(invalidTeam);
 
@@ -128,12 +132,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //then
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.loggingBrokerMock.Verify(broker => broker.LogError(
                 It.Is(SameExceptionAs(expectedTeamValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(
                 It.IsAny<Team>()), Times.Never);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

@@ -128,7 +128,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),
-                values: $"Date is not  same as {nameof(User.CreatedDate)}");
+                values: $"Date is same as {nameof(User.CreatedDate)}");
 
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
@@ -141,25 +141,22 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(invalidUser);
 
-            UserServiceException actualUserServiceException =
-               await Assert.ThrowsAsync<UserServiceException>(modifyUserTask.AsTask);
-
             //then
-
-            actualUserServiceException.Should().BeEquivalentTo(expectedUserValidationException);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+              modifyUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                    expectedUserValidationException))), Times.Once);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Never);
+
             this.storageBrokerMock.Verify(broker =>
                broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }

@@ -59,6 +59,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
             ValidationUserOnMadify(user);
 
             var maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
+            ValidateStorageUser(maybeUser, user.Id);
+            ValidateAginstStorageUserOnModify(inputUser:user, storageUser:maybeUser);
 
             return await this.storageBroker.UpdateUserAsync(user);
         });

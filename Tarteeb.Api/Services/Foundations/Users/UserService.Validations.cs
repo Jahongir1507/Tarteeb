@@ -4,6 +4,9 @@
 //=================================
 
 using System;
+using System.Data;
+using System.Data.Common;
+using System.Reflection.Metadata;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
@@ -37,9 +40,25 @@ namespace Tarteeb.Api.Services.Foundations.Users
         private void ValidateUserId(Guid userId) =>
             Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
 
+        private static void ValidateAginstStorageUserOnModify(User inputUser, User storageUser)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputUser.CreatedDate,
+                    secondDate: storageUser.CreatedDate,
+                    secondDateName: nameof(User.CreatedDate)),
+                Parameter: nameof(User.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputUser.UpdatedDate,
+                    secondDate: storageUser.UpdatedDate,
+                    secondDateName: nameof(User.UpdatedDate)),
+                Parameter: nameof(User.UpdatedDate)));
+        }
+
         private void ValidateStorageUser(User maybeUser, Guid userId)
         {
-            if(maybeUser is null)
+            if (maybeUser is null)
             {
                 throw new NotFoundUserException(userId);
             }
@@ -56,7 +75,14 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(user.BirthDate), Parameter: nameof(User.BirthDate)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
-                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)));
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: user.UpdatedDate,
+                    secondDate: user.CreatedDate,
+                    secondDateName: nameof(User.CreatedDate)),
+
+                    Parameter: nameof(User.UpdatedDate)));
         }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
@@ -98,6 +124,15 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != default && firstDate == secondDate,
+                Message = $"Date is same as {secondDateName}"
             };
 
         private static void ValidateUserNotNull(User user)

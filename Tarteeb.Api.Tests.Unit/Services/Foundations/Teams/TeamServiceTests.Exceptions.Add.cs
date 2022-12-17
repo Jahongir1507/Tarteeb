@@ -105,8 +105,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var expectedTeamDependencyValidationException = 
                 new TeamDependencyValidationException(lockedTeamException);
 
-            this.storageBrokerMock.Setup(broker=>broker.InsertTeamAsync(It.IsAny<Team>()))
-                .ThrowsAsync(dbUpdateConcurrencyException);
+            this.dateTimeBrokerMock.Setup(broker=>broker.GetCurrentDateTime())
+                .Throws(dbUpdateConcurrencyException);
             
             //when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
@@ -118,10 +118,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamDependencyValidationException.Should()
                 .BeEquivalentTo(expectedTeamDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(It.IsAny<Team>()),Times.Once);
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrentDateTime(),Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedTeamDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertTeamAsync(It.IsAny<Team>()),Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

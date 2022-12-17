@@ -7,12 +7,13 @@ using System;
 using System.Data;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public partial class TeamService
     {
-        private static void ValidateTeam(Team team)
+        private void ValidateTeam(Team team)
         {
             ValidateTeamNotNull(team);
 
@@ -22,8 +23,8 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
                 (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
                 (Rule: IsNotSame(team.CreatedDate, team.UpdatedDate, nameof(Team.UpdatedDate)),
-                Parameter: nameof(Team.CreatedDate))
-                );
+                    Parameter: nameof(Team.CreatedDate)),
+                (Rule: IsNotRecent(team.CreatedDate), Parameter: nameof(Team.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -52,6 +53,20 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}."
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
 
         private static void ValidateTeamNotNull(Team team)
         {

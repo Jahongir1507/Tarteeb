@@ -3,10 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using System;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Tarteeb.Api.Services.Foundations.Tickets;
@@ -53,6 +54,25 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpGet]
+        public ActionResult<IQueryable<Ticket>> GetAllTickets()
+        {
+            try
+            {
+                IQueryable<Ticket> allTickets = this.ticketService.RetrieveAllTickets();
+
+                return Ok(allTickets);
+            }
+            catch (TicketDependencyException ticketDependencyException)
+            {
+                return InternalServerError(ticketDependencyException.InnerException);
+            }
+            catch (TicketServiceException ticketServiceException)
+            {
+                return InternalServerError(ticketServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{ticketId}")]
         public async ValueTask<ActionResult<Ticket>> GetTicketByIdAsync(Guid id)
         {
             try

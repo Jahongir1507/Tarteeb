@@ -25,14 +25,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //given
             Team someTeam = CreateRandomTeam();
             SqlException sqlException = CreateSqlException();
-
             var failedTeamStorageException = new FailedTeamStorageException(sqlException);
 
             var expectedTeamDependencyException =
                 new TeamDependencyException(failedTeamStorageException);
 
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertTeamAsync(It.IsAny<Team>())).ThrowsAsync(sqlException);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Throws(sqlException);
 
             //when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
@@ -43,15 +42,19 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //then
             actualTeamDependencyException.Should().BeEquivalentTo(expectedTeamDependencyException);
 
+            this.dateTimeBrokerMock.Verify(broker=>
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Once);
+                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedTeamDependencyException))),Times.Once);
+                    expectedTeamDependencyException))), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]

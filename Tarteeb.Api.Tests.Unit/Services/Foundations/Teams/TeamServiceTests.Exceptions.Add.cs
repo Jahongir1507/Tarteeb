@@ -143,8 +143,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var expectedTeamServiceException =
                 new TeamServiceException(failedTeamServiceException);
 
-            this.storageBrokerMock.Setup(broker => broker.InsertTeamAsync(It.IsAny<Team>()))
-                .ThrowsAsync(serviceException);
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
+                .Throws(serviceException);
 
             //when
             ValueTask<Team> addTeamTask =
@@ -155,16 +155,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             //then
             actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Once);
+            
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTeamServiceException))),Times.Once);
+                    expectedTeamServiceException))), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTeamAsync(It.IsAny<Team>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

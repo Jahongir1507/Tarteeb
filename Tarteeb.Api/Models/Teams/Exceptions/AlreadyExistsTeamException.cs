@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class AlreadyExistsTeamException:Xeption
+    public class AlreadyExistsTeamException : Xeption
     {
         public AlreadyExistsTeamException(Exception innerException)
-            :base(message:"Team already exists.",innerException)
+            : base(message: "Team already exists.", innerException)
         { }
     }
 }

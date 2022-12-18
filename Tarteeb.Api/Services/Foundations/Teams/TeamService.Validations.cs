@@ -22,9 +22,14 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
                 (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
-                (Rule: IsNotSame(team.CreatedDate, team.UpdatedDate, nameof(Team.UpdatedDate)),
-                    Parameter: nameof(Team.CreatedDate)),
-                (Rule: IsNotRecent(team.CreatedDate), Parameter: nameof(Team.CreatedDate)));
+                (Rule: IsNotRecent(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstDate: team.CreatedDate,
+                    secondDate: team.UpdatedDate,
+                    secondDateName: nameof(Team.UpdatedDate)),
+
+                Parameter: nameof(Team.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -57,7 +62,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
-            Message = "Date is not recent"
+            Message = "Date is not recent."
         };
 
         private bool IsDateNotRecent(DateTimeOffset date)

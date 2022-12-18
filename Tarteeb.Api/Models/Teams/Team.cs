@@ -13,6 +13,5 @@ namespace Tarteeb.Api.Models.Teams
         public string TeamName { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public Guid UpdatedUserId { get; set; }
     }
 }

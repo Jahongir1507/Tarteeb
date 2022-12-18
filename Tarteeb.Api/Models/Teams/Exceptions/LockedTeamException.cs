@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class LockedTeamException: Xeption
+    public class LockedTeamException : Xeption
     {
         public LockedTeamException(Exception innerException)
-            :base(message: "Team is locked, please try again.",innerException)
+            : base(message: "Team is locked, please try again.", innerException)
         { }
     }
 }

@@ -11,7 +11,6 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Services.Foundations;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -19,7 +18,7 @@ using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
-    public partial class TeamServiceTests 
+    public partial class TeamServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
@@ -29,7 +28,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         public TeamServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.dateTimeBrokerMock= new Mock<IDateTimeBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.teamService = new TeamService(
@@ -55,8 +54,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             };
         }
 
-        private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-           actualException => actualException.SameExceptionAs(expectedExceptoin);
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
@@ -68,7 +67,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Team CreateRandomTeam(DateTimeOffset dates) =>
-        CreateTeamFiller(dates).Create();
+            CreateTeamFiller(dates).Create();
 
         private static Team CreateRandomTeam() =>
             CreateTeamFiller(GetRandomDateTime()).Create();

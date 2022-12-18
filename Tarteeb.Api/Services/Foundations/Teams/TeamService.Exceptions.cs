@@ -81,7 +81,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             return teamDependencyValidationException;
         }
 
-        private Exception CreateAndLogServiceException(Xeption exception)
+        private TeamServiceException CreateAndLogServiceException(Xeption exception)
         {
             var teamServiceException = new TeamServiceException(exception);
             this.loggingBroker.LogError(teamServiceException);

@@ -50,10 +50,10 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
                 throw CreateAndDependencyValidationException(lockedTeamException);
             }
-            catch(Exception serviceException)
+            catch (Exception serviceException)
             {
                 var failedTeamServiceException = new FailedTeamServiceException(serviceException);
-                
+
                 throw CreateAndLogServiceException(failedTeamServiceException);
             }
         }
@@ -73,6 +73,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return teamDependencyException;
         }
+
         private TeamDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var teamDependencyValidationException = new TeamDependencyValidationException(exception);

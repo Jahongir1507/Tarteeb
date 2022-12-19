@@ -114,7 +114,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
 
-            var actualTeamDependencyValidationException =
+            TeamDependencyValidationException actualTeamDependencyValidationException =
                 await Assert.ThrowsAsync<TeamDependencyValidationException>(addTeamTask.AsTask);
 
             //then
@@ -127,7 +127,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedTeamDependencyValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertTeamAsync(It.IsAny<Team>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

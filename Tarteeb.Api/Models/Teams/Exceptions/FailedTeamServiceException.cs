@@ -12,7 +12,7 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
     {
         public FailedTeamServiceException(Exception innerException)
             : base(message: "Failed profile service occurred, please contact support.",
-                  innerException)
+                innerException)
         { }
     }
 }

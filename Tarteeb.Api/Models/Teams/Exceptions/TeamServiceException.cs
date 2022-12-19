@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
     public class TeamServiceException : Xeption
     {
         public TeamServiceException(Exception innerException)
-            : base(message: "Profile service error occurred, contact support.", innerException)
+            : base(message: "Team service error occurred, contact support.", innerException)
         { }
     }
 }

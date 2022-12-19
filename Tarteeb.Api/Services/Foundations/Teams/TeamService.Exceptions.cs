@@ -1,5 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
 using System;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -35,7 +40,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
         private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var teamDependencyException = 
+            var teamDependencyException =
                 new TeamDependencyException(exception);
 
             this.loggingBroker.LogCritical(teamDependencyException);

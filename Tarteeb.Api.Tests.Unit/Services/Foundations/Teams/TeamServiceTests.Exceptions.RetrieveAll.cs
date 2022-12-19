@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using System;
@@ -18,7 +19,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         {
             //given
             SqlException sqlException = CreateSqlException();
-
             var failedTeamStorageException =
                 new FailedTeamStorageException(sqlException);
 
@@ -32,10 +32,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Action retrieveAllTeamsAction = () =>
                 this.teamService.RetrieveAllTeams();
 
-            //then
-            Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
+            TeamDependencyException actualTeamDependencyException =
+               Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
 
-            this.storageBrokerMock.Verify(broker => broker.SelectAllTeams());
+            //then
+            actualTeamDependencyException.Should().BeEquivalentTo(expectedTeamDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTeams(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                  broker.LogCritical(It.Is(SameExceptionAs(
@@ -51,13 +55,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         {
             //given
             string exceptionMessage = GetRandomString();
-
             var serviceException = new Exception(exceptionMessage);
 
             var failedTeamServiceException =
                new FailedTeamServiceException(serviceException);
 
-            var expectedteamServiceException =
+            var expectedTeamServiceException =
                 new TeamServiceException(failedTeamServiceException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -67,15 +70,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Action retrieveAllTeamAction = () =>
                 this.teamService.RetrieveAllTeams();
 
+            TeamServiceException actualTeamServiceException =
+                Assert.Throws<TeamServiceException>(retrieveAllTeamAction);
+
             //then
-            Assert.Throws<TeamServiceException>(retrieveAllTeamAction);
+            actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllTeams(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedteamServiceException))), Times.Once);
+                    expectedTeamServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

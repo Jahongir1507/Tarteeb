@@ -19,16 +19,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             //given
             IQueryable<Team> randomTeams = CreateRandomTeam();
             IQueryable<Team> storageTeams = randomTeams;
-            IQueryable<Team> expectedTeam = storageTeams;
+            IQueryable<Team> expectedTeams = storageTeams;
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTeams()).Returns(storageTeams);
 
             //when
-            IQueryable<Team> actualTeam = this.teamService.RetrieveAllTeams();
+            IQueryable<Team> actualTeams = this.teamService.RetrieveAllTeams();
 
             //then
-            actualTeam.Should().BeEquivalentTo(expectedTeam);
+            actualTeams.Should().BeEquivalentTo(expectedTeams);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllTeams(), Times.Once());

@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -35,6 +36,9 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
             return await this.storageBroker.InsertTicketAsync(ticket);
         });
+
+        public IQueryable<Ticket> RetrieveAllTickets() =>
+        TryCatch(() => this.storageBroker.SelectAllTickets());
 
         public ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
         TryCatch(async () =>

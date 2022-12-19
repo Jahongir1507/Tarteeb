@@ -4,14 +4,16 @@
 //=================================
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using RESTFulSense.Controllers;
 
 namespace Tarteeb.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HomeController : ControllerBase
+    public class HomeController : RESTFulController
     {
         [HttpGet]
-        public ActionResult<string> GetHomeMessage() => "Tarteeb is running...";
+        public ActionResult<string> GetHomeMessage() => Ok("Tarteeb is running...");
     }
 }

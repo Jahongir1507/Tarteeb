@@ -266,7 +266,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            Ticket randomTicket = CreateRandomTicket(randomDateTime);
+            Ticket randomTicket = CreateRandomModifyTicket(randomDateTime);
             Ticket invalidTicket = randomTicket.DeepClone();
             Ticket storageTicket = invalidTicket.DeepClone();
             storageTicket.CreatedDate = storageTicket.CreatedDate.AddMinutes(randomMinutes);

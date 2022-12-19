@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,6 +61,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             var maybeTicket = await this.storageBroker.SelectTicketByIdAsync(ticket.Id);
 
             ValidateStorageTicket(maybeTicket,ticket.Id);
+            ValidateAginstStorageTicketOnModify(inputTicket: ticket, storageTicket: maybeTicket);
 
             return await this.storageBroker.UpdateTicketAsync(ticket);
         });

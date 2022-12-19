@@ -17,6 +17,7 @@ using Tarteeb.Api.Services.Foundations.Tickets;
 using Tynamix.ObjectFiller;
 using Xunit;
 using Xeptions;
+using Microsoft.Extensions.Hosting;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -79,6 +80,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
             CreateTicketFiller(dates).Create();
+
+        private static Ticket CreateRandomModifyTicket(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            Ticket randomTicket = CreateRandomTicket(dates);
+
+            randomTicket.CreatedDate =
+                randomTicket.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomTicket;
+        }
 
         private static T GetInvalidEnum<T>()
         {

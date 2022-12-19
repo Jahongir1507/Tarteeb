@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Extensions.Hosting;
 using System;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
@@ -44,6 +45,16 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw new NotFoundTicketException(ticketId);
             }
+        }
+
+        private void ValidateAginstStorageTicketOnModify(Ticket inputTicket, Ticket storageTicket)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputTicket.CreatedDate,
+                    secondDate: storageTicket.CreatedDate,
+                    secondDateName: nameof(Ticket.CreatedDate)),
+                Parameter: nameof(Ticket.CreatedDate)));
         }
 
         private void ValidateTicketOnModify(Ticket ticket)
@@ -107,7 +118,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             string secondDateName) => new
             {
                 Condition = firstDate != secondDate,
-                Message = $"Date is not same as {secondDateName}"
+                Message = $"Date is not the same as {secondDateName}"
             };
 
         private static bool IsEnumInvalid<T>(T value)

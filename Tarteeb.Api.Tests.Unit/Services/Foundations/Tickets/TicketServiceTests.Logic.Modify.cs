@@ -5,6 +5,7 @@
 
 using FluentAssertions;
 using Force.DeepCloner;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -18,38 +19,37 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldModifyTicketAsync()
         {
-            //given
-            int randomDaysAgo = GetRandomNegativeNumber();
+            // given
             DateTimeOffset randomDate = GetRandomDateTime();
-            Ticket randomTicket = CreateRandomTicket(randomDate);
-            randomTicket.CreatedDate = randomDate.AddDays(randomDaysAgo);
+            Ticket randomTicket = CreateRandomModifyTicket(randomDate);
             Ticket inputTicket = randomTicket;
-            Ticket persistedTicket = inputTicket.DeepClone();
+            Ticket storageTicket = inputTicket.DeepClone();
+            storageTicket.UpdatedDate = randomTicket.CreatedDate;
             Ticket updatedTicket = inputTicket;
             Ticket expectedTicket = updatedTicket.DeepClone();
-            Guid inputTicketId = inputTicket.Id;
+            Guid ticketId = inputTicket.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(inputTicketId)).ReturnsAsync(persistedTicket);
+                broker.SelectTicketByIdAsync(ticketId)).ReturnsAsync(storageTicket);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.UpdateTicketAsync(inputTicket)).ReturnsAsync(updatedTicket);
 
-            //when
-            Ticket actualTicket = await this.ticketService.
-                ModifyTicketAsync(inputTicket);
+            // when
+            Ticket actualTicket =
+                await this.ticketService.ModifyTicketAsync(inputTicket);
 
-            //then
+            // then
             actualTicket.Should().BeEquivalentTo(expectedTicket);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(inputTicketId), Times.Once);
+                broker.SelectTicketByIdAsync(ticketId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTicketAsync(inputTicket), Times.Once);

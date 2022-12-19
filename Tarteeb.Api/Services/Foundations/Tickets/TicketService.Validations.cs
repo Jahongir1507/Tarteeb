@@ -54,7 +54,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                     firstDate: inputTicket.CreatedDate,
                     secondDate: storageTicket.CreatedDate,
                     secondDateName: nameof(Ticket.CreatedDate)),
-                Parameter: nameof(Ticket.CreatedDate)));
+                Parameter: nameof(Ticket.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputTicket.UpdatedDate,
+                    secondDate: storageTicket.UpdatedDate,
+                    secondDateName: nameof(Ticket.UpdatedDate)),
+                Parameter: nameof(Ticket.UpdatedDate)));
+
         }
 
         private void ValidateTicketOnModify(Ticket ticket)
@@ -85,7 +92,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             string secondDateName) => new
             {
                 Condition = firstDate == secondDate,
-                Message = $"Date is same as {secondDateName}"
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private static dynamic IsInvalid(Guid id) => new

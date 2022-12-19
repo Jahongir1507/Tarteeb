@@ -10,6 +10,7 @@ using System.Data;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Hosting;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {
@@ -62,13 +63,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.UpdatedDate), Parameter: nameof(Ticket.UpdatedDate)),
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
-
+                (Rule: IsNotRecent(ticket.UpdatedDate), Parameter: nameof(ticket.UpdatedDate)),
+            
                 (Rule: IsSame(
-                    firstDate: ticket.UpdatedDate,
-                    secondDate: ticket.CreatedDate,
-                    secondDateName: nameof(ticket.CreatedDate)),
+                        firstDate: ticket.UpdatedDate,
+                        secondDate: ticket.CreatedDate,
+                        secondDateName: nameof(ticket.CreatedDate)),
 
-                 Parameter: nameof(ticket.UpdatedDate)));
+                     Parameter: nameof(ticket.UpdatedDate)));
         }
 
         private dynamic IsSame(

@@ -61,6 +61,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 

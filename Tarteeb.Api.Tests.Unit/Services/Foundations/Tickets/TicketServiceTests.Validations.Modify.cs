@@ -4,6 +4,7 @@
 //===============================
 
 using FluentAssertions;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -80,25 +81,22 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 values: "Value is required");
 
             invalidTicketException.AddData(
-               key: nameof(Ticket.CreatedDate),
-               values: "Value is required");
-
+                key: nameof(Ticket.CreatedDate),
+                values: "Value is required");
+            
             invalidTicketException.AddData(
                 key: nameof(Ticket.UpdatedDate),
-                    values: new[]
-                        {
-                        "Value is required",
-                        $"Date is same as {nameof(Ticket.CreatedDate)}"
-                        }
-                    );
+                "Value is required",
+                "Date is not recent",
+                $"Date is same as {nameof(Ticket.CreatedDate)}");
 
             invalidTicketException.AddData(
-               key: nameof(Ticket.CreatedUserId),
-               values: "Id is required");
+                key: nameof(Ticket.CreatedUserId),
+                values: "Id is required");
 
             invalidTicketException.AddData(
-              key: nameof(Ticket.UpdatedUserId),
-              values: "Id is required");
+                key: nameof(Ticket.UpdatedUserId),
+                values: "Id is required");
 
             var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
@@ -117,7 +115,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))),

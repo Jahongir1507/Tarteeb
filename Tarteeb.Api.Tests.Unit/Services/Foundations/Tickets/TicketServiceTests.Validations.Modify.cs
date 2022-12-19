@@ -4,7 +4,6 @@
 //===============================
 
 using FluentAssertions;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -83,7 +82,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             invalidTicketException.AddData(
                 key: nameof(Ticket.CreatedDate),
                 values: "Value is required");
-            
+
             invalidTicketException.AddData(
                 key: nameof(Ticket.UpdatedDate),
                 "Value is required",
@@ -102,8 +101,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketValidationException(invalidTicketException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(GetRandomDateTime);
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
             //when
             ValueTask<Ticket> addTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
@@ -118,8 +116,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))),
-                    Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTicketAsync(It.IsAny<Ticket>()), Times.Never);
@@ -142,7 +139,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 key: nameof(Ticket.UpdatedDate),
                 values: $"Date is same as {nameof(Ticket.CreatedDate)}");
 
-            var expectedTicketValidationException = 
+            var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -152,7 +149,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             ValueTask<Ticket> modifyTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
 
             TicketValidationException actualTicketValidationException =
-                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask); 
+                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
             //then
             actualTicketValidationException.Should().BeEquivalentTo(
@@ -184,9 +181,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 key: nameof(Ticket.UpdatedDate),
                 values: "Date is not recent");
 
-            var expectedTicketValidationException = 
+            var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);
-            
+
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 

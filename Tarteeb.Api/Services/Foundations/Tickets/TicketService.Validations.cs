@@ -3,14 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Azure.Messaging;
 using System;
-using System.Reflection.Metadata;
-using System.Data;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.Extensions.Hosting;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {
@@ -45,12 +40,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
 
         private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
         {
-            if(maybeTicket is null)
+            if (maybeTicket is null)
             {
                 throw new NotFoundTicketException(ticketId);
             }
         }
- 
+
         private void ValidateTicketOnModify(Ticket ticket)
         {
             ValidateTicketNotNull(ticket);
@@ -64,7 +59,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 (Rule: IsInvalid(ticket.CreatedUserId), Parameter: nameof(Ticket.CreatedUserId)),
                 (Rule: IsInvalid(ticket.UpdatedUserId), Parameter: nameof(Ticket.UpdatedUserId)),
                 (Rule: IsNotRecent(ticket.UpdatedDate), Parameter: nameof(ticket.UpdatedDate)),
-            
+
                 (Rule: IsSame(
                         firstDate: ticket.UpdatedDate,
                         secondDate: ticket.CreatedDate,

@@ -43,8 +43,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 ModifyTicketAsync(inputTicket);
 
             //then
-            actualTicket.Should().
-                BeEquivalentTo(expectedTicket);
+            actualTicket.Should().BeEquivalentTo(expectedTicket);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);

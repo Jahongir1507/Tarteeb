@@ -210,5 +210,52 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfTicketDoesNotExistAndLogItAsync()
+        {
+            //given
+            int randomNegativeMInutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTime();
+            Ticket randomTicket = CreateRandomTicket(dateTime);
+            Ticket nonExistTicket = randomTicket;
+            nonExistTicket.CreatedDate = dateTime.AddMinutes(randomNegativeMInutes);
+            Ticket nullTicket = null;
+
+            var notFoundTicketException = 
+                new NotFoundTicketException(nonExistTicket.Id);
+
+            var expectedTicketValidationException = new 
+                TicketValidationException(notFoundTicketException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTicketByIdAsync(nonExistTicket.Id)).ReturnsAsync(nullTicket);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(dateTime);
+
+            //when
+            ValueTask<Ticket> modifyTicketTask = 
+                this.ticketService.ModifyTicketAsync(nonExistTicket);
+
+            TicketValidationException actualTicketValidationException =
+                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
+
+            //then
+            actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTicketByIdAsync(nonExistTicket.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

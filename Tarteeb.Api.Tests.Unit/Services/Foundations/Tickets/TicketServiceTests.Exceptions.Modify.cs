@@ -171,5 +171,57 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Ticket randomTicket = CreateRandomTicket(randomDateTime);
+            Ticket someTicket = randomTicket;
+            someTicket.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
+
+            var failedTicketException =
+                new FailedTicketServiceException(serviceException);
+
+            var expectedTicketServiceException =
+                new TicketServiceException(failedTicketException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTicketByIdAsync(someTicket.Id))
+                    .ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Ticket> modifyTicketTask =
+                this.ticketService.ModifyTicketAsync(someTicket);
+
+            TicketServiceException actualTicketServiceException =
+                await Assert.ThrowsAsync<TicketServiceException>(
+                    modifyTicketTask.AsTask);
+
+            // then
+            actualTicketServiceException.Should().BeEquivalentTo(
+                expectedTicketServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTicketByIdAsync(someTicket.Id), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -118,5 +118,58 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Ticket randomTicket = CreateRandomTicket(randomDateTime);
+            Ticket someTicket = randomTicket;
+            someTicket.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid ticketId = someTicket.Id;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedTicketException =
+                new LockedTicketException(databaseUpdateConcurrencyException);
+
+            var expectedTicketDependencyValidationException =
+                new TicketDependencyValidationException(lockedTicketException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTicketByIdAsync(ticketId))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Ticket> modifyTicketTask =
+                this.ticketService.ModifyTicketAsync(someTicket);
+
+            TicketDependencyValidationException actualTicketDependencyValidationException =
+                await Assert.ThrowsAsync<TicketDependencyValidationException>(
+                    modifyTicketTask.AsTask);
+
+            // then
+            actualTicketDependencyValidationException.Should().BeEquivalentTo(
+                expectedTicketDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTicketByIdAsync(ticketId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -3,11 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-namespace Tarteeb.Api.Services.Foundations.Teams
+using Xeptions;
+
+namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public interface ITeamService
+    public class NullTeamException : Xeption
     {
-        ValueTask<Team> AddTeamAsync(Team team);
-        IQueryable<Team> RetrieveAllTeams();
+        public NullTeamException() : base(message: "Team is null.")
+        { }
     }
 }

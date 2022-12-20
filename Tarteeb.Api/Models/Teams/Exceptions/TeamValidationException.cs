@@ -3,13 +3,14 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Xeptions;
+
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class FailedTeamServiceException : Xeption
+    public class TeamValidationException : Xeption
     {
-        public FailedTeamServiceException(Exception innerException)
-            : base(message: "Failed team service occurred, please contact support.",
-                innerException)
+        public TeamValidationException(Xeption innerException)
+            : base(message: "Team validation error occured, fix the errors and try again.", innerException)
         { }
     }
 }

@@ -1,21 +1,7 @@
 ﻿//=================================
 // Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
-//=================================
-
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
-using Microsoft.Data.SqlClient;
-using Moq;
-using Tarteeb.Api.Brokers.DateTimes;
-using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Services.Foundations.Teams;
-using Tynamix.ObjectFiller;
-using Xeptions;
+//===============================
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
@@ -33,33 +19,54 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.teamService = new TeamService(
-                storageBroker: this.storageBrokerMock.Object,
-                dateTimeBroker: this.dateTimeBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                this.storageBrokerMock.Object,
+                this.dateTimeBrokerMock.Object,
+                this.loggingBrokerMock.Object);
         }
 
-        private static IQueryable<Team> CreateRandomTeam() =>
-            CreateTeamFiller().Create(count: GetRandomNumber()).AsQueryable();
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+            private static IQueryable<Team> CreateRandomTeam() =>
+                CreateTeamFiller().Create(count: GetRandomNumber()).AsQueryable();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
+
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
-            actualException => actualException.SameExceptionAs(expectedException);
+        private static Team CreateRandomTeam(DateTimeOffset dates) =>
+            CreateTeamFiller(dates).Create();
 
-        private static string GetRandomString() => new MnemonicString().GetValue();
+        private static Team CreateRandomTeam() =>
+            CreateTeamFiller(GetRandomDateTime()).Create();
 
-        private static int GetRandomNumber() => new IntRange(min: 2, max: 10).GetValue();
-
-        private static DateTimeOffset GetRandomDateTimeOffset() =>
-            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-
-        private static Filler<Team> CreateTeamFiller()
+        private static Filler<Team> CreateTeamFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Team>();
 
-            filler.Setup().OnType<DateTimeOffset>()
-                .Use(GetRandomDateTimeOffset());
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
         }

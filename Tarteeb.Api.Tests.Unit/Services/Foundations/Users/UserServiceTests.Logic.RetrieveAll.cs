@@ -17,12 +17,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public void ShouldRetrieveAllUsers()
         {
             //given
-            IQueryable<User> randomUsers = CreateRandomUser();
+            IQueryable<User> randomUsers = CreateRandomUsers();
             IQueryable<User> storageUsers = randomUsers;
             IQueryable<User> expectedUser = storageUsers;
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectAllUsers()).Returns(storageUsers);
+                broker.SelectAllUsers()).Returns(storageUsers);
 
             //when
             IQueryable<User> actualUser = this.userService.RetrieveAllUsers();

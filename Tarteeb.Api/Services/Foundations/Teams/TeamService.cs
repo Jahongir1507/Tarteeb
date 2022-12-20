@@ -3,12 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Linq;
-using Tarteeb.Api.Brokers.DateTimes;
-using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models.Teams;
-
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public partial class TeamService : ITeamService
@@ -27,6 +21,14 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
+
+        public ValueTask<Team> AddTeamAsync(Team team) =>
+        TryCatch(async () =>
+        {
+            ValidateTeam(team);
+
+            return await this.storageBroker.InsertTeamAsync(team);
+        });
         public IQueryable<Team> RetrieveAllTeams() =>
             TryCatch(() => this.storageBroker.SelectAllTeams());
     }

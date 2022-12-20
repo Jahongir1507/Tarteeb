@@ -3,7 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -27,7 +29,28 @@ namespace Tarteeb.Api.Services.Foundations.Users
             this.dateTimeBroker = dateTimeBroker;
         }
 
+        public ValueTask<User> AddUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            ValidateUser(user);
+
+            return await this.storageBroker.InsertUserAsync(user);
+        });
+
         public IQueryable<User> RetrieveAllUsers() =>
-            TryCatch(() => this.storageBroker.SelectAllUsers());
+        TryCatch(() => this.storageBroker.SelectAllUsers());
+
+        public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+
+            User maybeUser =
+                await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(maybeUser, userId);
+
+            return maybeUser;
+        });
     }
 }

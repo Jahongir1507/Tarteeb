@@ -37,9 +37,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             return await this.storageBroker.InsertTeamAsync(team);
         });
 
-        public ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId)
-        {
-            throw new NotImplementedException();
-        }
+        public async ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId) =>
+            await storageBroker.SelectTeamByIdAsync(teamId);
     }
 }

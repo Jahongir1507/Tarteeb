@@ -64,11 +64,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             string someMessage = GetRandomString();
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
-            var alreadyExistsTicketException =
+            var alreadyExistsTeamException =
                 new AlreadyExistsTeamException(duplicateKeyException);
 
             var expectedTeamDependencyValidationException =
-                new TeamDependencyValidationException(alreadyExistsTicketException);
+                new TeamDependencyValidationException(alreadyExistsTeamException);
 
             this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(duplicateKeyException);

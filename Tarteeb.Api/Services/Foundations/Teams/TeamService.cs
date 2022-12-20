@@ -3,7 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -34,5 +36,10 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return await this.storageBroker.InsertTeamAsync(team);
         });
+
+        public ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

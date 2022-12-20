@@ -4,10 +4,8 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
-using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {

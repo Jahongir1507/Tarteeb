@@ -3,6 +3,21 @@
 // Free to use to bring order in your workplace
 //===============================
 
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
+using Moq;
+using Tarteeb.Api.Brokers.DateTimes;
+using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Brokers.Storages;
+using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Services.Foundations.Teams;
+using Tynamix.ObjectFiller;
+using Xeptions;
+using Xunit;
+
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
     public partial class TeamServiceTests
@@ -29,8 +44,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             int secondsInPast = -1 * new IntRange(
                 min: 60,
                 max: short.MaxValue).GetValue();
-            private static IQueryable<Team> CreateRandomTeam() =>
-                CreateTeamFiller().Create(count: GetRandomNumber()).AsQueryable();
 
             int secondsInFuture = new IntRange(
                 min: 0,
@@ -58,8 +71,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private static Team CreateRandomTeam(DateTimeOffset dates) =>
             CreateTeamFiller(dates).Create();
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
+
         private static Team CreateRandomTeam() =>
             CreateTeamFiller(GetRandomDateTime()).Create();
+
+        private static IQueryable<Team> CreateRandomTeams()
+        {
+            return CreateTeamFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static Filler<Team> CreateTeamFiller(DateTimeOffset dates)
         {

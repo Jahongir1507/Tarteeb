@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         public void ShouldRetrieveAllTeams()
         {
             //given
-            IQueryable<Team> randomTeams = CreateRandomTeam();
+            IQueryable<Team> randomTeams = CreateRandomTeams();
             IQueryable<Team> storageTeams = randomTeams;
             IQueryable<Team> expectedTeams = storageTeams;
 

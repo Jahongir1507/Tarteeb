@@ -3,6 +3,16 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Teams.Exceptions;
+using Xeptions;
+
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
     public partial class TeamService
@@ -11,7 +21,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         private delegate IQueryable<Team> ReturningTeamsFunction();
 
         private async ValueTask<Team> TryCatch(ReturningTeamFunction returningTeamFunction)
-        private IQueryable<Team> TryCatch(ReturningTeamsFunction returningTeamsFunction)
         {
             try
             {
@@ -20,7 +29,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             catch (NullTeamException nullTeamException)
             {
                 throw CreateAndLogValidationException(nullTeamException);
-                return returningTeamsFunction();
             }
             catch (InvalidTeamException invalidTeamException)
             {
@@ -29,13 +37,10 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             catch (SqlException sqlException)
             {
                 var failedTeamStorageException = new FailedTeamStorageException(sqlException);
-                var failedTeamStorageException =
-                    new FailedTeamStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
             }
             catch (DuplicateKeyException duplicateKeyException)
-            catch (Exception exception)
             {
                 var alreadyExistsTeamException = new AlreadyExistsTeamException(duplicateKeyException);
 
@@ -44,8 +49,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedTeamException = new LockedTeamException(dbUpdateConcurrencyException);
-                var failedTeamServiceException =
-                    new FailedTeamServiceException(exception);
 
                 throw CreateAndDependencyValidationException(lockedTeamException);
             }
@@ -57,7 +60,34 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
-        private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        private IQueryable<Team> TryCatch(ReturningTeamsFunction returningTeamsFunction)
+        {
+            try
+            {
+                return returningTeamsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedTeamServiceException = new FailedTeamServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTeamServiceException);
+            }
+        }
+
+        private TeamServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var teamServiceException = new TeamServiceException(exception);
+            this.loggingBroker.LogError(teamServiceException);
+
+            return teamServiceException;
+        }
+
         private TeamValidationException CreateAndLogValidationException(Xeption exception)
         {
             var teamValidationExpcetion = new TeamValidationException(exception);
@@ -65,8 +95,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return teamValidationExpcetion;
         }
-        var teamDependencyException =
-            new TeamDependencyException(exception);
 
         private TeamDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
@@ -77,22 +105,11 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         }
 
         private TeamDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
-        private TeamServiceException CreateAndLogServiceException(Xeption exception)
         {
             var teamDependencyValidationException = new TeamDependencyValidationException(exception);
             this.loggingBroker.LogError(teamDependencyValidationException);
 
             return teamDependencyValidationException;
-        }
-        var teamServiceException =
-            new TeamServiceException(exception);
-
-        private TeamServiceException CreateAndLogServiceException(Xeption exception)
-        {
-            var teamServiceException = new TeamServiceException(exception);
-            this.loggingBroker.LogError(teamServiceException);
-
-            return teamServiceException;
         }
     }
 }

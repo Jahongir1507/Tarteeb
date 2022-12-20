@@ -3,6 +3,17 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
+using Xeptions;
+
 namespace Tarteeb.Api.Services.Foundations.Users
 {
     public partial class UserService

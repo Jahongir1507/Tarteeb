@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xunit;
 
@@ -26,14 +26,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamDependencyException(failedTeamStorageException);
 
             this.storageBrokerMock.Setup(broker =>
-               broker.SelectAllTeams()).Throws(sqlException);
+                broker.SelectAllTeams()).Throws(sqlException);
 
             //when
             Action retrieveAllTeamsAction = () =>
                 this.teamService.RetrieveAllTeams();
 
             TeamDependencyException actualTeamDependencyException =
-               Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
+                Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
 
             //then
             actualTeamDependencyException.Should().BeEquivalentTo(expectedTeamDependencyException);
@@ -42,7 +42,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.SelectAllTeams(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                 broker.LogCritical(It.Is(SameExceptionAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -58,7 +58,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var serviceException = new Exception(exceptionMessage);
 
             var failedTeamServiceException =
-               new FailedTeamServiceException(serviceException);
+                new FailedTeamServiceException(serviceException);
 
             var expectedTeamServiceException =
                 new TeamServiceException(failedTeamServiceException);

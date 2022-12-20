@@ -3,12 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Data.SqlClient;
-using Moq;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
+using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -47,9 +47,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
-        private static string GetRandomString() =>new MnemonicString().GetValue();
+        private static string GetRandomString() => new MnemonicString().GetValue();
 
-        private static int GetRandomNumber() =>new IntRange(min: 2, max: 10).GetValue();
+        private static int GetRandomNumber() => new IntRange(min: 2, max: 10).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
@@ -58,7 +58,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         {
             var filler = new Filler<Team>();
 
-            filler.Setup().OnType<DateTimeOffset>().Use(GetRandomDateTimeOffset());
+            filler.Setup().OnType<DateTimeOffset>()
+                .Use(GetRandomDateTimeOffset());
 
             return filler;
         }

@@ -8,7 +8,7 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class FailedTeamServiceException: Xeption
+    public class FailedTeamServiceException : Xeption
     {
         public FailedTeamServiceException(Exception innerException)
             : base(message: "Team service error occurred, contact support.", innerException)

@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Data.SqlClient;
 using System;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xeptions;

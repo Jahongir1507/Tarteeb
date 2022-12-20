@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
 
@@ -26,7 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserDependencyException(failedUserStorageException);
 
             this.storageBrokerMock.Setup(broker =>
-               broker.SelectAllUsers())
+                broker.SelectAllUsers())
                    .Throws(sqlException);
 
             //when
@@ -37,10 +37,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
 
             this.storageBrokerMock.Verify(broker =>
-               broker.SelectAllUsers());
+                broker.SelectAllUsers());
 
             this.loggingBrokerMock.Verify(broker =>
-                 broker.LogCritical(It.Is(SameExceptionAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedUserDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

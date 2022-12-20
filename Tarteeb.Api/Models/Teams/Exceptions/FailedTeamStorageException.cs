@@ -8,7 +8,7 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class FailedTeamStorageException: Xeption
+    public class FailedTeamStorageException : Xeption
     {
         public FailedTeamStorageException(Exception innerException)
             : base(message: "Failed team storage error occurred, contact support.", innerException)

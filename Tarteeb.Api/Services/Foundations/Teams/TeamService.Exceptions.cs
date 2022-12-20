@@ -4,8 +4,8 @@
 //=================================
 
 using System;
-using Microsoft.Data.SqlClient;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xeptions;
@@ -47,6 +47,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return teamDependencyException;
         }
+
         private TeamServiceException CreateAndLogServiceException(Xeption exception)
         {
             var teamServiceException =

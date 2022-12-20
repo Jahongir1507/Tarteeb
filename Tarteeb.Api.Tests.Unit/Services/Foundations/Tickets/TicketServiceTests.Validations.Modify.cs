@@ -31,8 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 this.ticketService.ModifyTicketAsync(nullTicket);
 
             TicketValidationException actualTicketValidationException =
-                await Assert.ThrowsAsync<TicketValidationException>(
-                    modifyTicketTask.AsTask);
+                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
             //then
             actualTicketValidationException.Should()
@@ -105,10 +104,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
             //when
-            ValueTask<Ticket> addTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
+            ValueTask<Ticket> modifyTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
 
             TicketValidationException actualTicketValidationException =
-                await Assert.ThrowsAsync<TicketValidationException>(addTicketTask.AsTask);
+                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
             //then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);

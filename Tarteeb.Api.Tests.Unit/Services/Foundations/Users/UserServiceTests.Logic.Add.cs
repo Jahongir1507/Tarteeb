@@ -19,7 +19,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public async Task ShouldAddUserAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTime();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDateTime);
             User inputUser = randomUser;
             User persistedUser = inputUser;

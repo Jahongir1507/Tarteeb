@@ -64,7 +64,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         }
 
         private static User CreateRandomUser() =>
-            CreateUserFiller(dates: GetRandomDateTime()).Create();
+            CreateUserFiller(dates: GetRandomDateTimeOffset()).Create();
 
         private static User CreateRandomUser(DateTimeOffset dates) =>
             CreateUserFiller(dates).Create();
@@ -92,14 +92,22 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         private static string GetRandomString() =>
              new MnemonicString().GetValue();
 
-        private static DateTimeOffset GetRandomDateTime() =>
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();
 
-        private static DateTimeOffset GetRandomDateTimeOffset() =>
-            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+        public static TheoryData MinutsBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber=GetRandomNegativeNumber();
+            return new TheoryData<int>
+            {
+                randomNumber, 
+                randomNegativeNumber
+            };
+        }
 
         private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {

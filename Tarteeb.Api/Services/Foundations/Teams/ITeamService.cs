@@ -11,5 +11,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
     public interface ITeamService
     {
         ValueTask<Team> AddTeamAsync(Team team);
+        ValueTask<Team> ModifyTeamAsync(Team team);
     }
 }

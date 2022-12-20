@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Users.Exceptions
     public partial class AlreadyExistsUserException : Xeption
     {
         public AlreadyExistsUserException(Exception innerException)
-            : base(message: "Failed user dependency validation error occurred, fix errors and try again.", innerException) 
+            : base(message: "User already exists.", innerException)
         { }
     }
 }

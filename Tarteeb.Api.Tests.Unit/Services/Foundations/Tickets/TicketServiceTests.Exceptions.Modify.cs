@@ -3,13 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Xunit;
@@ -86,8 +85,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketDependencyException(failedTicketException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(ticketId))
-                    .ThrowsAsync(databaseUpdateException);
+                broker.SelectTicketByIdAsync(ticketId)).ThrowsAsync(databaseUpdateException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
@@ -138,20 +136,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketDependencyValidationException(lockedTicketException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(ticketId))
-                    .ThrowsAsync(databaseUpdateConcurrencyException);
+                broker.SelectTicketByIdAsync(ticketId)).ThrowsAsync(databaseUpdateConcurrencyException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Ticket> modifyTicketTask =
                 this.ticketService.ModifyTicketAsync(someTicket);
 
             TicketDependencyValidationException actualTicketDependencyValidationException =
-                await Assert.ThrowsAsync<TicketDependencyValidationException>(
-                    modifyTicketTask.AsTask);
+                await Assert.ThrowsAsync<TicketDependencyValidationException>(modifyTicketTask.AsTask);
 
             // then
             actualTicketDependencyValidationException.Should().BeEquivalentTo(
@@ -190,12 +185,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 new TicketServiceException(failedTicketException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTicketByIdAsync(someTicket.Id))
-                    .ThrowsAsync(serviceException);
+                broker.SelectTicketByIdAsync(someTicket.Id)).ThrowsAsync(serviceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Ticket> modifyTicketTask =

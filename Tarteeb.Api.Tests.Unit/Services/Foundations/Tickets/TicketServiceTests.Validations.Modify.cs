@@ -291,24 +291,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 this.ticketService.ModifyTicketAsync(invalidTicket);
 
             TicketValidationException actualTicketValidationException =
-                await Assert.ThrowsAsync<TicketValidationException>(
-                    modifyTicketTask.AsTask);
+                await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
             // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(invalidTicket.Id),
-                    Times.Once);
+                broker.SelectTicketByIdAsync(invalidTicket.Id),Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
+                broker.GetCurrentDateTime(),Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
-                   expectedTicketValidationException))),
-                       Times.Once);
+                   expectedTicketValidationException))),Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

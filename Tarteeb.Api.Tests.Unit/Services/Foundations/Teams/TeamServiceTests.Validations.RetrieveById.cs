@@ -13,21 +13,20 @@ using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
-    internal partial class TeamServiceTests
+    public partial class TeamServiceTests
     {
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
         {
             // given
             var invalidTeamId = Guid.Empty;
-
             var invalidTeamException = new InvalidTeamException();
 
             invalidTeamException.AddData(
                 key: nameof(Team.Id),
                 values: "Id is required");
 
-            var expectedTeamValidationException = new
+            var expectedTeamValidationException = new 
                 TeamValidationException(invalidTeamException);
 
             // when

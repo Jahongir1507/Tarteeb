@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -314,6 +315,55 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
                    expectedTeamValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Team randomTeam = CreateRandomModifyTeam(randomDateTime);
+            Team invalidTeam = randomTeam;
+            Team storageTeam = randomTeam.DeepClone();
+            invalidTeam.UpdatedDate = storageTeam.UpdatedDate;
+            Guid teamId = invalidTeam.Id;
+            var invalidTeamException = new InvalidTeamException();
+            
+            invalidTeamException.AddData(
+            key: nameof(Team.UpdatedDate),
+                values: $"Date is same as {nameof(Team.UpdatedDate)}.");
+
+            var expectedTeamValidationException =
+                new TeamValidationException(invalidTeamException);
+
+            this.storageBrokerMock.Setup(broker =>
+               broker.SelectTeamByIdAsync(invalidTeam.Id)).ReturnsAsync(storageTeam);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Team> modifyTeamTask = this.teamService.ModifyTeamAsync(invalidTeam);
+
+            TeamValidationException actualTeamValidationException =
+               await Assert.ThrowsAsync<TeamValidationException>(modifyTeamTask.AsTask);
+
+            // then
+            actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamValidationException))),Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(teamId),Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

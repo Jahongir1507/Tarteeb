@@ -34,7 +34,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw CreateAndLogValidationException(invalidTicketException);
             }
-            catch(NotFoundTicketException notFoundTicketException)
+            catch (NotFoundTicketException notFoundTicketException)
             {
                 throw CreateAndLogValidationException(notFoundTicketException);
             }
@@ -66,14 +66,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             }
             catch (DbUpdateException databaseUpdateException)
             {
-                var failedPostStorageException = new FailedTicketStorageException(databaseUpdateException);
+                var failedTicketStorageException = new FailedTicketStorageException(databaseUpdateException);
 
-                throw CreateAndLogDependencyException(failedPostStorageException);
+                throw CreateAndLogDependencyException(failedTicketStorageException);
             }
             catch (Exception serviceException)
             {
                 var failedServiceProfileException = new FailedTicketServiceException(serviceException);
-                
+
                 throw CreateAndLogServiceException(failedServiceProfileException);
             }
         }

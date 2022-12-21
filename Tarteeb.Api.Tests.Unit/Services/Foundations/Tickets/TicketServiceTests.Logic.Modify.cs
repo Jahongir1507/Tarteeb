@@ -3,12 +3,11 @@
 // Free to use to bring order in your workplace
 //===============================
 
-using FluentAssertions;
-using Force.DeepCloner;
-using Microsoft.Extensions.Hosting;
-using Moq;
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Force.DeepCloner;
+using Moq;
 using Tarteeb.Api.Models.Tickets;
 using Xunit;
 

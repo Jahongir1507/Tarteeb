@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Extensions.Hosting;
 using System;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
@@ -61,7 +60,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                     secondDate: storageTicket.UpdatedDate,
                     secondDateName: nameof(Ticket.UpdatedDate)),
                 Parameter: nameof(Ticket.UpdatedDate)));
-
         }
 
         private void ValidateTicketOnModify(Ticket ticket)

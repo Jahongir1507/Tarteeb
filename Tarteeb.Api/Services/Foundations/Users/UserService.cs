@@ -61,6 +61,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
             User someUser =
                await this.storageBroker.SelectUserByIdAsync(userId);
 
+            ValidateStorageUser(someUser, userId);
+
             return await this.storageBroker.DeleteUserAsync(someUser);
         });
     }

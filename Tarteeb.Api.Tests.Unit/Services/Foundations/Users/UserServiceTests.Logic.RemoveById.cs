@@ -43,17 +43,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(inputUserId),
-                    Times.Once);
+                broker.SelectUserByIdAsync(inputUserId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteUserAsync(expectedInputUser),
-                    Times.Once);
+                broker.DeleteUserAsync(expectedInputUser), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-
         }
     }
 }

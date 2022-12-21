@@ -41,6 +41,8 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             ValidateTeamOnModify(team);
             var maybeTeam = await this.storageBroker.SelectTeamByIdAsync(team.Id);
 
+            ValidateStorageTeam(maybeTeam, team.Id);
+
             return await this.storageBroker.UpdateTeamAsync(team);
         });
     }

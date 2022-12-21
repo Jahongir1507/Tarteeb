@@ -7,8 +7,6 @@ using System;
 using Microsoft.Extensions.Hosting;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
-using Tarteeb.Api.Models.Tickets;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
@@ -41,12 +39,20 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
                 (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
                 (Rule: IsNotRecent(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
-            
+
                 (Rule: IsSame(
                         firstDate: team.UpdatedDate,
                         secondDate: team.CreatedDate,
                         secondDateName: nameof(team.CreatedDate)),
                      Parameter: nameof(team.UpdatedDate)));
+        }
+
+        private static void ValidateStorageTeam(Team maybeTeam, Guid teamId)
+        {
+            if (maybeTeam is null)
+            {
+                throw new NotFoundTeamException(teamId);
+            }
         }
 
         private static dynamic IsInvalid(Guid id) => new

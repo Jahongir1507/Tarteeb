@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
@@ -22,7 +23,7 @@ namespace Tarteeb.Api.Controllers
             this.userService = userService;
 
         [HttpPost]
-        public async ValueTask<ActionResult<User>> PostUserAsync(User user)
+        public async ValueTask<ActionResult<User>> PostUserAsync(User user)        
         {
             try
             {
@@ -40,6 +41,26 @@ namespace Tarteeb.Api.Controllers
             catch (UserDependencyValidationException userDependencyValidationException)
             {
                 return BadRequest(userDependencyValidationException.InnerException);
+                
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<User>> GetAllUsers()
+        {
+            try
+            {
+                IQueryable<User> allUsers = this.userService.RetrieveAllUsers();
+
+                return Ok(allUsers);
             }
             catch (UserDependencyException userDependencyException)
             {

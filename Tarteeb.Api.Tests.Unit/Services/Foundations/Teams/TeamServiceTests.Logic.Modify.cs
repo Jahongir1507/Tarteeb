@@ -3,14 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Moq;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Force.DeepCloner;
+using Moq;
 using Tarteeb.Api.Models.Teams;
 using Xunit;
-using Force.DeepCloner;
-using Tarteeb.Api.Models.Teams;
-using FluentAssertions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
@@ -50,14 +49,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeam.Should().
                 BeEquivalentTo(expectedTeam);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
-
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(inputTeamId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(inputTeam), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

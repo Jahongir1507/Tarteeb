@@ -6,7 +6,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -27,7 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 key: nameof(Team.Id),
                 values: "Id is required");
 
-            var expectedTeamValidationException = new 
+            var expectedTeamValidationException = new
                 TeamValidationException(invalidTeamException);
 
             // when

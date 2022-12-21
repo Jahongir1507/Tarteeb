@@ -3,14 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Extensions.Hosting;
-using Moq;
-using System.Threading.Tasks;
 using System;
-using Xunit;
-using Tarteeb.Api.Models.Teams;
-using Force.DeepCloner;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Force.DeepCloner;
+using Moq;
+using Tarteeb.Api.Models.Teams;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {

@@ -3,14 +3,14 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System.Threading.Tasks;
-using System;
-using Xunit;
-using Tarteeb.Api.Models.Teams.Exceptions;
 using Tarteeb.Api.Models.Teams;
-using FluentAssertions;
+using Tarteeb.Api.Models.Teams.Exceptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {

@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public IQueryable<Ticket> SelectAllTickets() =>
             SelectAll<Ticket>();
-         
+
         public async ValueTask<Ticket> SelectTicketByIdAsync(Guid id) =>
             await SelectAsync<Ticket>(id);
 

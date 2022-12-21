@@ -39,7 +39,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private void ValidateStorageUser(User maybeUser, Guid userId)
         {
-            if(maybeUser is null)
+            if (maybeUser is null)
             {
                 throw new NotFoundUserException(userId);
             }

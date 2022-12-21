@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class NotFoundTicketException : Xeption
     {
         public NotFoundTicketException(Guid ticketId)
-            : base(message:$"Couldn't find ticket with id: {ticketId}.")
+            : base(message: $"Couldn't find ticket with id: {ticketId}.")
         { }
     }
 }

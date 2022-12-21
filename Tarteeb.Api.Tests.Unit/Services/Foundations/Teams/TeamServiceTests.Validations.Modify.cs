@@ -10,7 +10,6 @@ using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
@@ -78,7 +77,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             invalidTeamException.AddData(
                 key: nameof(Team.UpdatedDate),
-                 values: "Value is required"  
+                    values: new[]
+                    {
+                        "Value is required",
+                        $"Date is the same as {nameof(Team.CreatedDate)}"
+                    }
                 );
 
             var expectedTeamValidationException =
@@ -147,7 +150,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 .BeEquivalentTo(expectedTeamValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

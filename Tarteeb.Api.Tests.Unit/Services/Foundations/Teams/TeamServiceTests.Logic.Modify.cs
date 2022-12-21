@@ -41,13 +41,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     .ReturnsAsync(updatedTeam);
 
             //when
-            Team actualTeam =
-                await this.teamService.
-                    ModifyTeamAsync(inputTeam);
+            Team actualTeam = await this.teamService.
+                ModifyTeamAsync(inputTeam);
 
             //then
-            actualTeam.Should().
-                BeEquivalentTo(expectedTeam);
+            actualTeam.Should().BeEquivalentTo(expectedTeam);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(inputTeamId), Times.Once);

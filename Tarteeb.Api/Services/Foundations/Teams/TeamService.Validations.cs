@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using Microsoft.Extensions.Hosting;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -27,7 +28,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                     firstDate: team.CreatedDate,
                     secondDate: team.UpdatedDate,
                     secondDateName: nameof(Team.UpdatedDate)),
-            Parameter: nameof(Team.CreatedDate)));
+                Parameter: nameof(Team.CreatedDate)));
         }
 
         private void ValidateTeamOnModify(Team team)
@@ -37,7 +38,13 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsInvalid(team.Id), Parameter: nameof(Team.Id)),
                 (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
                 (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
-                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)));
+                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: team.UpdatedDate,
+                    secondDate: team.CreatedDate,
+                    secondDateName: nameof(team.CreatedDate)),
+                 Parameter: nameof(team.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -65,6 +72,14 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}."
+            };
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

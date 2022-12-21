@@ -53,7 +53,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 secondsInFuture
             };
         }
-
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
             actualException => actualException.SameExceptionAs(expectedExceptoin);
 

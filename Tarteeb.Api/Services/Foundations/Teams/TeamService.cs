@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -42,6 +43,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             var maybeTeam = await this.storageBroker.SelectTeamByIdAsync(team.Id);
 
             ValidateStorageTeam(maybeTeam, team.Id);
+            ValidateAginstStorageTeamOnModify(inputTeam: team, storageTeam: maybeTeam);
 
             return await this.storageBroker.UpdateTeamAsync(team);
         });

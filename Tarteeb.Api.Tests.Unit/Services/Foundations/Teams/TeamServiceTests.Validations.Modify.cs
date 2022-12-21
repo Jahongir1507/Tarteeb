@@ -281,7 +281,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             invalidTeamException.AddData(
                 key: nameof(Team.CreatedDate),
-                values: $"Date is not the same as {nameof(Team.CreatedDate)}");
+                values: $"Date is not same as {nameof(Team.CreatedDate)}.");
 
             var expectedTeamValidationException =
                 new TeamValidationException(invalidTeamException);

@@ -55,6 +55,16 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
+        private static void ValidateAginstStorageTeamOnModify(Team inputTeam, Team storageTeam)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputTeam.CreatedDate,
+                    secondDate: storageTeam.CreatedDate,
+                    secondDateName: nameof(Team.CreatedDate)),
+                Parameter: nameof(Team.CreatedDate)));
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

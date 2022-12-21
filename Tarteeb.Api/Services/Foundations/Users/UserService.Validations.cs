@@ -82,7 +82,9 @@ namespace Tarteeb.Api.Services.Foundations.Users
                     secondDate: user.CreatedDate,
                     secondDateName: nameof(User.CreatedDate)),
 
-                    Parameter: nameof(User.UpdatedDate)));
+                    Parameter: nameof(User.UpdatedDate)),
+                
+                (Rule:IsNotRecent(user.UpdatedDate),Parameter:nameof(User.UpdatedDate)));
         }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

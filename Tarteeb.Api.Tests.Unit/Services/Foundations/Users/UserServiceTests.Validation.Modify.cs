@@ -104,7 +104,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
-                    Times.Never);
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(It.IsAny<User>()),
@@ -116,7 +116,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsNotSameAsCreateDateAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsSameAsCreateDateAndLogItAsync()
         {
             //given
             DateTimeOffset randomDatetime = GetRandomDateTimeOffset();
@@ -150,19 +150,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                    expectedUserValidationException))), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);
 
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
         [MemberData(nameof(MinutsBeforeOrAfter))]
-
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minuts)
         {
             //given
@@ -170,12 +169,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             User randomUser = CreateRandomUser(dateTime);
             User inputUser = randomUser;
             inputUser.UpdatedDate = dateTime.AddMinutes(minuts);
+
             var invalidUserException=
                 new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),
-                values: "Data is not recent");
+                values: "Date is not recent");
 
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
@@ -187,6 +187,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             //when
             ValueTask<User>modifyUserTask=
                 this.userService.ModifyUserAsync(inputUser);
+
             //then
             await Assert.ThrowsAsync<UserValidationException>(()=>
                 modifyUserTask.AsTask());
@@ -201,8 +202,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                       Times.Once);
 
             this.storageBrokerMock.Verify(broker=>
-            broker.SelectUserByIdAsync(It.IsAny<Guid> ()),
-            Times.Never);
+                broker.SelectUserByIdAsync(It.IsAny<Guid> ()),Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -228,11 +228,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(nonExistUser.Id))
-                .ReturnsAsync(nullUser);
+                    .ReturnsAsync(nullUser);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                .Returns(dateTime);
+                    .Returns(dateTime);
 
             // when
             ValueTask<User> modifyUserTask =
@@ -244,11 +244,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(nonExistUser.Id),
-                Times.Once());
+                    Times.Once());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
-                Times.Once());
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

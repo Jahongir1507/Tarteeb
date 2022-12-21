@@ -6,6 +6,7 @@
 using System;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
@@ -32,6 +33,11 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         private void ValidateTeamOnModify(Team team)
         {
             ValidateTeamNotNull(team);
+            Validate(
+                (Rule: IsInvalid(team.Id), Parameter: nameof(Team.Id)),
+                (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
+                (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
+                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new

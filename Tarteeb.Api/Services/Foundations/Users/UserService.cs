@@ -37,11 +37,6 @@ namespace Tarteeb.Api.Services.Foundations.Users
             return await this.storageBroker.InsertUserAsync(user);
         });
 
-        public ValueTask<User> RemoveUserByIdAsync(Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IQueryable<User> RetrieveAllUsers() =>
         TryCatch(() => this.storageBroker.SelectAllUsers());
 
@@ -57,5 +52,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
             return maybeUser;
         });
+
+        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        {
+            User someUser =
+                await this.storageBroker.SelectUserByIdAsync(userId);
+
+            return await this.storageBroker.DeleteUserAsync(someUser);
+        }
     }
 }

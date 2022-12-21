@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                     .ReturnsAsync(storageUser);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectUserByIdAsync(inputUserId))
+                broker.DeleteUserAsync(expectedInputUser))
                     .ReturnsAsync(deletedUser);
 
             // when
@@ -44,15 +44,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(inputUserId),
-                    Times.Once());
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteUserAsync(expectedInputUser),
                     Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
 
         }
     }

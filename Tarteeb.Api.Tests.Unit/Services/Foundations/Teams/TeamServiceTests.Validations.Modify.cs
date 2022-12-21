@@ -82,6 +82,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     values: new[]
                     {
                         "Value is required",
+                        "Date is not recent.",
                         $"Date is the same as {nameof(Team.CreatedDate)}"
                     }
                 );
@@ -110,7 +111,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     expectedTeamValidationException))), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(It.IsAny<Team>()), Times.Never);
@@ -152,7 +153,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 .BeEquivalentTo(expectedTeamValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -179,7 +180,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new InvalidTeamException();
             invalidTeamException.AddData(
                 key: nameof(Team.UpdatedDate),
-                values: "Date is not recent");
+                values: "Date is not recent.");
 
             var expectedTeamValidatonException =
                 new TeamValidationException(invalidTeamException);

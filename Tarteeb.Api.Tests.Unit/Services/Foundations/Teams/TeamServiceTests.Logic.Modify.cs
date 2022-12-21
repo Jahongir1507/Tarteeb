@@ -9,6 +9,7 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Tickets;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -19,30 +20,27 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         public async Task ShouldModifyTeamAsync()
         {
             //given
+            int randomDaysAgo = GetRandomNegativeNumber();
             DateTimeOffset randomDate = GetRandomDateTime();
-            Team randomTeam = CreateRandomTeam();
+            Team randomTeam = CreateRandomTeam(randomDate);
+            randomTeam.CreatedDate = randomDate.AddDays(randomDaysAgo);
             Team inputTeam = randomTeam;
-            inputTeam.UpdatedDate = randomDate.AddMinutes(1);
             Team storageTeam = inputTeam;
             Team updatedTeam = inputTeam;
             Team expectedTeam = updatedTeam.DeepClone();
             Guid inputTeamId = inputTeam.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(inputTeamId))
-                    .ReturnsAsync(storageTeam);
+                broker.SelectTeamByIdAsync(inputTeamId)).ReturnsAsync(storageTeam);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.UpdateTeamAsync(inputTeam))
-                    .ReturnsAsync(updatedTeam);
+                broker.UpdateTeamAsync(inputTeam)).ReturnsAsync(updatedTeam);
 
             //when
-            Team actualTeam = await this.teamService.
-                ModifyTeamAsync(inputTeam);
+            Team actualTeam = await this.teamService.ModifyTeamAsync(inputTeam);
 
             //then
             actualTeam.Should().BeEquivalentTo(expectedTeam);
@@ -54,7 +52,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.UpdateTeamAsync(inputTeam), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

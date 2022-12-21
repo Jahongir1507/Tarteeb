@@ -68,6 +68,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
+        private static Team CreateRandomModifyTeam(DateTimeOffset dates)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Team randomTeam = CreateRandomTeam(dates);
+
+            randomTeam.CreatedDate = randomTeam.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomTeam;
+        }
+
         private static Team CreateRandomTeam(DateTimeOffset dates) =>
             CreateTeamFiller(dates).Create();
 

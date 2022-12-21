@@ -6,12 +6,11 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Hosting;
+using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
@@ -252,14 +251,69 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(nonExistTeam.Id),Times.Once);
+                broker.SelectTeamByIdAsync(nonExistTeam.Id), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTeamValidationException))),Times.Once);
+                    expectedTeamValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNegativeNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTime();
+            Team randomTeam = CreateRandomModifyTeam(randomDateTimeOffset);
+            Team invalidTeam = randomTeam.DeepClone();
+            Team storageTeam = invalidTeam.DeepClone();
+            storageTeam.CreatedDate = storageTeam.CreatedDate.AddMinutes(randomMinutes);
+            storageTeam.UpdatedDate = storageTeam.UpdatedDate.AddMinutes(randomMinutes);
+            var invalidTeamException = new InvalidTeamException();
+            Guid teamId = invalidTeam.Id;
+
+            invalidTeamException.AddData(
+                key: nameof(Team.CreatedDate),
+                values: $"Date is not the same as {nameof(Team.CreatedDate)}");
+
+            var expectedTeamValidationException =
+                new TeamValidationException(invalidTeamException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(teamId))
+                .ReturnsAsync(storageTeam);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Team> modifyTeamTask =
+                this.teamService.ModifyTeamAsync(invalidTeam);
+
+            TeamValidationException actualTeamValidationException =
+                await Assert.ThrowsAsync<TeamValidationException>(
+                    modifyTeamTask.AsTask);
+
+            // then
+            actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(invalidTeam.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedTeamValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

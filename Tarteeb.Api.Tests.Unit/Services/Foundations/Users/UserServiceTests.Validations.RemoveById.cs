@@ -55,8 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new NotFoundUserException(inputUserId);
 
             var expectedUserValidationException =
-                new UserValidationException(
-                    notFoundUserException);
+                new UserValidationException(notFoundUserException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()))
@@ -71,21 +70,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 removeUserByIdTask.AsTask());
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
-                    Times.Once);
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))),
-                        Times.Once);
+                    expectedUserValidationException))),Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteUserAsync(It.IsAny<User>()),
-                    Times.Never);
+                broker.DeleteUserAsync(It.IsAny<User>()),Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

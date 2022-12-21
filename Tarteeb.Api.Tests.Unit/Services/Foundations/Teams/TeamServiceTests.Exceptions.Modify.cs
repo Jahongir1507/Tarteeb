@@ -7,6 +7,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -63,6 +65,59 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Team randomTeam = CreateRandomTeam(randomDateTime);
+            Team SomeTeam = randomTeam;
+            Guid TeamId = SomeTeam.Id;
+            SomeTeam.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedTeamException =
+                new FailedTeamStorageException(databaseUpdateException);
+
+            var expectedTeamDependencyException =
+                new TeamDependencyException(failedTeamException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(TeamId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Team> modifyTeamTask =
+                this.teamService.ModifyTeamAsync(SomeTeam);
+
+            TeamDependencyException actualTeamDependencyException =
+              await Assert.ThrowsAsync<TeamDependencyException>(
+                  modifyTeamTask.AsTask);
+
+            // then
+            actualTeamDependencyException.Should().BeEquivalentTo(
+                expectedTeamDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(TeamId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

@@ -172,5 +172,57 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Team randomTeam = CreateRandomTeam(randomDateTime);
+            Team someTeam = randomTeam;
+            someTeam.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
+
+            var failedTeamException =
+                new FailedTeamServiceException(serviceException);
+
+            var expectedTeamServiceException =
+                new TeamServiceException(failedTeamException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(someTeam.Id))
+                    .ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Team> modifyTeamTask =
+                this.teamService.ModifyTeamAsync(someTeam);
+
+            TeamServiceException actualTeamServiceException =
+                await Assert.ThrowsAsync<TeamServiceException>(
+                    modifyTeamTask.AsTask);
+
+            // then
+            actualTeamServiceException.Should().BeEquivalentTo(
+                expectedTeamServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(someTeam.Id), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

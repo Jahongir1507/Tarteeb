@@ -52,8 +52,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
             catch (NotFoundTeamException notFoundTeamException)
             {
-                //var teamValidationException = new TeamValidationException(notFoundTeamException);
-
                 throw CreateAndLogValidationException(notFoundTeamException);
             }
             catch (Exception serviceException)

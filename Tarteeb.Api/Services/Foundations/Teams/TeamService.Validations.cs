@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using Microsoft.Extensions.Hosting;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 
@@ -62,7 +61,13 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                     firstDate: inputTeam.CreatedDate,
                     secondDate: storageTeam.CreatedDate,
                     secondDateName: nameof(Team.CreatedDate)),
-                Parameter: nameof(Team.CreatedDate)));
+                Parameter: nameof(Team.CreatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: inputTeam.UpdatedDate,
+                        secondDate: storageTeam.UpdatedDate,
+                        secondDateName: nameof(Team.UpdatedDate)),
+                Parameter: nameof(Team.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -91,6 +96,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}."
             };
+
         private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,

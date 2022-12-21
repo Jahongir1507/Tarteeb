@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;

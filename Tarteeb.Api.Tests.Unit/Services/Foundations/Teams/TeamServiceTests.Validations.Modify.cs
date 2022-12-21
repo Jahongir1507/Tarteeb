@@ -129,15 +129,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             var invalidTeamException = new InvalidTeamException();
 
             invalidTeamException.AddData(
-            key: nameof(Team.UpdatedDate),
+                key: nameof(Team.UpdatedDate),
                 values: $"Date is the same as {nameof(Team.CreatedDate)}");
 
             var expectedTeamValidationException =
                 new TeamValidationException(invalidTeamException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =
@@ -175,8 +174,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Team randomTeam = CreateRandomTeam(dateTime);
             Team inputTeam = randomTeam;
             inputTeam.UpdatedDate = dateTime.AddMinutes(minutes);
-            var invalidTeamException =
-                new InvalidTeamException();
+            var invalidTeamException = new InvalidTeamException();
+
             invalidTeamException.AddData(
                 key: nameof(Team.UpdatedDate),
                 values: "Date is not recent.");
@@ -185,8 +184,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamValidationException(invalidTeamException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                .Returns(dateTime);
+                broker.GetCurrentDateTime()).Returns(dateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =
@@ -200,17 +198,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidatonException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTeamValidatonException))),
-                        Times.Once);
+                    expectedTeamValidatonException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(It.IsAny<Guid>()),
-                    Times.Never);
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -288,12 +283,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamValidationException(invalidTeamException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(teamId))
-                .ReturnsAsync(storageTeam);
+                broker.SelectTeamByIdAsync(teamId)).ReturnsAsync(storageTeam);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                .Returns(randomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(randomDateTimeOffset);
 
             // when
             ValueTask<Team> modifyTeamTask =

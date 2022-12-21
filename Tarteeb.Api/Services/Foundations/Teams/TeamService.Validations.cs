@@ -32,6 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         private void ValidateTeamOnModify(Team team)
         {
             ValidateTeamNotNull(team);
+
             Validate(
                 (Rule: IsInvalid(team.Id), Parameter: nameof(Team.Id)),
                 (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),

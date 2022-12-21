@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
@@ -27,9 +28,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(invalidUserId);
 
+            UserValidationException actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(removeUserByIdTask.AsTask);
+
             //then
-            await Assert.ThrowsAsync<UserValidationException>(() =>
-                removeUserByIdTask.AsTask());
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -65,19 +68,22 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(inputUserId);
 
+            UserValidationException actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(removeUserByIdTask.AsTask);
+
             //then
             await Assert.ThrowsAsync<UserValidationException>(() =>
                 removeUserByIdTask.AsTask());
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()),Times.Once);
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))),Times.Once);
+                    expectedUserValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteUserAsync(It.IsAny<User>()),Times.Never);
+                broker.DeleteUserAsync(It.IsAny<User>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

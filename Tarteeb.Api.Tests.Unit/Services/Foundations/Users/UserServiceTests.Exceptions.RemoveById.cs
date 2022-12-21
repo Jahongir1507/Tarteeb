@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models;
@@ -33,12 +34,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                     .ThrowsAsync(sqlException);
 
             //when
-            ValueTask<User> deleteUserTask =
+            ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(someUserId);
 
+            UserDependencyException actualUserDependencyException =
+                await Assert.ThrowsAsync<UserDependencyException>(removeUserByIdTask.AsTask);
+
             //then
-            await Assert.ThrowsAsync<UserDependencyException>(() =>
-                deleteUserTask.AsTask());
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);

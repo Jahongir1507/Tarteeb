@@ -14,17 +14,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         {
             //given
             Guid invalidUserId = Guid.Empty;
-
-            var invalidUserException =
-                new InvalidUserException();
+            var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.Id),
                 values: "Id is required");
-
-            invalidUserException.AddData(
-               key: nameof(User.Id),
-               values: "Id is required");
 
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
@@ -45,8 +39,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.DeleteUserAsync(It.IsAny<User>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]

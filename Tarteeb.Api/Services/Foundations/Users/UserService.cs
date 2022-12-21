@@ -53,12 +53,15 @@ namespace Tarteeb.Api.Services.Foundations.Users
             return maybeUser;
         });
 
-        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
         {
+            ValidateUserId(userId);
+
             User someUser =
-                await this.storageBroker.SelectUserByIdAsync(userId);
+               await this.storageBroker.SelectUserByIdAsync(userId);
 
             return await this.storageBroker.DeleteUserAsync(someUser);
-        }
+        });
     }
 }

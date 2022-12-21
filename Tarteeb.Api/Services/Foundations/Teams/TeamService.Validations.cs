@@ -4,10 +4,8 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
-using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
@@ -28,8 +26,12 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                     firstDate: team.CreatedDate,
                     secondDate: team.UpdatedDate,
                     secondDateName: nameof(Team.UpdatedDate)),
+            Parameter: nameof(Team.CreatedDate)));
+        }
 
-                Parameter: nameof(Team.CreatedDate)));
+        private void ValidateTeamOnModify(Team team)
+        {
+            ValidateTeamNotNull(team);
         }
 
         private static dynamic IsInvalid(Guid id) => new

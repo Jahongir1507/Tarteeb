@@ -35,11 +35,13 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             return await this.storageBroker.InsertTeamAsync(team);
         });
 
-        public async ValueTask<Team> ModifyTeamAsync(Team team)
+        public ValueTask<Team> ModifyTeamAsync(Team team) =>
+        TryCatch(async () =>
         {
+            ValidateTeamOnModify(team);
             var maybeTeam = await this.storageBroker.SelectTeamByIdAsync(team.Id);
 
             return await this.storageBroker.UpdateTeamAsync(team);
-        }
+        });
     }
 }

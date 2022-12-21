@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Xunit;
 

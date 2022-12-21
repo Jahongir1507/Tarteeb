@@ -10,6 +10,8 @@ using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
+using System;
+using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Controllers
 {
@@ -65,6 +67,33 @@ namespace Tarteeb.Api.Controllers
             catch (UserDependencyException userDependencyException)
             {
                 return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{userId}")]
+        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid Id)
+        {
+            try
+            {
+                return await this.userService.RetrieveUserByIdAsync(Id);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is InvalidUserException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
+            {
+                return NotFound(userValidationException.InnerException);
             }
             catch (UserServiceException userServiceException)
             {

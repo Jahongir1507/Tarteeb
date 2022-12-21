@@ -83,6 +83,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             return randomUser;
         }
 
+        private static SqlException GetSqlException()=>
+           (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 

@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Threading.Tasks;
-using System.Linq;
-using Tarteeb.Api.Models;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {

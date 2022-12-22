@@ -4,7 +4,6 @@
 //=================================
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using RESTFulSense.Controllers;
 
 namespace Tarteeb.Api.Controllers

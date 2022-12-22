@@ -1,48 +1,49 @@
 ﻿//=================================
 // Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
-//=================================
+//===============================
 
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Teams;
 using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 {
-    public partial class UserServiceTests
+    public partial class TeamServiceTests
     {
         [Fact]
-        public async Task ShouldAddUserAsync()
+        public async Task ShouldAddTeamAsync()
         {
             //given
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            User randomUser = CreateRandomUser(randomDateTime);
-            User inputUser = randomUser;
-            User persistedUser = inputUser;
-            User expectedUser = persistedUser.DeepClone();
+            Team randomTeam = CreateRandomTeam(randomDateTime);
+            Team inputTeam = randomTeam;
+            Team persistedTeam = inputTeam;
+            Team expectedTeam = persistedTeam.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.InsertUserAsync(inputUser))
-                   .ReturnsAsync(persistedUser);
+                broker.InsertTeamAsync(inputTeam))
+                    .ReturnsAsync(persistedTeam);
 
             //when
-            User actualUser = await this.userService.AddUserAsync(inputUser);
+            Team actuaTeam = await this.teamService
+                .AddTeamAsync(inputTeam);
 
             //then
-            actualUser.Should().BeEquivalentTo(expectedUser);
+            actuaTeam.Should().BeEquivalentTo(expectedTeam);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertUserAsync(inputUser), Times.Once);
+                broker.InsertTeamAsync(inputTeam), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

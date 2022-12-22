@@ -46,6 +46,13 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidUserReferenceException =
+                  new InvalidUserReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
@@ -95,6 +102,16 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
                 throw CreateAndLogServiceException(failedUserServiceException);
             }
+        }
+
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
 
         private UserDependencyException CreateAndLogDependencyException(Xeption exception)

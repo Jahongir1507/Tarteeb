@@ -64,7 +64,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
 
-                throw CreateAndDependencyValidationException(lockedUserException);
+                throw CreateAndLogDependencyValidationException(lockedUserException);
             }
             catch(DbUpdateException databaseUpdateException)
             {

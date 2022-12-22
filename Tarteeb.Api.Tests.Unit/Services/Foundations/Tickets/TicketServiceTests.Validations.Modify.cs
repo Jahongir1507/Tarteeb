@@ -127,7 +127,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
         {
             //given
             DateTimeOffset randomDateTime = GetRandomDateTime();
@@ -155,12 +155,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             actualTicketValidationException.Should().BeEquivalentTo(
                 expectedTicketValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedTicketValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(invalidTicket.Id), Times.Never);
-
+            
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

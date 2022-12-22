@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
-        private static void ValidateAginstStorageTeamOnModify(Team inputTeam, Team storageTeam)
+        private static void ValidateAgainstStorageTeamOnModify(Team inputTeam, Team storageTeam)
         {
             ValidateStorageTeam(storageTeam, inputTeam.Id);
 

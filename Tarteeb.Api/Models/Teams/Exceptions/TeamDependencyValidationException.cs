@@ -9,7 +9,7 @@ namespace Tarteeb.Api.Models.Teams.Exceptions
 {
     public class TeamDependencyValidationException : Xeption
     {
-        public  TeamDependencyValidationException(Xeption innerException)
+        public TeamDependencyValidationException(Xeption innerException)
             : base(message: "Team dependency validation error occurred, fix the errors and try again.",
                 innerException)
         { }

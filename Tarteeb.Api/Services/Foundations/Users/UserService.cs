@@ -58,12 +58,12 @@ namespace Tarteeb.Api.Services.Foundations.Users
         {
             ValidateUserId(userId);
 
-            User someUser =
+            User maybeUser =
                await this.storageBroker.SelectUserByIdAsync(userId);
 
-            ValidateStorageUser(someUser, userId);
+            ValidateStorageUser(maybeUser, userId);
 
-            return await this.storageBroker.DeleteUserAsync(someUser);
+            return await this.storageBroker.DeleteUserAsync(maybeUser);
         });
     }
 }

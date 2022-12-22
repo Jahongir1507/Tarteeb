@@ -72,8 +72,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 await Assert.ThrowsAsync<UserValidationException>(removeUserByIdTask.AsTask);
 
             //then
-            await Assert.ThrowsAsync<UserValidationException>(() =>
-                removeUserByIdTask.AsTask());
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()), Times.Once);

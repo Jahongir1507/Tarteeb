@@ -51,7 +51,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                     secondDate: storageTicket.UpdatedDate,
                     secondDateName: nameof(Ticket.UpdatedDate)),
                 Parameter: nameof(Ticket.UpdatedDate)));
-
         }
 
         private void ValidateTicketOnModify(Ticket ticket)

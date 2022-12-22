@@ -46,8 +46,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -84,8 +84,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     expectedTeamServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.Extensions.Hosting;
 using System;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
@@ -36,19 +35,10 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
                 Parameter: nameof(Ticket.CreatedDate)));
         }
 
-        private void ValidateTicketId(Guid ticketId) =>
-            Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
-
-        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
-        {
-            if (maybeTicket is null)
-            {
-                throw new NotFoundTicketException(ticketId);
-            }
-        }
-
         private void ValidateAginstStorageTicketOnModify(Ticket inputTicket, Ticket storageTicket)
         {
+            ValidateStorageTicket(storageTicket, inputTicket.Id);
+
             Validate(
                 (Rule: IsNotSame(
                     firstDate: inputTicket.CreatedDate,
@@ -147,6 +137,17 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             TimeSpan timeDifference = currentDateTime.Subtract(date);
 
             return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+
+        private void ValidateTicketId(Guid ticketId) =>
+            Validate((Rule: IsInvalid(ticketId), Parameter: nameof(Ticket.Id)));
+
+        private void ValidateStorageTicket(Ticket maybeTicket, Guid ticketId)
+        {
+            if (maybeTicket is null)
+            {
+                throw new NotFoundTicketException(ticketId);
+            }
         }
 
         private static void ValidateTicketNotNull(Ticket ticket)

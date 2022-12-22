@@ -6,8 +6,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Force.DeepCloner;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Moq;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
@@ -34,7 +32,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 TicketValidationException(invalidTicketException);
 
             //when 
-            ValueTask<Ticket> retrieveTicketByIdTask = 
+            ValueTask<Ticket> retrieveTicketByIdTask =
                 this.ticketService.RetrieveTicketByIdAsync(invalidTicketId);
 
             TicketValidationException actualTicketValidationException =
@@ -45,10 +43,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketValidationException))),Times.Once);
+                    expectedTicketValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),Times.Never);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

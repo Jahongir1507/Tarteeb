@@ -19,6 +19,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         {
             //given
             SqlException sqlException = CreateSqlException();
+
             var failedTeamStorageException =
                 new FailedTeamStorageException(sqlException);
 

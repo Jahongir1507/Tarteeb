@@ -53,7 +53,12 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             return maybeTicket;
         });
 
-        public ValueTask<Ticket> RemoveTicketByIdAsync(Guid ticketId) =>
-            throw new NotImplementedException();
+        public async ValueTask<Ticket> RemoveTicketByIdAsync(Guid ticketId)
+        {
+            Ticket maybeTicket = await this.storageBroker
+                 .SelectTicketByIdAsync(ticketId);
+
+            return await this.storageBroker.DeleteTicketAsync(maybeTicket);
+        }
     }
 }

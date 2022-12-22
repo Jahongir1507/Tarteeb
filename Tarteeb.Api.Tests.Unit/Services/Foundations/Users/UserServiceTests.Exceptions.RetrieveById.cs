@@ -9,8 +9,6 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Tickets.Exceptions;
-using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
 

@@ -3,18 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Tarteeb.Api.Brokers.DateTimes;
-using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Services.Foundations.Teams;
-using Tarteeb.Api.Services.Foundations.Tickets;
-
 namespace Tarteeb.Api
 {
     public class Startup
@@ -29,8 +17,7 @@ namespace Tarteeb.Api
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
-            services.AddTransient<ITicketService, TicketService>();
-            services.AddTransient<ITeamService, TeamService>();
+            AddFoundationServices(services);
 
             services.AddSwaggerGen(config =>
             {
@@ -65,6 +52,13 @@ namespace Tarteeb.Api
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+        }
+
+        private static void AddFoundationServices(IServiceCollection services)
+        {
+            services.AddTransient<ITicketService, TicketService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITeamService, TeamService>();
         }
     }
 }

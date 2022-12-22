@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
@@ -39,5 +40,18 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
         public IQueryable<Team> RetrieveAllTeams() =>
         TryCatch(() => this.storageBroker.SelectAllTeams());
+
+        public ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId) =>
+        TryCatch(async () =>
+        {
+            ValidateTeamId(teamId);
+
+            Team maybeTeam =
+                await storageBroker.SelectTeamByIdAsync(teamId);
+
+            ValidateStorageTeam(maybeTeam, teamId);
+
+            return maybeTeam;
+        });
     }
 }

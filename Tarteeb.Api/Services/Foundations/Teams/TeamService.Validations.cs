@@ -30,6 +30,17 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 Parameter: nameof(Team.CreatedDate)));
         }
 
+        private void ValidateTeamId(Guid teamId) =>
+            Validate((Rule: IsInvalid(teamId), Parameter: nameof(Team.Id)));
+
+        private void ValidateStorageTeam(Team maybeTeam, Guid teamId)
+        {
+            if (maybeTeam is null)
+            {
+                throw new NotFoundTeamException(teamId);
+            }
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

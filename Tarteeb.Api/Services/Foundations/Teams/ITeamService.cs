@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Teams;
@@ -13,5 +14,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
     {
         ValueTask<Team> AddTeamAsync(Team team);
         IQueryable<Team> RetrieveAllTeams();
+        ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId);
     }
 }

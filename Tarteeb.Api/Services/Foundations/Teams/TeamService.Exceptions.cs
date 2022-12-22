@@ -58,12 +58,26 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 throw CreateAndLogValidationException(notFoundTeamException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedTeamStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedTeamServiceException = new FailedTeamServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedTeamServiceException);
             }
+        }
+
+        private TeamDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var teamDependencyException = new TeamDependencyException(exception);
+            this.loggingBroker.LogError(teamDependencyException);
+
+            return teamDependencyException;
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)

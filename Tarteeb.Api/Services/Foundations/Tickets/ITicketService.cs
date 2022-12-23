@@ -15,5 +15,6 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         ValueTask<Ticket> AddTicketAsync(Ticket ticket);
         IQueryable<Ticket> RetrieveAllTickets();
         ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId);
+        ValueTask<Ticket> ModifyTicketAsync(Ticket ticket);
     }
 }

@@ -5,7 +5,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Teams

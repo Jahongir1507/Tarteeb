@@ -3,14 +3,14 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
-using System;
 using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Controllers
@@ -25,7 +25,7 @@ namespace Tarteeb.Api.Controllers
             this.userService = userService;
 
         [HttpPost]
-        public async ValueTask<ActionResult<User>> PostUserAsync(User user)        
+        public async ValueTask<ActionResult<User>> PostUserAsync(User user)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Tarteeb.Api.Controllers
             catch (UserDependencyValidationException userDependencyValidationException)
             {
                 return BadRequest(userDependencyValidationException.InnerException);
-                
+
             }
             catch (UserDependencyException userDependencyException)
             {

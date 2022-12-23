@@ -49,8 +49,12 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             return maybeTeam;
         });
 
-        public ValueTask<Team> RemoveTeamByIdAsync(Guid TeamId) =>
-            throw new NotImplementedException();
-        
+        public async ValueTask<Team> RemoveTeamByIdAsync(Guid teamId)
+        {
+            Team maybeTeam = await this.storageBroker
+                .SelectTeamByIdAsync(teamId);
+
+            return await this.storageBroker.DeleteTeamAsync(maybeTeam);
+        }
     }
 }

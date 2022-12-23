@@ -47,8 +47,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteTicketAsync(It.IsAny<Ticket>()),
-                    Times.Never);
+                broker.DeleteTicketAsync(It.IsAny<Ticket>()),Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

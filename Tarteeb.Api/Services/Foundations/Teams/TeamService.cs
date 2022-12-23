@@ -57,6 +57,8 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             Team maybeTeam = await this.storageBroker
                 .SelectTeamByIdAsync(teamId);
 
+            ValidateStorageTeam(maybeTeam, teamId);
+
             return await this.storageBroker.DeleteTeamAsync(maybeTeam);
         });
     }

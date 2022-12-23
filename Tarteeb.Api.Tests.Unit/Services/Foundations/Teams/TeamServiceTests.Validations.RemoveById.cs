@@ -6,7 +6,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;

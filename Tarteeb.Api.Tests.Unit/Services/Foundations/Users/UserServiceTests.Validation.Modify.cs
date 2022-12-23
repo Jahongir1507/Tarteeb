@@ -31,6 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
+
             //then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
@@ -142,15 +143,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
+
             //then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                    expectedUserValidationException))), Times.Once);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);

@@ -24,8 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             // given
             Guid someTeamId = Guid.NewGuid();
 
-            var databaseUpdateConcurrencyException =
-                new DbUpdateConcurrencyException();
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedTeamException =
                 new LockedTeamException(databaseUpdateConcurrencyException);
@@ -98,6 +97,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someTeamId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedTeamServiceException =
+                new FailedTeamServiceException(serviceException);
+
+            var expectedTeamServiceException =
+                new TeamServiceException(failedTeamServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Team> removeTeamByIdTask =
+                this.teamService.RemoveTeamByIdAsync(someTeamId);
+
+            TeamServiceException actualTeamServiceException =
+                await Assert.ThrowsAsync<TeamServiceException>(
+                    removeTeamByIdTask.AsTask);
+
+            // then
+            actualTeamServiceException.Should().BeEquivalentTo(
+                expectedTeamServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -50,6 +51,49 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfTeamIsNotFoundAndLogItAsync()
+        {
+            // given
+            Guid randomTeamId = Guid.NewGuid();
+            Guid inputTeamId = randomTeamId;
+            Team noTeam = null;
+
+            var notFoundTeamException =
+                new NotFoundTeamException(inputTeamId);
+
+            var expectedTeamValidationException =
+                new TeamValidationException(notFoundTeamException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTeam);
+
+            // when
+            ValueTask<Team> removeTeamByIdTask =
+                this.teamService.RemoveTeamByIdAsync(inputTeamId);
+
+            TeamValidationException actualTeamValidationException =
+                await Assert.ThrowsAsync<TeamValidationException>(
+                    removeTeamByIdTask.AsTask);
+
+            // then
+            actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTeamValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteTeamAsync(It.IsAny<Team>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }

@@ -48,5 +48,9 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return maybeTeam;
         });
+
+        public ValueTask<Team> RemoveTeamByIdAsync(Guid TeamId) =>
+            throw new NotImplementedException();
+        
     }
 }

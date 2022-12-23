@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
 

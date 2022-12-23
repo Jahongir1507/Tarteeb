@@ -34,7 +34,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             {
                 throw CreateAndLogValidationException(invalidTicketException);
             }
-            catch(NotFoundTicketException notFoundTicketException)
+            catch (NotFoundTicketException notFoundTicketException)
             {
                 throw CreateAndLogValidationException(notFoundTicketException);
             }
@@ -85,7 +85,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             }
         }
 
-        private Exception CreateAndLogServiceException(Xeption exception)
+        private TicketServiceException CreateAndLogServiceException(Xeption exception)
         {
             var ticketServiceException = new TicketServiceException(exception);
             this.loggingBroker.LogError(ticketServiceException);

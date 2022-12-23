@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using Moq;
 using FluentAssertions;
 using Force.DeepCloner;
-using Moq;
-using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Xunit;

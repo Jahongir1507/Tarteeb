@@ -6,12 +6,12 @@
 using System;
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Tickets.Exceptions
+namespace Tarteeb.Api.Models.Teams.Exceptions
 {
-    public class NotFoundTicketException : Xeption
+    public class NotFoundTeamException : Xeption
     {
-        public NotFoundTicketException(Guid ticketId)
-            : base(message: $"Couldn't find ticket with id: {ticketId}.")
+        public NotFoundTeamException(Guid teamId)
+            : base(message: $"Could not find team with id:{teamId}.")
         { }
     }
 }

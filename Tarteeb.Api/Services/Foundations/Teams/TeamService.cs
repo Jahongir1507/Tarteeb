@@ -4,53 +4,49 @@
 //=================================
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models.Tickets;
+using Tarteeb.Api.Models.Teams;
 
-namespace Tarteeb.Api.Services.Foundations.Tickets
+namespace Tarteeb.Api.Services.Foundations.Teams
 {
-    public partial class TicketService : ITicketService
+    public partial class TeamService : ITeamService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public TicketService(
+        public TeamService(
             IStorageBroker storageBroker,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
+            this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Ticket> AddTicketAsync(Ticket ticket) =>
+        public ValueTask<Team> AddTeamAsync(Team team) =>
         TryCatch(async () =>
         {
-            ValidateTicket(ticket);
+            ValidateTeam(team);
 
-            return await this.storageBroker.InsertTicketAsync(ticket);
+            return await this.storageBroker.InsertTeamAsync(team);
         });
 
-        public IQueryable<Ticket> RetrieveAllTickets() =>
-        TryCatch(() => this.storageBroker.SelectAllTickets());
-
-        public ValueTask<Ticket> RetrieveTicketByIdAsync(Guid ticketId) =>
+        public ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId) =>
         TryCatch(async () =>
         {
-            ValidateTicketId(ticketId);
+            ValidateTeamId(teamId);
 
-            Ticket maybeTicket =
-                await this.storageBroker.SelectTicketByIdAsync(ticketId);
+            Team maybeTeam =
+                await storageBroker.SelectTeamByIdAsync(teamId);
 
-            ValidateStorageTicket(maybeTicket, ticketId);
+            ValidateStorageTeam(maybeTeam, teamId);
 
-            return maybeTicket;
+            return maybeTeam;
         });
     }
 }

@@ -6,7 +6,9 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -56,6 +58,46 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTeamAsync(It.IsAny<Team>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someTeamId = Guid.NewGuid();
+            SqlException sqlException = CreateSqlException();
+
+            var failedTeamStorageException =
+                new FailedTeamStorageException(sqlException);
+
+            var expectedTeamDependencyException =
+                new TeamDependencyException(failedTeamStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(sqlException);
+            // when
+            ValueTask<Team> deleteTeamTask =
+                this.teamService.RemoveTeamByIdAsync(someTeamId);
+
+            TeamDependencyException actualTeamDependencyException =
+                await Assert.ThrowsAsync<TeamDependencyException>(
+                    deleteTeamTask.AsTask);
+
+            // then
+            actualTeamDependencyException.Should().BeEquivalentTo(
+                expectedTeamDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

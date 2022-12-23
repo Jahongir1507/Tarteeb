@@ -21,8 +21,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             // given
             Guid invalidTeamId = Guid.Empty;
 
-            var invalidTeamException =
-                new InvalidTeamException();
+            var invalidTeamException = new InvalidTeamException();
 
             invalidTeamException.AddData(
                 key: nameof(Team.Id),

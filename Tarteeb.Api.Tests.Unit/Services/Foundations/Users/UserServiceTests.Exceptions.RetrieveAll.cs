@@ -27,7 +27,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllUsers())
-                   .Throws(sqlException);
+                    .Throws(sqlException);
 
             //when
             Action retrieveAllUsersAction = () =>

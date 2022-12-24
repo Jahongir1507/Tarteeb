@@ -126,7 +126,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             invalidTicketException.AddData(
                 key: nameof(Ticket.CreatedDate),
-                values: $"Date is not same as {nameof(Ticket.UpdatedDate)}");
+                values: $"Date is not the same as {nameof(Ticket.UpdatedDate)}");
 
             var expectedTicketValidationException =
                 new TicketValidationException(invalidTicketException);

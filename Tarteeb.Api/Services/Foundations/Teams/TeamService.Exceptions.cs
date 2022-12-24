@@ -32,6 +32,10 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 throw CreateAndLogValidationException(invalidTeamException);
             }
+            catch (NotFoundTeamException notFoundTeamException)
+            {
+                throw CreateAndLogValidationException(notFoundTeamException);
+            }
             catch (SqlException sqlException)
             {
                 var failedTeamStorageException = new FailedTeamStorageException(sqlException);
@@ -49,10 +53,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 var lockedTeamException = new LockedTeamException(dbUpdateConcurrencyException);
 
                 throw CreateAndDependencyValidationException(lockedTeamException);
-            }
-            catch (NotFoundTeamException notFoundTeamException)
-            {
-                throw CreateAndLogValidationException(notFoundTeamException);
             }
             catch (DbUpdateException databaseUpdateException)
             {

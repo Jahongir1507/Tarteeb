@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -51,6 +52,27 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(teamServiceException.InnerException);
             }
         }
+
+
+        [HttpGet]
+        public ActionResult<IQueryable<Team>> GetAllTeams()
+        {
+            try
+            {
+                IQueryable<Team> allTeams = this.teamService.RetrieveAllTeams();
+
+                return Ok(allTeams);
+            }
+            catch (TeamDependencyException teamDependencyException)
+            {
+                return InternalServerError(teamDependencyException.InnerException);
+            }
+            catch (TeamServiceException teamServiceException)
+            {
+                return InternalServerError(teamServiceException.InnerException);
+            }
+        }
+
 
         [HttpGet("{teamId}")]
         public async ValueTask<ActionResult<Team>> GetTeamByIdAsync(Guid Id)

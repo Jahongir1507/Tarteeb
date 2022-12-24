@@ -88,14 +88,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 expectedTicketDependencyValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),Times.Once);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketDependencyValidationException))),Times.Once);
+                    expectedTicketDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteTicketAsync(It.IsAny<Ticket>()),Times.Never);
+                broker.DeleteTicketAsync(It.IsAny<Ticket>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -132,11 +132,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 expectedTicketServiceException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTicketByIdAsync(It.IsAny<Guid>()),Times.Once);
+                broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTicketServiceException))),Times.Once);
+                    expectedTicketServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

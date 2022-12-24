@@ -59,7 +59,7 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             ValidateTicketId(ticketId);
 
             Ticket maybeTicket = await this.storageBroker
-                 .SelectTicketByIdAsync(ticketId);
+                .SelectTicketByIdAsync(ticketId);
 
             ValidateStorageTicket(maybeTicket, ticketId);
 

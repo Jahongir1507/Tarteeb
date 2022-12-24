@@ -66,7 +66,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
         }
 
-        private void ValidationUserOnModify(User user)
+        private void ValidateUserOnModify(User user)
         {
             ValidateUserNotNull(user);
 

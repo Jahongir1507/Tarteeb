@@ -123,9 +123,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             DateTimeOffset randomDatetime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDatetime);
             User invalidUser = randomUser;
-
-            var invalidUserException =
-                new InvalidUserException();
+            var invalidUserException =new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),
@@ -135,7 +133,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserValidationException(invalidUserException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-               broker.GetCurrentDateTime()).Returns(randomDatetime);
+                broker.GetCurrentDateTime()).Returns(randomDatetime);
 
             //when
             ValueTask<User> modifyUserTask =
@@ -155,7 +153,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                    expectedUserValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-               broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);
+                broker.SelectUserByIdAsync(invalidUser.Id), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -171,9 +169,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             User randomUser = CreateRandomUser(dateTime);
             User inputUser = randomUser;
             inputUser.UpdatedDate = dateTime.AddMinutes(minuts);
-
-            var invalidUserException =
-                new InvalidUserException();
+            var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),
@@ -199,7 +195,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-               broker.LogError(It.Is(SameExceptionAs(
+                broker.LogError(It.Is(SameExceptionAs(
                    expectedUserValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

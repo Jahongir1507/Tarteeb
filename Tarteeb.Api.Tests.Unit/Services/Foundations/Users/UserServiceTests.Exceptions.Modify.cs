@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 new UserDependencyException(failedUserStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-               broker.GetCurrentDateTime()).Throws(sqlException);
+                broker.GetCurrentDateTime()).Throws(sqlException);
 
             //when
             ValueTask<User> modifyUserTask =
@@ -45,14 +45,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-               broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedUserDependencyException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-               broker.SelectUserByIdAsync(randomUser.Id), Times.Never);
+                broker.SelectUserByIdAsync(randomUser.Id), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(randomUser), Times.Never);
@@ -101,8 +101,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                     expectedUserDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-               broker.SelectUserByIdAsync(foreignKeyConflictedUser.Id),
-                   Times.Never);
+                broker.SelectUserByIdAsync(foreignKeyConflictedUser.Id), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(foreignKeyConflictedUser), Times.Never);
@@ -142,7 +141,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 this.userService.ModifyUserAsync(someUser);
 
             UserDependencyException actualUserDependencyException =
-              await Assert.ThrowsAsync<UserDependencyException>(modifyUserTask.AsTask);
+                await Assert.ThrowsAsync<UserDependencyException>(modifyUserTask.AsTask);
 
             // then
             actualUserDependencyException.Should().BeEquivalentTo(

@@ -159,7 +159,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 expectedTeamDependencyValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(TeamId), Times.Once);
+                broker.SelectTeamByIdAsync(teamId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);

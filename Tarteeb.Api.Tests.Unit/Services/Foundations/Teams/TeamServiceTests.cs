@@ -1,8 +1,10 @@
-﻿// Copyright (c) Coalition of Good-Hearted Engineers
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
 //===============================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -82,8 +84,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         private static Team CreateRandomTeam(DateTimeOffset dates) =>
             CreateTeamFiller(dates).Create();
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
+
         private static Team CreateRandomTeam() =>
             CreateTeamFiller(GetRandomDateTime()).Create();
+
+        private static IQueryable<Team> CreateRandomTeams()
+        {
+            return CreateTeamFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static Filler<Team> CreateTeamFiller(DateTimeOffset dates)
         {

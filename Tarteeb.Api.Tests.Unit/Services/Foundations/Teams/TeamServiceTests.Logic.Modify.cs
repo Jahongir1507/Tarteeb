@@ -26,14 +26,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             storageTeam.UpdatedDate = randomTeam.CreatedDate;
             Team updatedTeam = inputTeam;
             Team expectedTeam = updatedTeam.DeepClone();
-            Guid TeamId = inputTeam.Id;
+            Guid teamId = inputTeam.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
                     .Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(TeamId))
+                broker.SelectTeamByIdAsync(teamId))
                     .ReturnsAsync(storageTeam);
 
             this.storageBrokerMock.Setup(broker =>
@@ -51,7 +51,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(TeamId), Times.Once);
+                broker.SelectTeamByIdAsync(teamId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(inputTeam), Times.Once);

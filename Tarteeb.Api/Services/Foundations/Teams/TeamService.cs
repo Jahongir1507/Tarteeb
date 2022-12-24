@@ -53,7 +53,9 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         TryCatch(async () =>
         {
             ValidateTeamOnModify(team);
+
             var maybeTeam = await this.storageBroker.SelectTeamByIdAsync(team.Id);
+
             ValidateAgainstStorageTeamOnModify(inputTeam: team, storageTeam: maybeTeam);
 
             return await this.storageBroker.UpdateTeamAsync(team);

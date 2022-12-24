@@ -42,8 +42,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 this.teamService.ModifyTeamAsync(someTeam);
 
             TeamDependencyException actualTeamDependencyException =
-              await Assert.ThrowsAsync<TeamDependencyException>(
-                  modifyTeamTask.AsTask);
+                await Assert.ThrowsAsync<TeamDependencyException>(
+                     modifyTeamTask.AsTask);
 
             // then
             actualTeamDependencyException.Should().BeEquivalentTo(
@@ -74,9 +74,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             int minutesInPast = GetRandomNegativeNumber();
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Team randomTeam = CreateRandomTeam(randomDateTime);
-            Team SomeTeam = randomTeam;
-            Guid TeamId = SomeTeam.Id;
-            SomeTeam.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Team someTeam = randomTeam;
+            Guid TeamId = someTeam.Id;
+            someTeam.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
             var databaseUpdateException = new DbUpdateException();
 
             var failedTeamException =
@@ -95,11 +95,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             // when
             ValueTask<Team> modifyTeamTask =
-                this.teamService.ModifyTeamAsync(SomeTeam);
+                this.teamService.ModifyTeamAsync(someTeam);
 
             TeamDependencyException actualTeamDependencyException =
-              await Assert.ThrowsAsync<TeamDependencyException>(
-                  modifyTeamTask.AsTask);
+                 await Assert.ThrowsAsync<TeamDependencyException>(
+                     modifyTeamTask.AsTask);
 
             // then
             actualTeamDependencyException.Should().BeEquivalentTo(
@@ -119,6 +119,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
         {
@@ -128,7 +129,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Team randomTeam = CreateRandomTeam(randomDateTime);
             Team someTeam = randomTeam;
             someTeam.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
-            Guid TeamId = someTeam.Id;
+            Guid teamId = someTeam.Id;
             var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedTeamException =
@@ -138,7 +139,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamDependencyValidationException(lockedTeamException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(TeamId))
+                broker.SelectTeamByIdAsync(teamId))
                     .ThrowsAsync(databaseUpdateConcurrencyException);
 
             this.dateTimeBrokerMock.Setup(broker =>

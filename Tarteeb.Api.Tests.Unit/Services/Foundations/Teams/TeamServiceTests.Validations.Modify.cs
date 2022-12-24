@@ -105,12 +105,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamValidationException.Should()
                 .BeEquivalentTo(expectedTeamValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+            
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeamValidationException))), Times.Once);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(It.IsAny<Team>()), Times.Never);
@@ -347,6 +348,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             // then
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
+            
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(teamId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
@@ -354,9 +358,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeamValidationException))), Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(teamId), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

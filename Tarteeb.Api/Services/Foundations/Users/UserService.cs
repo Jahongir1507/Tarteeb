@@ -56,7 +56,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         public ValueTask<User> ModifyUserAsync(User user) =>
         TryCatch(async () =>
         {
-            ValidationUserOnModify(user);
+            ValidateUserOnModify(user);
             var maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
             ValidateAginstStorageUserOnModify(inputUser:user, storageUser:maybeUser);
 

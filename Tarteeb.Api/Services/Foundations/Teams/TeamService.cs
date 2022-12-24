@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -22,6 +23,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             IStorageBroker storageBroker,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
+
         {
             this.storageBroker = storageBroker;
             this.dateTimeBroker = dateTimeBroker;
@@ -35,6 +37,9 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return await this.storageBroker.InsertTeamAsync(team);
         });
+
+        public IQueryable<Team> RetrieveAllTeams() =>
+        TryCatch(() => this.storageBroker.SelectAllTeams());
 
         public ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId) =>
         TryCatch(async () =>

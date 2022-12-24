@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -17,6 +18,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
     public partial class TeamService
     {
         private delegate ValueTask<Team> ReturningTeamFunction();
+        private delegate IQueryable<Team> ReturningTeamsFunction();
 
         private async ValueTask<Team> TryCatch(ReturningTeamFunction returningTeamFunction)
         {
@@ -62,6 +64,34 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
+        private IQueryable<Team> TryCatch(ReturningTeamsFunction returningTeamsFunction)
+        {
+            try
+            {
+                return returningTeamsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTeamStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedTeamServiceException = new FailedTeamServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTeamServiceException);
+            }
+        }
+
+        private TeamServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var teamServiceException = new TeamServiceException(exception);
+            this.loggingBroker.LogError(teamServiceException);
+
+            return teamServiceException;
+        }
+
         private TeamValidationException CreateAndLogValidationException(Xeption exception)
         {
             var teamValidationExpcetion = new TeamValidationException(exception);
@@ -84,14 +114,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             this.loggingBroker.LogError(teamDependencyValidationException);
 
             return teamDependencyValidationException;
-        }
-
-        private TeamServiceException CreateAndLogServiceException(Xeption exception)
-        {
-            var teamServiceException = new TeamServiceException(exception);
-            this.loggingBroker.LogError(teamServiceException);
-
-            return teamServiceException;
         }
     }
 }

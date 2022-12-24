@@ -43,7 +43,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeam.Should().BeEquivalentTo(expectedTeam);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(inputTeamId), Times.Once());
+                broker.SelectTeamByIdAsync(inputTeamId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTeamAsync(expectedInputTeam), Times.Once);

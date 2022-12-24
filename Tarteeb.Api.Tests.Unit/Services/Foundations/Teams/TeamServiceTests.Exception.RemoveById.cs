@@ -52,7 +52,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-            expectedTeamDependencyValidationException))), Times.Once);
+                    expectedTeamDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTeamAsync(It.IsAny<Team>()), Times.Never);
@@ -78,6 +78,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTeamByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
+
             // when
             ValueTask<Team> deleteTeamTask =
                 this.teamService.RemoveTeamByIdAsync(someTeamId);
@@ -132,7 +133,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 expectedTeamServiceException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once());
+                broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

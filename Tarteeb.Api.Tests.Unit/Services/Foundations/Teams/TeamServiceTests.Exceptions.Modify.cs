@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
@@ -53,19 +52,19 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(TeamId), Times.Never);
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
+                broker.SelectTeamByIdAsync(TeamId), Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(someTeam), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -158,11 +157,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamDependencyValidationException.Should().BeEquivalentTo(
                 expectedTeamDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
-
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(TeamId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -210,11 +209,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeamServiceException.Should().BeEquivalentTo(
                 expectedTeamServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
-
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(someTeam.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

@@ -21,12 +21,12 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         public UserService(
             IStorageBroker storageBroker,
-            ILoggingBroker loggingBroker,
-            IDateTimeBroker dateTimeBroker)
+            IDateTimeBroker dateTimeBroker,
+            ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
+            this.loggingBroker = loggingBroker;
         }
 
         public ValueTask<User> AddUserAsync(User user) =>
@@ -51,6 +51,19 @@ namespace Tarteeb.Api.Services.Foundations.Users
             ValidateStorageUser(maybeUser, userId);
 
             return maybeUser;
+        });
+
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+
+            User maybeUser =
+                await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(maybeUser, userId);
+
+            return await this.storageBroker.DeleteUserAsync(maybeUser);
         });
     }
 }

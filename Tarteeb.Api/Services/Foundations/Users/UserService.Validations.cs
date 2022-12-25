@@ -42,6 +42,8 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private static void ValidateAginstStorageUserOnModify(User inputUser, User storageUser)
         {
+            ValidateStorageUser(storageUser, inputUser.Id);
+
             Validate(
                 (Rule: IsNotSame(
                     firstDate: inputUser.CreatedDate,
@@ -56,7 +58,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
                 Parameter: nameof(User.UpdatedDate)));
         }
 
-        private void ValidateStorageUser(User maybeUser, Guid userId)
+        private static void ValidateStorageUser(User maybeUser, Guid userId)
         {
             if (maybeUser is null)
             {
@@ -64,7 +66,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             }
         }
 
-        private void ValidationUserOnMadify(User user)
+        private void ValidateUserOnModify(User user)
         {
             ValidateUserNotNull(user);
 

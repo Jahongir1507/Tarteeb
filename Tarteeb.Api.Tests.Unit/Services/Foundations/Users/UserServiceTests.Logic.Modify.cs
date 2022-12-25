@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using Moq;
 using FluentAssertions;
 using Force.DeepCloner;
-using Moq;
-using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Xunit;
@@ -36,8 +36,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                     .ReturnsAsync(storageUser);
 
             this.storageBrokerMock.Setup(broker =>
-               broker.UpdateUserAsync(inputUser))
-                   .ReturnsAsync(updatedUser);
+                broker.UpdateUserAsync(inputUser))
+                    .ReturnsAsync(updatedUser);
 
             //when
             User actualUser =
@@ -50,12 +50,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(userId),
-                    Times.Once);
+                broker.SelectUserByIdAsync(userId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateUserAsync(inputUser),
-                    Times.Once);
+                broker.UpdateUserAsync(inputUser), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

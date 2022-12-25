@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             DateTimeOffset someDateTime = GetRandomDateTime();
             Team randomTeam = CreateRandomTeam(someDateTime);
             Team someTeam = randomTeam;
-            Guid TeamId = someTeam.Id;
+            Guid teamId = someTeam.Id;
             SqlException sqlException = CreateSqlException();
 
             var failedTeamStorageException =
@@ -34,8 +34,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamDependencyException(failedTeamStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Throws(sqlException);
+                broker.GetCurrentDateTime()).Throws(sqlException);
 
             // when
             ValueTask<Team> modifyTeamTask =
@@ -57,7 +56,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     expectedTeamDependencyException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(TeamId), Times.Never);
+                broker.SelectTeamByIdAsync(teamId), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(someTeam), Times.Never);
@@ -75,7 +74,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Team randomTeam = CreateRandomTeam(randomDateTime);
             Team someTeam = randomTeam;
-            Guid TeamId = someTeam.Id;
+            Guid teamId = someTeam.Id;
             someTeam.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
             var databaseUpdateException = new DbUpdateException();
 
@@ -86,12 +85,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 new TeamDependencyException(failedTeamException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(TeamId))
+                broker.SelectTeamByIdAsync(teamId))
                     .ThrowsAsync(databaseUpdateException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =
@@ -106,7 +104,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 expectedTeamDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTeamByIdAsync(TeamId), Times.Once);
+                broker.SelectTeamByIdAsync(teamId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
@@ -143,8 +141,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     .ThrowsAsync(databaseUpdateConcurrencyException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =
@@ -195,8 +192,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                     .ThrowsAsync(serviceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =

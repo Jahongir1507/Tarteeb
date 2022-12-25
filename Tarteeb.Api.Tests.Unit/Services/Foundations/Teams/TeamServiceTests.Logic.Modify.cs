@@ -29,16 +29,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Guid teamId = inputTeam.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(randomDate);
+                broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTeamByIdAsync(teamId))
-                    .ReturnsAsync(storageTeam);
+                broker.SelectTeamByIdAsync(teamId)).ReturnsAsync(storageTeam);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.UpdateTeamAsync(inputTeam))
-                    .ReturnsAsync(updatedTeam);
+                broker.UpdateTeamAsync(inputTeam)).ReturnsAsync(updatedTeam);
 
             // when
             Team actualTeam =

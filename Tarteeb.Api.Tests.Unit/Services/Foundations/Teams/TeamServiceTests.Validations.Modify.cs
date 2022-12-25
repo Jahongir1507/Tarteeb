@@ -107,11 +107,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
-            
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTeamValidationException))), Times.Once);
-
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTeamAsync(It.IsAny<Team>()), Times.Never);
@@ -120,6 +119,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
         {
@@ -267,8 +267,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             // given
             int randomNumber = GetRandomNegativeNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDateTimeOffset = GetRandomDateTime();
-            Team randomTeam = CreateRandomModifyTeam(randomDateTimeOffset);
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Team randomTeam = CreateRandomModifyTeam(randomDateTime);
             Team invalidTeam = randomTeam.DeepClone();
             Team storageTeam = invalidTeam.DeepClone();
             storageTeam.CreatedDate = storageTeam.CreatedDate.AddMinutes(randomMinutes);
@@ -287,15 +287,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.SelectTeamByIdAsync(teamId)).ReturnsAsync(storageTeam);
 
             this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime()).Returns(randomDateTimeOffset);
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
             ValueTask<Team> modifyTeamTask =
                 this.teamService.ModifyTeamAsync(invalidTeam);
 
             TeamValidationException actualTeamValidationException =
-                await Assert.ThrowsAsync<TeamValidationException>(
-                    modifyTeamTask.AsTask);
+                await Assert.ThrowsAsync<TeamValidationException>(modifyTeamTask.AsTask);
 
             // then
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
@@ -348,7 +347,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
 
             // then
             actualTeamValidationException.Should().BeEquivalentTo(expectedTeamValidationException);
-            
+
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(teamId), Times.Once);
 

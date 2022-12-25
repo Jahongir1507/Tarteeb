@@ -53,7 +53,6 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
-
         [HttpGet]
         public ActionResult<IQueryable<Team>> GetAllTeams()
         {
@@ -72,7 +71,6 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(teamServiceException.InnerException);
             }
         }
-
 
         [HttpGet("{teamId}")]
         public async ValueTask<ActionResult<Team>> GetTeamByIdAsync(Guid Id)

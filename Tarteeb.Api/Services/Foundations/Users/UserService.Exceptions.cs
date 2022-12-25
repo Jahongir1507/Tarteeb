@@ -3,12 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using EFxceptions.Models.Exceptions;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
@@ -35,7 +35,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
-            catch(NotFoundUserException notFoundUserException)
+            catch (NotFoundUserException notFoundUserException)
             {
                 throw CreateAndLogValidationException(notFoundUserException);
             }

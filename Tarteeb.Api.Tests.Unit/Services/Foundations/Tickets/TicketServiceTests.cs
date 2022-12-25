@@ -6,17 +6,17 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Moq;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
+using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tynamix.ObjectFiller;
-using Xunit;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 {
@@ -80,6 +80,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         private static Ticket CreateRandomTicket(DateTimeOffset dates) =>
             CreateTicketFiller(dates).Create();
 
+        private static Ticket CreateRandomModifyTicket(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            Ticket randomTicket = CreateRandomTicket(dates);
+
+            randomTicket.CreatedDate =
+                randomTicket.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomTicket;
+        }
+
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = GetRandomNumber();
@@ -94,6 +105,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 99).GetValue();
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static Ticket CreateRandomTicket() =>
             CreateTicketFiller(GetRandomDateTime()).Create();

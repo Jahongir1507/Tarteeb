@@ -25,14 +25,14 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
+            this.loggingBroker = loggingBroker;
         }
 
         public ValueTask<Ticket> AddTicketAsync(Ticket ticket) =>
         TryCatch(async () =>
         {
-            ValidateTicket(ticket);
+            ValidateTicketOnAdd(ticket);
 
             return await this.storageBroker.InsertTicketAsync(ticket);
         });
@@ -45,12 +45,37 @@ namespace Tarteeb.Api.Services.Foundations.Tickets
         {
             ValidateTicketId(ticketId);
 
-            Ticket maybeTicket = 
+            Ticket maybeTicket =
                 await this.storageBroker.SelectTicketByIdAsync(ticketId);
 
             ValidateStorageTicket(maybeTicket, ticketId);
 
             return maybeTicket;
+        });
+
+        public ValueTask<Ticket> ModifyTicketAsync(Ticket ticket) =>
+        TryCatch(async () =>
+        {
+            ValidateTicketOnModify(ticket);
+            var maybeTicket = await this.storageBroker.SelectTicketByIdAsync(ticket.Id);
+
+            ValidateStorageTicket(maybeTicket, ticket.Id);
+            ValidateAginstStorageTicketOnModify(inputTicket: ticket, storageTicket: maybeTicket);
+
+            return await this.storageBroker.UpdateTicketAsync(ticket);
+        });
+
+        public ValueTask<Ticket> RemoveTicketByIdAsync(Guid ticketId) =>
+        TryCatch(async () =>
+        {
+            ValidateTicketId(ticketId);
+
+            Ticket maybeTicket = await this.storageBroker
+                .SelectTicketByIdAsync(ticketId);
+
+            ValidateStorageTicket(maybeTicket, ticketId);
+
+            return await this.storageBroker.DeleteTicketAsync(maybeTicket);
         });
     }
 }

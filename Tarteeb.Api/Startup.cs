@@ -12,7 +12,9 @@ using Microsoft.OpenApi.Models;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
+using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Tarteeb.Api.Services.Foundations.Users;
 
 namespace Tarteeb.Api
 {
@@ -28,7 +30,7 @@ namespace Tarteeb.Api
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
-            services.AddTransient<ITicketService, TicketService>();
+            AddFoundationServices(services);
 
             services.AddSwaggerGen(config =>
             {
@@ -63,6 +65,13 @@ namespace Tarteeb.Api
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+        }
+
+        private static void AddFoundationServices(IServiceCollection services)
+        {
+            services.AddTransient<ITicketService, TicketService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITeamService, TeamService>();
         }
     }
 }

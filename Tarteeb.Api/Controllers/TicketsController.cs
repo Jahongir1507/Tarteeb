@@ -98,5 +98,39 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(ticketServiceException.InnerException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<Ticket>> PutTicketAsync(Ticket ticket)
+        {
+            try
+            {
+                Ticket modifiedTicket =
+                    await this.ticketService.ModifyTicketAsync(ticket);
+
+                return Ok(modifiedTicket);
+            }
+            catch (TicketValidationException ticketValidationException)
+                when (ticketValidationException.InnerException is NotFoundTicketException)
+            {
+                return NotFound(ticketValidationException.InnerException);
+            }
+            catch (TicketValidationException ticketValidationException)
+            {
+                return BadRequest(ticketValidationException.InnerException);
+            }
+            catch (TicketDependencyValidationException ticketDependencyValidationException)
+                when (ticketDependencyValidationException.InnerException is AlreadyExistsTicketException)
+            {
+                return Conflict(ticketDependencyValidationException.InnerException);
+            }
+            catch (TicketDependencyException ticketDependencyException)
+            {
+                return InternalServerError(ticketDependencyException);
+            }
+            catch (TicketServiceException ticketServiceException)
+            {
+                return InternalServerError(ticketServiceException);
+            }
+        }
     }
 }

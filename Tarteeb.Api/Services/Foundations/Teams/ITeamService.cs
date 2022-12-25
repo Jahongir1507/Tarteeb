@@ -15,5 +15,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         ValueTask<Team> AddTeamAsync(Team team);
         IQueryable<Team> RetrieveAllTeams();
         ValueTask<Team> RetrieveTeamByIdAsync(Guid teamId);
+        ValueTask<Team> RemoveTeamByIdAsync(Guid teamId);
     }
 }

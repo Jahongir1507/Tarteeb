@@ -25,7 +25,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             Team storageTeam = inputTeam.DeepClone();
             storageTeam.UpdatedDate = randomTeam.CreatedDate;
             Team updatedTeam = inputTeam;
-            Team expectedTeam = updatedTeam.DeepClone();
+            Team expectedTeam = updatedTeam;
             Guid teamId = inputTeam.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>

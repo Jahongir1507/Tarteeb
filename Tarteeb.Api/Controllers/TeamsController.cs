@@ -96,12 +96,12 @@ namespace Tarteeb.Api.Controllers
             }
             catch(TeamValidationException teamValidationException)
             {
-                return BadRequest(teamValidationException);
+                return BadRequest(teamValidationException.InnerException);
             }
             catch(TeamDependencyValidationException teamDependencyValidationException)
                 when(teamDependencyValidationException.InnerException is LockedTeamException)
             {
-                return Locked(teamDependencyValidationException);
+                return Locked(teamDependencyValidationException.InnerException);
             }
             catch(TeamDependencyValidationException teamDependencyValidationException)
             {
@@ -113,7 +113,7 @@ namespace Tarteeb.Api.Controllers
             }
             catch(TeamServiceException teamServiceException)
             {
-                return InternalServerError(teamServiceException.InnerException);
+                return InternalServerError(teamServiceException);
             }
         }
     }

@@ -100,6 +100,7 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(userServiceException.InnerException);
             }
         }
+
         [HttpDelete("{userId}")]
         public async ValueTask<ActionResult<User>> DeleteUserByIdAsync(Guid usertId)
         {

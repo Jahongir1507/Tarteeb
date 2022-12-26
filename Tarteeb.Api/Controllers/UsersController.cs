@@ -102,12 +102,12 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpDelete("{userId}")]
-        public async ValueTask<ActionResult<User>> DeleteUserByIdAsync(Guid usertId)
+        public async ValueTask<ActionResult<User>> DeleteUserByIdAsync(Guid userId)
         {
             try
             {
                 User deletedUser =
-                    await this.userService.RemoveUserByIdAsync(usertId);
+                    await this.userService.RemoveUserByIdAsync(userId);
 
                 return Ok(deletedUser);
             }

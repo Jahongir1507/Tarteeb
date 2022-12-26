@@ -85,7 +85,7 @@ namespace Tarteeb.Api.Controllers
             try
             {
                 Team deletedTeam = 
-                    await this.teamService.RetrieveTeamByIdAsync(teamId);
+                    await this.teamService.RemoveTeamByIdAsync(teamId);
 
                 return Ok(deletedTeam);
             }

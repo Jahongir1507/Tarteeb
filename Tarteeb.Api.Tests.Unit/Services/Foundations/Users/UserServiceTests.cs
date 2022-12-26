@@ -30,7 +30,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public UserServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
@@ -39,6 +38,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private static IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(dates: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        } 
 
         public static TheoryData<int> InvalidSeconds()
         {
@@ -58,14 +64,27 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         }
 
         private static User CreateRandomUser() =>
-            CreateUserFiller(dates: GetRandomDateTime()).Create();
+            CreateUserFiller(dates: GetRandomDateTimeOffset()).Create();
 
-        private static IQueryable<User> CreateRandomUsers()
+        private static User CreateRandomUser(DateTimeOffset dates) =>
+            CreateUserFiller(dates).Create();
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static User CreateRandomModifyUser(DateTimeOffset dates)
         {
-            return CreateUserFiller(dates: GetRandomDateTimeOffset()).
-                Create(count: GetRandomNumber())
-                    .AsQueryable();
+            int randomDaysInPast = GetRandomNegativeNumber();
+            User randomUser = CreateRandomUser(dates);
+
+            randomUser.CreatedDate =
+                randomUser.CreatedDate.AddDays(randomDaysInPast);
+            
+            return randomUser;
         }
+
+        private static SqlException GetSqlException()=>
+           (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
@@ -76,17 +95,23 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         private static string GetRandomString() =>
              new MnemonicString().GetValue();
 
-        private static DateTimeOffset GetRandomDateTime() =>
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNumber() =>
            new IntRange(min: 2, max: 10).GetValue();
 
-        private static User CreateRandomUser(DateTimeOffset dates) =>
-            CreateUserFiller(dates).Create();
+        public static TheoryData MinutsBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber=GetRandomNegativeNumber();
 
-        private static DateTimeOffset GetRandomDateTimeOffset() =>
-            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+            return new TheoryData<int>
+            {
+                randomNumber, 
+                randomNegativeNumber
+            };
+        }
 
         private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {
@@ -96,6 +121,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
-        }
+        }  
     }
 }

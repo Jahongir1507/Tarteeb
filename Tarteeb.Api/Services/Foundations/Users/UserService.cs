@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user) =>
         TryCatch(async () =>
         {
-            ValidateUser(user);
+            ValidateUserOnAdd(user);
 
             return await this.storageBroker.InsertUserAsync(user);
         });
@@ -51,6 +51,16 @@ namespace Tarteeb.Api.Services.Foundations.Users
             ValidateStorageUser(maybeUser, userId);
 
             return maybeUser;
+        });
+
+        public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            ValidateUserOnModify(user);
+            var maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
+            ValidateAginstStorageUserOnModify(inputUser:user, storageUser:maybeUser);
+
+            return await this.storageBroker.UpdateUserAsync(user);
         });
 
         public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>

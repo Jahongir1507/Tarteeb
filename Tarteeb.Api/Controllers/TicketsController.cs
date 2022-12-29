@@ -5,9 +5,9 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Tarteeb.Api.Services.Foundations.Tickets;
@@ -122,6 +122,44 @@ namespace Tarteeb.Api.Controllers
                 when (ticketDependencyValidationException.InnerException is AlreadyExistsTicketException)
             {
                 return Conflict(ticketDependencyValidationException.InnerException);
+            }
+            catch (TicketDependencyException ticketDependencyException)
+            {
+                return InternalServerError(ticketDependencyException);
+            }
+            catch (TicketServiceException ticketServiceException)
+            {
+                return InternalServerError(ticketServiceException);
+            }
+        }
+
+        [HttpDelete("{ticketId}")]
+        public async ValueTask<ActionResult<Ticket>> DeleteTicketByIdAsync(Guid ticketId)
+        {
+            try
+            {
+                Ticket deletedTicket =
+                    await this.ticketService.RemoveTicketByIdAsync(ticketId);
+
+                return Ok(deletedTicket);
+            }
+            catch (TicketValidationException ticketValidationException)
+                when (ticketValidationException.InnerException is NotFoundTicketException)
+            {
+                return NotFound(ticketValidationException.InnerException);
+            }
+            catch (TicketValidationException ticketValidationException)
+            {
+                return BadRequest(ticketValidationException.InnerException);
+            }
+            catch (TicketDependencyValidationException ticketDependencyValidationException)
+                when (ticketDependencyValidationException.InnerException is LockedTicketException)
+            {
+                return Locked(ticketDependencyValidationException.InnerException);
+            }
+            catch (TicketDependencyValidationException ticketDependencyValidationException)
+            {
+                return BadRequest(ticketDependencyValidationException.InnerException);
             }
             catch (TicketDependencyException ticketDependencyException)
             {

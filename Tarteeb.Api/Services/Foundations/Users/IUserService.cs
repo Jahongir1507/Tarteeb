@@ -15,6 +15,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         ValueTask<User> AddUserAsync(User user);
         IQueryable<User> RetrieveAllUsers();
         ValueTask<User> RetrieveUserByIdAsync(Guid userId);
+        ValueTask<User> ModifyUserAsync(User user);
         ValueTask<User> RemoveUserByIdAsync(Guid userId);
     }
 }

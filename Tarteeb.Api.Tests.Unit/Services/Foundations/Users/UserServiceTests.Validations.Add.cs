@@ -118,8 +118,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTime();
-            DateTimeOffset anotherRandomDate = GetRandomDateTime();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset anotherRandomDate = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDateTime);
             User invalidUser = randomUser;
             invalidUser.UpdatedDate = anotherRandomDate;
@@ -165,7 +165,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             int invalidSeconds)
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTime();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             User randomInvalidUser = CreateRandomUser(invalidRandomDateTime);
             User invalidUser = randomInvalidUser;

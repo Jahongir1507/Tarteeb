@@ -90,21 +90,21 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
+        private TeamServiceException CreateAndLogServiceException(
+            Exception exception)
+        {
+            var teamServiceException = new TeamServiceException(exception);
+            this.loggingBroker.LogError(teamServiceException);
+
+            return teamServiceException;
+        }
+
         private TeamDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var teamDependencyException = new TeamDependencyException(exception);
             this.loggingBroker.LogError(teamDependencyException);
 
             return teamDependencyException;
-        }
-
-        private TeamServiceException CreateAndLogServiceException(
-            Exception exception)
-        {
-            var TeamServiceException = new TeamServiceException(exception);
-            this.loggingBroker.LogError(TeamServiceException);
-
-            return TeamServiceException;
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)

@@ -41,13 +41,13 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                 (Rule: IsNotRecent(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
 
                 (Rule: IsSame(
-                        firstDate: team.UpdatedDate,
-                        secondDate: team.CreatedDate,
-                        secondDateName: nameof(team.CreatedDate)),
-                     Parameter: nameof(team.UpdatedDate)));
+                    firstDate: team.UpdatedDate,
+                    secondDate: team.CreatedDate,
+                    secondDateName: nameof(team.CreatedDate)),
+                Parameter: nameof(team.UpdatedDate)));
         }
 
-        private static void ValidateStorageTeam(Team maybeTeam, Guid teamId)
+        private static void ValidateStorageTeamExists(Team maybeTeam, Guid teamId)
         {
             if (maybeTeam is null)
             {
@@ -57,7 +57,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
         private static void ValidateAgainstStorageTeamOnModify(Team inputTeam, Team storageTeam)
         {
-            ValidateStorageTeam(storageTeam, inputTeam.Id);
+            ValidateStorageTeamExists(storageTeam, inputTeam.Id);
 
             Validate(
                 (Rule: IsNotSame(

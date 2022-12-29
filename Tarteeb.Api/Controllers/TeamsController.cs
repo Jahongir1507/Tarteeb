@@ -98,5 +98,40 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(teamServiceException.InnerException);
             }
         }
+
+        [HttpPut]
+
+        public async ValueTask<ActionResult<Team>> PutTeamAsync(Team team)
+        {
+            try
+            {
+                Team modifiedTeam =
+                    await this.teamService.ModifyTeamAsync(team);
+
+                return Ok(modifiedTeam);
+            }
+            catch (TeamValidationException teamValidationException)
+                when (teamValidationException.InnerException is NotFoundTeamException)
+            {
+                return NotFound(teamValidationException.InnerException);
+            }
+            catch (TeamValidationException teamValidationException)
+            {
+                return BadRequest(teamValidationException.InnerException);
+            }
+            catch (TeamDependencyValidationException teamDependencyValidationException)
+                when (teamDependencyValidationException.InnerException is AlreadyExistsTeamException)
+            {
+                return Conflict(teamDependencyValidationException.InnerException);
+            }
+            catch (TeamDependencyException teamDependencyException)
+            {
+                return InternalServerError(teamDependencyException);
+            }
+            catch (TeamServiceException teamServiceException)
+            {
+                return InternalServerError(teamServiceException);
+            }
+        }
     }
 }

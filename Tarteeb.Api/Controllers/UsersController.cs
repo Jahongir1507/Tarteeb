@@ -127,15 +127,15 @@ namespace Tarteeb.Api.Controllers
             }
             catch (UserDependencyValidationException userDependencyValidationException)
             {
-                return BadRequest(userDependencyValidationException);
+                return BadRequest(userDependencyValidationException.InnerException);
             }
             catch (UserDependencyException userDependencyException)
             {
-                return InternalServerError(userDependencyException);
+                return InternalServerError(userDependencyException.InnerException);
             }
             catch (UserServiceException userServiceException)
             {
-                return InternalServerError(userServiceException);
+                return InternalServerError(userServiceException.InnerException);
             }
         }
     }

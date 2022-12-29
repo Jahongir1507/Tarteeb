@@ -101,6 +101,40 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<User>> PutUserAsync(User user)
+        {
+            try
+            {
+                User modifiedUser =
+                    await this.userService.ModifyUserAsync(user);
+
+                return Ok(modifiedUser);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
+            {
+                return NotFound(userValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserDependencyValidationException userDependencyValidationException)
+                when (userDependencyValidationException.InnerException is AlreadyExistsUserException)
+            {
+                return Conflict(userDependencyValidationException.InnerException);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
         [HttpDelete("{userId}")]
         public async ValueTask<ActionResult<User>> DeleteUserByIdAsync(Guid userId)
         {

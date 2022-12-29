@@ -26,20 +26,55 @@ namespace Tarteeb.Api.Services.Foundations.Teams
                     firstDate: team.CreatedDate,
                     secondDate: team.UpdatedDate,
                     secondDateName: nameof(Team.UpdatedDate)),
-
                 Parameter: nameof(Team.CreatedDate)));
         }
 
-        private void ValidateTeamId(Guid teamId) =>
-            Validate((Rule: IsInvalid(teamId), Parameter: nameof(Team.Id)));
+        private void ValidateTeamOnModify(Team team)
+        {
+            ValidateTeamNotNull(team);
 
-        private void ValidateStorageTeam(Team maybeTeam, Guid teamId)
+            Validate(
+                (Rule: IsInvalid(team.Id), Parameter: nameof(Team.Id)),
+                (Rule: IsInvalid(team.TeamName), Parameter: nameof(Team.TeamName)),
+                (Rule: IsInvalid(team.CreatedDate), Parameter: nameof(Team.CreatedDate)),
+                (Rule: IsInvalid(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
+                (Rule: IsNotRecent(team.UpdatedDate), Parameter: nameof(Team.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: team.UpdatedDate,
+                    secondDate: team.CreatedDate,
+                    secondDateName: nameof(team.CreatedDate)),
+                Parameter: nameof(team.UpdatedDate)));
+        }
+
+        private static void ValidateStorageTeamExists(Team maybeTeam, Guid teamId)
         {
             if (maybeTeam is null)
             {
                 throw new NotFoundTeamException(teamId);
             }
         }
+
+        private static void ValidateAgainstStorageTeamOnModify(Team inputTeam, Team storageTeam)
+        {
+            ValidateStorageTeamExists(storageTeam, inputTeam.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputTeam.CreatedDate,
+                    secondDate: storageTeam.CreatedDate,
+                    secondDateName: nameof(Team.CreatedDate)),
+                Parameter: nameof(Team.CreatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: inputTeam.UpdatedDate,
+                        secondDate: storageTeam.UpdatedDate,
+                        secondDateName: nameof(Team.UpdatedDate)),
+                Parameter: nameof(Team.UpdatedDate)));
+        }
+
+        private void ValidateTeamId(Guid teamId) =>
+            Validate((Rule: IsInvalid(teamId), Parameter: nameof(Team.Id)));
 
         private static dynamic IsInvalid(Guid id) => new
         {
@@ -66,6 +101,15 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}."
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

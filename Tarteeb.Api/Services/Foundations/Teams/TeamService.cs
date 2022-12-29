@@ -49,9 +49,22 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             Team maybeTeam =
                 await storageBroker.SelectTeamByIdAsync(teamId);
 
-            ValidateStorageTeam(maybeTeam, teamId);
+            ValidateStorageTeamExists(maybeTeam, teamId);
 
             return maybeTeam;
+        });
+
+        public ValueTask<Team> ModifyTeamAsync(Team team) =>
+        TryCatch(async () =>
+        {
+            ValidateTeamOnModify(team);
+
+            var maybeTeam = 
+                await this.storageBroker.SelectTeamByIdAsync(team.Id);
+
+            ValidateAgainstStorageTeamOnModify(inputTeam: team, storageTeam: maybeTeam);
+
+            return await this.storageBroker.UpdateTeamAsync(team);
         });
 
         public ValueTask<Team> RemoveTeamByIdAsync(Guid teamId) =>
@@ -62,7 +75,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             Team maybeTeam =
                 await this.storageBroker.SelectTeamByIdAsync(teamId);
 
-            ValidateStorageTeam(maybeTeam, teamId);
+            ValidateStorageTeamExists(maybeTeam, teamId);
 
             return await this.storageBroker.DeleteTeamAsync(maybeTeam);
         });

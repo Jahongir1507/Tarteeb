@@ -56,6 +56,12 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
                 throw CreateAndDependencyValidationException(lockedTeamException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedTeamStorageException = new FailedTeamStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedTeamStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedTeamServiceException = new FailedTeamServiceException(serviceException);
@@ -84,12 +90,21 @@ namespace Tarteeb.Api.Services.Foundations.Teams
             }
         }
 
-        private TeamServiceException CreateAndLogServiceException(Xeption exception)
+        private TeamServiceException CreateAndLogServiceException(
+            Exception exception)
         {
             var teamServiceException = new TeamServiceException(exception);
             this.loggingBroker.LogError(teamServiceException);
 
             return teamServiceException;
+        }
+
+        private TeamDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var teamDependencyException = new TeamDependencyException(exception);
+            this.loggingBroker.LogError(teamDependencyException);
+
+            return teamDependencyException;
         }
 
         private TeamValidationException CreateAndLogValidationException(Xeption exception)
@@ -115,5 +130,6 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return teamDependencyValidationException;
         }
+
     }
 }

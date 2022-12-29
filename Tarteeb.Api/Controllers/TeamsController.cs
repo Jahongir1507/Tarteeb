@@ -100,7 +100,6 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpPut]
-
         public async ValueTask<ActionResult<Team>> PutTeamAsync(Team team)
         {
             try
@@ -126,7 +125,7 @@ namespace Tarteeb.Api.Controllers
             }
             catch (TeamDependencyException teamDependencyException)
             {
-                return InternalServerError(teamDependencyException);
+                return InternalServerError(teamDependencyException.InnerException);
             }
             catch (TeamServiceException teamServiceException)
             {

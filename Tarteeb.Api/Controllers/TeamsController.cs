@@ -80,40 +80,40 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpDelete("{teamId}")]
-        public async ValueTask<ActionResult<Team>>DeleteTeamByIdAsync(Guid teamId)
+        public async ValueTask<ActionResult<Team>> DeleteTeamByIdAsync(Guid teamId)
         {
             try
             {
-                Team deletedTeam = 
+                Team deletedTeam =
                     await this.teamService.RemoveTeamByIdAsync(teamId);
 
                 return Ok(deletedTeam);
             }
             catch (TeamValidationException teamValidationException)
-                when(teamValidationException.InnerException is NotFoundTeamException)
+                when (teamValidationException.InnerException is NotFoundTeamException)
             {
                 return NotFound(teamValidationException.InnerException);
             }
-            catch(TeamValidationException teamValidationException)
+            catch (TeamValidationException teamValidationException)
             {
                 return BadRequest(teamValidationException.InnerException);
             }
-            catch(TeamDependencyValidationException teamDependencyValidationException)
-                when(teamDependencyValidationException.InnerException is LockedTeamException)
+            catch (TeamDependencyValidationException teamDependencyValidationException)
+                when (teamDependencyValidationException.InnerException is LockedTeamException)
             {
                 return Locked(teamDependencyValidationException.InnerException);
             }
-            catch(TeamDependencyValidationException teamDependencyValidationException)
+            catch (TeamDependencyValidationException teamDependencyValidationException)
             {
-                return BadRequest(teamDependencyValidationException);
+                return BadRequest(teamDependencyValidationException.InnerException);
             }
-            catch(TeamDependencyException teamDependencyException)
+            catch (TeamDependencyException teamDependencyException)
             {
-                return InternalServerError(teamDependencyException);
+                return InternalServerError(teamDependencyException.InnerException);
             }
-            catch(TeamServiceException teamServiceException)
+            catch (TeamServiceException teamServiceException)
             {
-                return InternalServerError(teamServiceException);
+                return InternalServerError(teamServiceException.InnerException);
             }
         }
     }

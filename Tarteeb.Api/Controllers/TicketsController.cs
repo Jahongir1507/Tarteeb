@@ -163,11 +163,11 @@ namespace Tarteeb.Api.Controllers
             }
             catch (TicketDependencyException ticketDependencyException)
             {
-                return InternalServerError(ticketDependencyException);
+                return InternalServerError(ticketDependencyException.InnerException);
             }
             catch (TicketServiceException ticketServiceException)
             {
-                return InternalServerError(ticketServiceException);
+                return InternalServerError(ticketServiceException.InnerException);
             }
         }
     }

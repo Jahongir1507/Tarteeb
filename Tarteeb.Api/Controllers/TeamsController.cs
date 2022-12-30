@@ -1,13 +1,13 @@
-﻿//=================================
+//=================================
 // Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.AspNetCore.Mvc;
+using RESTFulSense.Controllers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Tarteeb.Api.Services.Foundations.Teams;
@@ -99,15 +99,15 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
-        [HttpDelete("{teamId}")]
-        public async ValueTask<ActionResult<Team>> DeleteTeamByIdAsync(Guid teamId)
+        [HttpPut]
+        public async ValueTask<ActionResult<Team>> PutTeamAsync(Team team)
         {
             try
             {
-                Team deletedTeam =
-                    await this.teamService.RemoveTeamByIdAsync(teamId);
+                Team modifiedTeam =
+                    await this.teamService.ModifyTeamAsync(team);
 
-                return Ok(deletedTeam);
+                return Ok(modifiedTeam);
             }
             catch (TeamValidationException teamValidationException)
                 when (teamValidationException.InnerException is NotFoundTeamException)
@@ -119,13 +119,9 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(teamValidationException.InnerException);
             }
             catch (TeamDependencyValidationException teamDependencyValidationException)
-                when (teamDependencyValidationException.InnerException is LockedTeamException)
+                when (teamDependencyValidationException.InnerException is AlreadyExistsTeamException)
             {
-                return Locked(teamDependencyValidationException.InnerException);
-            }
-            catch (TeamDependencyValidationException teamDependencyValidationException)
-            {
-                return BadRequest(teamDependencyValidationException.InnerException);
+                return Conflict(teamDependencyValidationException.InnerException);
             }
             catch (TeamDependencyException teamDependencyException)
             {

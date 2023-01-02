@@ -18,5 +18,6 @@ namespace Tarteeb.Api.Models
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
         public Guid? ManagerId { get; set; }
+        public string Password { get; set; }
     }
 }

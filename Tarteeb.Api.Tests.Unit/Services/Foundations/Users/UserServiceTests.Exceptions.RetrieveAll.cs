@@ -3,9 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
+using System;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
+        public async void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
         {
             //given
             SqlException sqlException = CreateSqlException();
@@ -31,10 +32,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             Action retrieveAllUsersAction = () =>
-                this.userService.RetrieveAllUsers();
+               this.userService.RetrieveAllUsers();
+
+            UserDependencyException actualUserDependencyException =
+                Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
 
             //then
-            Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllUsers());

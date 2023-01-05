@@ -41,7 +41,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllUsers());
+                broker.SelectAllUsers(),Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(

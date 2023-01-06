@@ -4,10 +4,11 @@
 //=================================
 
 using System;
-using Microsoft.Data.SqlClient;
 using Moq;
-using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
+using Tarteeb.Api.Models.Users.Exceptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -31,13 +32,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             Action retrieveAllUsersAction = () =>
-                this.userService.RetrieveAllUsers();
+               this.userService.RetrieveAllUsers();
+
+            UserDependencyException actualUserDependencyException =
+                Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
 
             //then
-            Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllUsers());
+                broker.SelectAllUsers(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(

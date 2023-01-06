@@ -3,19 +3,19 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using Moq;
+using Xunit;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
-using Moq;
-using System;
 using Tarteeb.Api.Models.Users.Exceptions;
-using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {
     public partial class UserServiceTests
     {
         [Fact]
-        public async void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
+        public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
         {
             //given
             SqlException sqlException = CreateSqlException();
@@ -41,7 +41,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllUsers(),Times.Once);
+                broker.SelectAllUsers(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(

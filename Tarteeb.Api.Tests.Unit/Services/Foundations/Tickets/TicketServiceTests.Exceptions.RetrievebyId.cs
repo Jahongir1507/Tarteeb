@@ -72,13 +72,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             //when
             ValueTask<Ticket> retrieveTicketById =
-            this.ticketService.RetrieveTicketByIdAsync(someId);
+                this.ticketService.RetrieveTicketByIdAsync(someId);
 
-            TicketServiceException actualCommentServiceException =
+            TicketServiceException actualTeamServiceException =
                 await Assert.ThrowsAsync<TicketServiceException>(retrieveTicketById.AsTask);
 
             // then
-            actualCommentServiceException.Should().BeEquivalentTo(expectedTicketServiceExcpetion);
+            actualTeamServiceException.Should().BeEquivalentTo(expectedTicketServiceExcpetion);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>()), Times.Once);

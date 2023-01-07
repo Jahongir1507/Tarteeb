@@ -77,11 +77,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             ValueTask<Team> retrieveTeamById =
             this.teamService.RetrieveTeamByIdAsync(someId);
 
-            TeamServiceException actualCommentServiceException =
+            TeamServiceException actualTeamServiceException =
                 await Assert.ThrowsAsync<TeamServiceException>(retrieveTeamById.AsTask);
 
             // then
-            actualCommentServiceException.Should().BeEquivalentTo(expectedTeamServiceExcpetion);
+            actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceExcpetion);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTeamByIdAsync(It.IsAny<Guid>()), Times.Once);

@@ -10,29 +10,25 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Tokens;
 
 namespace Tarteeb.Api.Brokers.Tokens
 {
     public class TokenBroker : ITokenBroker
     {
-        private readonly IConfiguration configuration;
+        private readonly TokenConfiguration tokenConfiguration;
 
-        public TokenBroker(IConfiguration configuration) =>
-            this.configuration = configuration;
+        public TokenBroker(IConfiguration configuration)
+        {
+            tokenConfiguration = new TokenConfiguration();
+            configuration.Bind("Jwt",tokenConfiguration);
+        }
 
         public string GenerateJWT(User user)
         {
-            var secretKey =
-                configuration.GetSection("Jwt").GetSection("Key").Value;
 
-            var jwtIssuer =
-                configuration.GetSection("Jwt").GetSection("Issuer").Value;
-
-            var jwtAudience =
-                configuration.GetSection("Jwt").GetSection("Audience").Value;
-
-            var convertedKeyToBytes =
-                Encoding.UTF8.GetBytes(secretKey);
+            byte[] convertedKeyToBytes =
+                Encoding.UTF8.GetBytes(tokenConfiguration.Key);
 
             var securityKey =
                 new SymmetricSecurityKey(convertedKeyToBytes);
@@ -47,8 +43,8 @@ namespace Tarteeb.Api.Brokers.Tokens
             };
 
             var token = new JwtSecurityToken(
-                jwtIssuer,
-                jwtAudience,
+                tokenConfiguration.Issuer,
+                tokenConfiguration.Audience,
                 claims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: cridentials);

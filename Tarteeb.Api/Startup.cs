@@ -103,7 +103,8 @@ namespace Tarteeb.Api
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    var jwtOptions = Configuration.GetSection("JWTSettings").Get<JWTOptionsModel>();
+                    var jwtOptions = Configuration.GetSection("JWTOptionsModel").Get<JWTOptionsModel>();
+                    
                     options
                         .TokenValidationParameters = new TokenValidationParameters()
                     {

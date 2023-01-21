@@ -3,12 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -38,7 +41,7 @@ namespace Tarteeb.Api
             AddFoundationServices(services);
             AddProcessingService(services);
             AddOrchestrationService(services);
-            
+            AddAuthenticationService(services);
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
@@ -46,7 +49,6 @@ namespace Tarteeb.Api
                     info: new OpenApiInfo { Title = "Tarteeb.Api", Version = "v1" });
             });
         }
-        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
             if (environment.IsDevelopment())
@@ -93,6 +95,27 @@ namespace Tarteeb.Api
         {
             services.AddScoped(typeof(UserSecurityService));
             services.AddScoped(typeof(UserProcessingService));
+        }
+        
+        private void AddAuthenticationService(IServiceCollection services)
+        {
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var jwtOptions = Configuration.GetSection("JWTSettings").Get<JWTOptionsModel>();
+                    options
+                        .TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidateIssuer = true,
+                        ValidAudience = jwtOptions.Audience,
+                        ValidIssuer = jwtOptions.Issuer,
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
+                    };
+                });
         }
 
     }

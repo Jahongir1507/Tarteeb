@@ -4,9 +4,9 @@ using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Brokers.Storages;
 
-public class StorageBrokerUsersConfigurations : IEntityTypeConfiguration<User>
+public partial class StorageBroker
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void ConfigureUserEmail(EntityTypeBuilder<User> builder)
     {
         builder
             .HasIndex(user => user.Email)

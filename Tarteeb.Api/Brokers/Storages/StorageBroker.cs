@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Tarteeb.Api.Models;
 
 
 namespace Tarteeb.Api.Brokers.Storages
@@ -74,8 +75,7 @@ namespace Tarteeb.Api.Brokers.Storages
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .ApplyConfiguration(new StorageBrokerUsersConfigurations());
+            ConfigureUserEmail(modelBuilder.Entity<User>());
         }
     }
 }

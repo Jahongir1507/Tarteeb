@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Tarteeb.Api.Models;
+
 
 namespace Tarteeb.Api.Brokers.Storages
 {
@@ -75,9 +75,7 @@ namespace Tarteeb.Api.Brokers.Storages
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<User>()
-                .HasIndex(user => user.Email)
-                .IsUnique();
+                .ApplyConfiguration(new StorageBrokerUsersConfigurations());
         }
     }
 }

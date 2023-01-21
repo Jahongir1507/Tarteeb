@@ -12,16 +12,16 @@ namespace Tarteeb.Api.Controllers
     [Route("api/[controller]")]
     public class AccountsController : RESTFulController
     {
-        private readonly IUserOrchestrationService _userOrchestrationService;
+        private readonly IUserOrchestrationService userOrchestrationService;
         public AccountsController(IUserOrchestrationService userOrchestrationService)=>
-            this._userOrchestrationService= userOrchestrationService;
+            this.userOrchestrationService= userOrchestrationService;
 
         [HttpGet("login")]
         public  IActionResult Login(string email, string password)
         {
             try
             {
-                var user = _userOrchestrationService.LoginUser(email, password);
+                var user = userOrchestrationService.LoginUser(email, password);
                 return Ok(user);
             }
             catch (InvalidCredentialException e)

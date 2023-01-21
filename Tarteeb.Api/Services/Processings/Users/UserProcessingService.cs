@@ -22,7 +22,11 @@ namespace Tarteeb.Api.Services.Processings.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<User> UpsertUserAsync(User user) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<User> UpsertUserAsync(User user)
+        {
+            this.userService.RetrieveAllUsers();
+
+            return await this.userService.AddUserAsync(user);
+        }
     }
 }

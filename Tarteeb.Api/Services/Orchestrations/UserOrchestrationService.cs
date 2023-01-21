@@ -1,10 +1,12 @@
-﻿using Tarteeb.Api.Models;
+﻿using System;
+using System.Security.Authentication;
+using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Orchestrations.Model;
 using Tarteeb.Api.Services.Processings;
 
 namespace Tarteeb.Api.Services.Orchestrations
 {
-    public class UserOrchestrationService
+    public class UserOrchestrationService:IUserOrchestrationService
     {
         private readonly UserProcessingService userProcessingService;
         private readonly UserSecurityService userSecurityService;
@@ -24,6 +26,9 @@ namespace Tarteeb.Api.Services.Orchestrations
             User user =
                 userProcessingService.RetriveUserByCredentials(email, password);
 
+            if (user is null)
+                throw new InvalidCredentialException("Email or password incorrect. Please try again.");
+            
             UserToken userToken = new UserToken();
             userToken.UserId = user.Id;
             userToken.Token = userSecurityService.CreateToken(user);

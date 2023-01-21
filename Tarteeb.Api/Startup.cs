@@ -15,6 +15,7 @@ using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tarteeb.Api.Services.Foundations.Users;
+using Tarteeb.Api.Services.Processings;
 
 namespace Tarteeb.Api
 {
@@ -31,6 +32,7 @@ namespace Tarteeb.Api
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
             AddFoundationServices(services);
+            AddProcessingServices(services);
 
             services.AddSwaggerGen(config =>
             {
@@ -72,6 +74,11 @@ namespace Tarteeb.Api
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
+        }
+
+        private static void AddProcessingServices(IServiceCollection services)
+        {
+            services.AddTransient<IUserProcessingService, UserProcessingService>();
         }
     }
 }

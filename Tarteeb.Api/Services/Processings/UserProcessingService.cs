@@ -17,10 +17,9 @@ namespace Tarteeb.Api.Services.Processings
         {
             IQueryable<User> allUser=this.userService.RetrieveAllUsers();
           
-            User validUserOrNot=allUser
-                .FirstOrDefault(retrievedUser => 
-                    retrievedUser.Email == email && retrievedUser.Password == password);
-            return validUserOrNot;
+            return allUser
+                        .FirstOrDefault(retrievedUser => 
+                            retrievedUser.Email == email && retrievedUser.Password == password);
         }
     }
 }

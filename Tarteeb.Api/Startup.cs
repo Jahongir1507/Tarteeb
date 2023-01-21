@@ -86,7 +86,7 @@ namespace Tarteeb.Api
         }
         private void AddOrchestrationService(IServiceCollection services)
         {
-            services.AddTransient<IUserOrchestrationService, UserOrchestrationService>();
+            services.AddTransient<IUserSecurityOrchestrationService, UserSecurityOrchestrationService>();
         }
         
         private void AddProcessingService(IServiceCollection services)

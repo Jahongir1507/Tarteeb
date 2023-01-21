@@ -6,12 +6,12 @@ using Tarteeb.Api.Services.Processings;
 
 namespace Tarteeb.Api.Services.Orchestrations
 {
-    public class UserOrchestrationService:IUserOrchestrationService
+    public class UserSecurityOrchestrationService:IUserSecurityOrchestrationService
     {
         private readonly UserProcessingService userProcessingService;
         private readonly UserSecurityService userSecurityService;
 
-        public UserOrchestrationService(
+        public UserSecurityOrchestrationService(
             UserProcessingService userProcessingService,
             UserSecurityService userSecurityService)
         {

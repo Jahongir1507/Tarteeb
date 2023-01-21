@@ -20,15 +20,15 @@ namespace Tarteeb.Api.Brokers.Tokens
 
         public TokenBroker(IConfiguration configuration)
         {
-            tokenConfiguration = new TokenConfiguration();
-            configuration.Bind("Jwt",tokenConfiguration);
+            this.tokenConfiguration = new TokenConfiguration();
+            configuration.Bind("Jwt",this.tokenConfiguration);
         }
 
         public string GenerateJWT(User user)
         {
 
             byte[] convertedKeyToBytes =
-                Encoding.UTF8.GetBytes(tokenConfiguration.Key);
+                Encoding.UTF8.GetBytes(this.tokenConfiguration.Key);
 
             var securityKey =
                 new SymmetricSecurityKey(convertedKeyToBytes);
@@ -43,8 +43,8 @@ namespace Tarteeb.Api.Brokers.Tokens
             };
 
             var token = new JwtSecurityToken(
-                tokenConfiguration.Issuer,
-                tokenConfiguration.Audience,
+                this.tokenConfiguration.Issuer,
+                this.tokenConfiguration.Audience,
                 claims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: cridentials);

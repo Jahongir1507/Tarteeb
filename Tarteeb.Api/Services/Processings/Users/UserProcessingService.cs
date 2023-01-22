@@ -3,12 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Processings.Users
 {
-    public class UserProcessingService:IUserProcessingService
+    public class UserProcessingService : IUserProcessingService
     {
         private readonly IUserService userService;
 
@@ -17,7 +18,11 @@ namespace Tarteeb.Api.Services.Processings.Users
 
         public User RetrieveUserByCredentails(string email, string password)
         {
-            throw new System.NotImplementedException();
+            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+
+            return allUser
+                .FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                    && retrievedUser.Password.Equals(password));
         }
     }
 }

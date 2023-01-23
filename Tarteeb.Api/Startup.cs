@@ -3,11 +3,14 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -32,6 +35,7 @@ namespace Tarteeb.Api
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
             AddFoundationServices(services);
+            RegisterJwtConfigurations(services, Configuration);
 
             services.AddSwaggerGen(config =>
             {
@@ -55,6 +59,7 @@ namespace Tarteeb.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -74,6 +79,27 @@ namespace Tarteeb.Api
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
+        }
+
+        private static void RegisterJwtConfigurations(IServiceCollection services, 
+            IConfiguration configuration)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    string key = configuration.GetSection("Jwt").GetValue<string>("Key");
+                    byte[] convertKeyToBytes = Encoding.UTF8.GetBytes(key);
+
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(convertKeyToBytes),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RequireExpirationTime = true,
+                        ValidateLifetime = true
+                    };
+                });
         }
     }
 }

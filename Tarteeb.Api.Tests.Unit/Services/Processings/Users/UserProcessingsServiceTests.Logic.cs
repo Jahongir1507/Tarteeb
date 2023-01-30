@@ -32,10 +32,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             // then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            userServiceMock.Verify(service =>
+            this.userServiceMock.Verify(service =>
                 service.RetrieveAllUsers(), Times.Once);
 
-            userServiceMock.VerifyNoOtherCalls();
+            this.userServiceMock.VerifyNoOtherCalls();
         }
     }
 }

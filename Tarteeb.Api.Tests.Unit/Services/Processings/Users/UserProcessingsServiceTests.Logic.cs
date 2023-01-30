@@ -15,7 +15,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
     public partial class UserProcessingsServiceTests
     {
         [Fact]
-        public void ShouldAddCountryIfNotExistAsync()
+        public void ShouldAddUserIfNotExistAsync()
         {
             // given
             string inputEmail = GetrandomString();

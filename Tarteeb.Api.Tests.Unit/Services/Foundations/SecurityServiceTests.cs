@@ -33,10 +33,10 @@ public partial class SecurityServiceTests
         new MnemonicString().GetValue();
 
     private static User CreateRandomUser() =>
-            CreateUserFiller(dates: GetRandomDateTimeOffset()).Create();
+        CreateUserFiller(dates: GetRandomDateTimeOffset()).Create();
 
     private static DateTimeOffset GetRandomDateTimeOffset() =>
-      new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+        new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
     private static Filler<User> CreateUserFiller(DateTimeOffset dates)
     {

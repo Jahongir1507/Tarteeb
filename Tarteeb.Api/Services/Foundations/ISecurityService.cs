@@ -5,10 +5,9 @@
 
 using Tarteeb.Api.Models;
 
-namespace Tarteeb.Api.Services.Foundations
+namespace Tarteeb.Api.Services.Foundations;
+
+public interface ISecurityService
 {
-    public interface ISecurityService
-    {
-        string CreateToken(User user);
-    }
+    string CreateToken(User user);
 }

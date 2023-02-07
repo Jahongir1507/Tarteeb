@@ -10,11 +10,11 @@ using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Services.Foundations
 {
-    public class UserSecurityService: IUserSecurityService
+    public class SecurityService: ISecurityService
     {
         private readonly ITokenBroker tokenBroker;
 
-        public UserSecurityService(ITokenBroker tokenBroker) =>
+        public SecurityService(ITokenBroker tokenBroker) =>
             this.tokenBroker = tokenBroker;        
 
         public string CreateToken(User user) =>

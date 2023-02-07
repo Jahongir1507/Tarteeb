@@ -4,6 +4,7 @@
 //=================================
 
 using System.Runtime.InteropServices;
+using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations;
@@ -12,12 +13,15 @@ namespace Tarteeb.Api.Services.Processings
 {
     public class SecurityProcessingService : ISecurityProcessingService
     {
-        private readonly IUserSecurityService userSecurityService;
+        private readonly ISecurityService securityService;
+        private readonly ILoggingBroker loggingBroker;
 
-        public SecurityProcessingService(IUserSecurityService userSecurityService) =>        
-            this.userSecurityService = userSecurityService;        
-
+        public SecurityProcessingService(ISecurityService securityService, ILoggingBroker loggingBroker)
+        {
+            this.securityService = securityService;
+            this.loggingBroker = loggingBroker;
+        } 
         public string CreateToken(User user) =>
-            this.userSecurityService.CreateToken(user);
+            this.securityService.CreateToken(user);
     }
 }

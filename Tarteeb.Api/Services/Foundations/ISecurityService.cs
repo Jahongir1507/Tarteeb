@@ -7,7 +7,7 @@ using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Services.Foundations
 {
-    public interface IUserSecurityService
+    public interface ISecurityService
     {
         string CreateToken(User user);
     }

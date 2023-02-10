@@ -43,6 +43,7 @@ namespace Tarteeb.Api
                     name: "v1",
                     info: new OpenApiInfo { Title = "Tarteeb.Api", Version = "v1" });
             });
+            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)

@@ -11,8 +11,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class AlreadyExistsTicketException : Xeption
     {
         public AlreadyExistsTicketException(Exception innerException)
-            : base(message: "Ticket already exists.",
-                  innerException)
+            : base(message: "Ticket already exists.", innerException)
         { }
     }
 }

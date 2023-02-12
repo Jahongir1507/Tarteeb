@@ -1,4 +1,5 @@
-﻿using Tarteeb.Api.Brokers.Loggings;
+﻿using System.Linq;
+using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
 
@@ -17,7 +18,10 @@ namespace Tarteeb.Api.Services.Processings.Users
 
         public User RetrieveUserByCredentails(string email, string password)
         {
-            throw new System.NotImplementedException();
+            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+
+            return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                    && retrievedUser.Password.Equals(password));
         }
     }
 }

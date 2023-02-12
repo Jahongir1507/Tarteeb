@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Tickets.Exceptions
     public class FailedTicketServiceException : Xeption
     {
         public FailedTicketServiceException(Exception innerException)
-            : base(message: "Failed ticket service occurred, please contact support", innerException)
+            : base(message: "Failed ticket service error occurred, please contact support", innerException)
         { }
     }
 }

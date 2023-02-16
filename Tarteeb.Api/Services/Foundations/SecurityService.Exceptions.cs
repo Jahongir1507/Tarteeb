@@ -37,24 +37,24 @@ namespace Tarteeb.Api.Services.Foundations
 
         }
 
-            private UserValidationException CreateAndLogValidationException(Xeption exception)
-            {
-                var userValidationException =
-                    new UserValidationException(exception);
+        private UserValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var userValidationException =
+                new UserValidationException(exception);
 
-                this.loggingBroker.LogError(userValidationException);
+            this.loggingBroker.LogError(userValidationException);
 
-                return userValidationException;
-            }
+            return userValidationException;
+        }
 
-            private UserServiceException CreateAndLogServiceException(Xeption exception)
-            {
-                var userServiceException =
-                    new UserServiceException(exception);
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userServiceException =
+                new UserServiceException(exception);
 
-                this.loggingBroker.LogError(userServiceException);
+            this.loggingBroker.LogError(userServiceException);
 
-                return userServiceException;
-            }
+            return userServiceException;
+        }
     }
 }

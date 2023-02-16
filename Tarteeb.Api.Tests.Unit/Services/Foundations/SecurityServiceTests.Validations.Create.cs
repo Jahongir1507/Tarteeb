@@ -43,5 +43,50 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.tokenBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnCreateJWTIfUserIsInvalidAndLogItAsync(
+            string invalidString)
+        {
+            //given
+            var invalidUser = new User
+            {
+                Email = invalidString
+            };
+
+            var invalidUserException = new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: nameof(User.Id),
+                values: "Id is required");
+
+            invalidUserException.AddData(
+                key: nameof(User.Email),
+                values: "Text is required");
+
+            var expectedUserValidationException = new UserValidationException(
+                invalidUserException);
+
+            //when
+            UserValidationException actualUserValidationException =
+                Assert.Throws<UserValidationException>(() => this.securityService.CreateToken(invalidUser));
+
+            //then
+            actualUserValidationException.Should().BeEquivalentTo(
+                expectedUserValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+              broker.LogError(It.Is(SameExceptionAs(
+                 expectedUserValidationException))), Times.Once);
+
+            this.tokenBrokerMock.Verify(broker =>
+              broker.GenerateJWT(It.IsAny<User>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.tokenBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

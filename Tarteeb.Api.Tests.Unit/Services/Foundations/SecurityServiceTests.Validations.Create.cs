@@ -1,0 +1,47 @@
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using FluentAssertions;
+using Moq;
+using System.Threading.Tasks;
+using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Users.Exceptions;
+using Xunit;
+
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations
+{
+
+    public partial class SecurityServiceTests
+    {
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnCreateJWTIfInputIsNullAndLogItAsync()
+        {
+            //given
+            User noUser = null;
+            var nullUserException = new NullUserException();
+
+            var expectedUserValidationException =
+                new UserValidationException(nullUserException);
+
+            //when
+            UserValidationException actualUserValidationException =
+                Assert.Throws<UserValidationException>(() => this.securityService.CreateToken(noUser));
+
+            //then
+            actualUserValidationException.Should().BeEquivalentTo(
+                expectedUserValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(
+                expectedUserValidationException))), Times.Once);
+
+            this.tokenBrokerMock.Verify(broker =>
+            broker.GenerateJWT(It.IsAny<User>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.tokenBrokerMock.VerifyNoOtherCalls();
+        }
+    }
+}

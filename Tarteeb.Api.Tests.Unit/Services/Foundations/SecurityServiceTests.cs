@@ -5,11 +5,13 @@
 
 using Moq;
 using System;
+using System.Linq.Expressions;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations;
 
@@ -28,6 +30,9 @@ public partial class SecurityServiceTests
             tokenBrokerMock.Object,
             loggingBrokerMock.Object);
     }
+
+    private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+        actualException => actualException.SameExceptionAs(expectedException);
 
     private string CreateRandomString() =>
         new MnemonicString().GetValue();

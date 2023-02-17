@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations
     public partial class SecurityServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnCreateJWTIfInputIsNullAndLogItAsync()
+        public void ShouldThrowValidationExceptionOnCreateJWTIfInputIsNullAndLogItAsync()
         {
             //given
             User noUser = null;
@@ -34,11 +34,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations
                 expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptionAs(
-                expectedUserValidationException))), Times.Once);
+               broker.LogError(It.Is(SameExceptionAs(
+                  expectedUserValidationException))), Times.Once);
 
             this.tokenBrokerMock.Verify(broker =>
-            broker.GenerateJWT(It.IsAny<User>()), Times.Never);
+                broker.GenerateJWT(It.IsAny<User>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.tokenBrokerMock.VerifyNoOtherCalls();

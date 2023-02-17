@@ -48,7 +48,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnCreateJWTIfUserIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnCreateJWTIfUserIsInvalidAndLogItAsync(
             string invalidString)
         {
             //given

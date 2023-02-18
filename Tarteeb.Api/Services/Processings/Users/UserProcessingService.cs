@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations.Users;
@@ -16,12 +17,15 @@ namespace Tarteeb.Api.Services.Processings.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public User RetrieveUserByCredentails(string email, string password)
-        {
-            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+        public ValueTask<User> RetrieveUserByCredentails(string email, string password) =>
+            TryCatch(async () =>
+            {
+                ValidateUser(email, password);
 
-            return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
-                    && retrievedUser.Password.Equals(password));
-        }
+                IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+
+                return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                        && retrievedUser.Password.Equals(password));
+            });
     }
 }

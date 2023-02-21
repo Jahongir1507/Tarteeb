@@ -1,4 +1,6 @@
-﻿using Tarteeb.Api.Models.Users.Exceptions;
+﻿using System;
+using Tarteeb.Api.Models.Users.Exceptions;
+using Xeptions;
 
 namespace Tarteeb.Api.Services.Processings
 {
@@ -12,10 +14,21 @@ namespace Tarteeb.Api.Services.Processings
             {
                 return returningTokenFunction();
             }
-            catch(NullUserException nullUserException)
+            catch(Exception exception)
             {
+                var failedUserServiceException = 
+                    new FailedUserServiceException(exception);
 
+                throw CreateAndLogServiceException(failedUserServiceException);
             }
+        }
+
+        private UserServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userServiceException = new UserServiceException(exception);
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
     }
 }

@@ -43,8 +43,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(date);
 
-            return filler;
-                
+            return filler;                
         }
     }
 }

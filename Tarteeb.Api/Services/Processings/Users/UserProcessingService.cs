@@ -11,7 +11,7 @@ using Tarteeb.Api.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Processings.Users
 {
-    public class UserProcessingService : IUserProcessingService
+    public partial class UserProcessingService : IUserProcessingService
     {
         private readonly IUserService userService;
         private readonly ILoggingBroker loggingBroker;
@@ -22,12 +22,15 @@ namespace Tarteeb.Api.Services.Processings.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public User RetrieveUserByCredentails(string email, string password)
-        {
-            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+        public ValueTask<User> RetrieveUserByCredentails(string email, string password) =>
+            TryCatch(async () =>
+            {
+                ValidateEmailAndPassword(email, password);
+                IQueryable<User> allUser = this.userService.RetrieveAllUsers();
 
-            return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
-                 && retrievedUser.Password.Equals(password));
-        }
+                return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                     && retrievedUser.Password.Equals(password));
+
+            });
     }
 }

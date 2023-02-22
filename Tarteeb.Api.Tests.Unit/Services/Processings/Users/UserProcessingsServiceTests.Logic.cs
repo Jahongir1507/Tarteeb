@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             // given
             string inputEmail = GetrandomString();
             string inputPassword = GetrandomString();
-            var expectedUser = new User { Email = inputEmail, Password = inputPassword };
+            User expectedUser = new User { Email = inputEmail, Password = inputPassword };
             var users = new List<User> { expectedUser };
 
             this.userServiceMock.Setup(service =>
@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                     .Returns(users.AsQueryable());
 
             // when
-            var actualUser = userProcessingsService.RetrieveUserByCredentails(inputEmail, inputPassword);
+            var actualUser = await userProcessingsService.RetrieveUserByCredentails(inputEmail, inputPassword);
 
             // then
             actualUser.Should().BeEquivalentTo(expectedUser);

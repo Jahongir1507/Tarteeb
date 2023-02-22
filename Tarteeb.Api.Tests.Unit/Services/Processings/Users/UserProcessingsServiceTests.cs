@@ -4,10 +4,13 @@
 //=================================
 
 using Moq;
+using System;
+using System.Linq.Expressions;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Processings.Users;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 {
@@ -29,6 +32,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 
         private static string GetrandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+           actualException => actualException.SameExceptionAs(expectedException);
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();

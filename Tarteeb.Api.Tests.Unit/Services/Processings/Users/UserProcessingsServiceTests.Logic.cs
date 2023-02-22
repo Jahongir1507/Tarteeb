@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                     .Returns(users.AsQueryable());
 
             // when
-            var actualUser = await userProcessingsService.RetrieveUserByCredentails(inputEmail, inputPassword);
+            var actualUser = userProcessingsService.RetrieveUserByCredentails(inputEmail, inputPassword);
 
             // then
             actualUser.Should().BeEquivalentTo(expectedUser);

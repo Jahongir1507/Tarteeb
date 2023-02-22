@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models;
@@ -21,9 +22,12 @@ namespace Tarteeb.Api.Services.Processings.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<User> RetrieveUserByCredentails(string email, string password)
+        public User RetrieveUserByCredentails(string email, string password)
         {
-            throw new System.NotImplementedException();
+            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+
+            return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                 && retrievedUser.Password.Equals(password));
         }
     }
 }

@@ -10,6 +10,6 @@ namespace Tarteeb.Api.Services.Processings.Users
 {
     public interface IUserProcessingService
     {
-        public ValueTask<User> RetrieveUserByCredentails(string email, string password);
+        public User RetrieveUserByCredentails(string email, string password);
     }
 }

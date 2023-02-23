@@ -19,7 +19,7 @@ namespace Tarteeb.Api.Services.Processings.Users
             {
                 throw CreateAndLogValidationException(nullUserProcessingException);
             }
-            catch(InvalidUserProcessingException invalidUserProcessingException)
+            catch (InvalidUserProcessingException invalidUserProcessingException)
             {
                 throw CreateAndLogValidationException(invalidUserProcessingException);
             }

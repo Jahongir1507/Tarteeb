@@ -1,9 +1,5 @@
 ﻿using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
@@ -17,8 +13,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
         public async Task ShouldThrowValidationExceptionOnUpsertIfEmailAndPasswordAreInvalidAndLogItAsync()
         {
             //given
-            string invalidEmail= string.Empty;
-            string invalidPassword= string.Empty;
+            string invalidEmail = string.Empty;
+            string invalidPassword = string.Empty;
             var invalidUserProcessingException = new InvalidUserProcessingException();
 
             invalidUserProcessingException.AddData(
@@ -29,14 +25,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                 key: nameof(User.Password),
                 values: "Text is required");
 
-            var expectedUserProcessingValidationException = 
+            var expectedUserProcessingValidationException =
                 new UserProcessingValidationException(invalidUserProcessingException);
 
             //when
-            ValueTask<User> retrieveUserByTask= 
+            ValueTask<User> retrieveUserByTask =
                 this.userProcessingsService.RetrieveUserByCredentails(invalidEmail, invalidPassword);
 
-            UserProcessingValidationException actualUserProcessingValidationException = 
+            UserProcessingValidationException actualUserProcessingValidationException =
                 await Assert.ThrowsAsync<UserProcessingValidationException>(retrieveUserByTask.AsTask);
 
             //then

@@ -1,13 +1,11 @@
-﻿using System;
-using Tarteeb.Api.Models;
+﻿using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
 
 namespace Tarteeb.Api.Services.Processings.Users
 {
     public partial class UserProcessingService
     {
-
-        private static void ValidateEmailAndPassword(string email,string password)
+        private static void ValidateEmailAndPassword(string email, string password)
         {
             ValidateUserIsNotNull(email, password);
 
@@ -16,9 +14,12 @@ namespace Tarteeb.Api.Services.Processings.Users
                 (Rule: IsInvalid(password), Parameter: nameof(User.Password)));
         }
 
-        private static void ValidateUserIsNotNull(string email,string password)
+        private static void ValidateUserIsNotNull(string email, string password)
         {
-            throw new NullUserProcessingException();
+            if (email == null || password == null)
+            {
+                throw new NullUserProcessingException();
+            }
         }
 
         private static dynamic IsInvalid(string text) => new

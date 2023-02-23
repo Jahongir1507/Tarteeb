@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             // given
             string inputEmail = GetrandomString();
             string inputPassword = GetrandomString();
-            User expectedUser = new User { Email = inputEmail, Password = inputPassword };
+            var expectedUser = new User { Email = inputEmail, Password = inputPassword };
             var users = new List<User> { expectedUser };
 
             this.userServiceMock.Setup(service =>

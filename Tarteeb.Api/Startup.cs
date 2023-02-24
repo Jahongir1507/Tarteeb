@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Tarteeb.Api.Brokers.DateTimes;
+using Tarteeb.Api.Brokers.EmailSenders;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Brokers.Tokens;
@@ -73,6 +74,7 @@ namespace Tarteeb.Api
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             services.AddTransient<ITokenBroker, TokenBroker>();
+            services.AddTransient<IEmailSenderBroker, EmailSenderBroker>();
         }
 
         private static void AddFoundationServices(IServiceCollection services)

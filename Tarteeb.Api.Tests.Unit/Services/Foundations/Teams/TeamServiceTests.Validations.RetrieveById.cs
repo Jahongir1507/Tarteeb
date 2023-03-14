@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfTeamIsNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid someTeamId = Guid.NewGuid();
             Team noTeam = null;
 
@@ -69,7 +69,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.SelectTeamByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noTeam);
 
-            //when
+            // when
             ValueTask<Team> retrieveTeamByIdTask =
                 this.teamService.RetrieveTeamByIdAsync(someTeamId);
 

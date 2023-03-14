@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
         {
-            //given
+            // given
             SqlException sqlException = CreateSqlException();
 
             var failedUserStorageException =
@@ -30,14 +30,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectAllUsers())
                     .Throws(sqlException);
 
-            //when
+            // when
             Action retrieveAllUsersAction = () =>
                this.userService.RetrieveAllUsers();
 
             UserDependencyException actualUserDependencyException =
                 Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
 
-            //then
+            // then
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
         {
-            //given
+            // given
             string exceptionMessage = GetRandomString();
             var serviceException = new Exception(exceptionMessage);
 
@@ -68,11 +68,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllUsers()).Throws(serviceException);
 
-            //when
+            // when
             Action retrieveAllUserAction = () =>
                 this.userService.RetrieveAllUsers();
 
-            //then
+            // then
             Assert.Throws<UserServiceException>(retrieveAllUserAction);
 
             this.storageBrokerMock.Verify(broker =>

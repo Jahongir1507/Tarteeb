@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someTicketId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
 
@@ -34,14 +34,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
 
-            //when
+            // when
             ValueTask<Ticket> deleteTicketAsync =
                 this.ticketService.RemoveTicketByIdAsync(someTicketId);
 
             TicketDependencyException actualTicketDependencyException =
                 await Assert.ThrowsAsync<TicketDependencyException>(deleteTicketAsync.AsTask);
 
-            //then
+            // then
             actualTicketDependencyException.Should().BeEquivalentTo(expectedTicketDependencyException);
 
             this.storageBrokerMock.Verify(broker =>

@@ -18,21 +18,21 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUserIsNullAndLogItAsync()
         {
-            //given
+            // given
             User nullUser = null;
             var nullUserException = new NullUserException();
 
             var expectedUserValidationException =
                 new UserValidationException(nullUserException);
 
-            //when
+            // when
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(nullUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -53,7 +53,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [InlineData(" ")]
         public async Task ShouldThrowValidationExceptionOnModifyIfUserIsInvalidAndLogItAsync(string invalidText)
         {
-            //given
+            // given
             var invalidUser = new User
             {
                 FirstName = invalidText
@@ -96,13 +96,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var expectedUserValidationException = new UserValidationException(
                 invalidUserException);
 
-            //when
+            // when
             ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -123,7 +123,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdateDateIsSameAsCreateDateAndLogItAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDatetime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDatetime);
             User invalidUser = randomUser;
@@ -139,14 +139,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDatetime);
 
-            //when
+            // when
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -168,7 +168,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [MemberData(nameof(MinutsBeforeOrAfter))]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minuts)
         {
-            //given
+            // given
             DateTimeOffset dateTime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(dateTime);
             User inputUser = randomUser;
@@ -185,14 +185,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(dateTime);
 
-            //when
+            // when
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(inputUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(modifyUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>

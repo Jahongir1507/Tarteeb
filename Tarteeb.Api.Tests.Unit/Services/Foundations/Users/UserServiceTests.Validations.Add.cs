@@ -18,21 +18,21 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnAddIfInputIsNullAndLogItAsync()
         {
-            //given
+            // given
             User noUser = null;
             var nullUserException = new NullUserException();
 
             var expectedUserValidationexception =
                 new UserValidationException(nullUserException);
 
-            //when
+            // when
             ValueTask<User> addUserTask =
                 this.userService.AddUserAsync(noUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(
                expectedUserValidationexception);
 
@@ -54,7 +54,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public async Task ShouldThrowValidationExceptionOnAddIfUserIsInvalidAndLogItAsync(
             string invalidString)
         {
-            //given
+            // given
             var invalidUser = new User
             {
                 FirstName = invalidString
@@ -97,13 +97,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var expectedUserValidationException = new UserValidationException(
                 invalidUserException);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(
                 expectedUserValidationException);
 
@@ -121,7 +121,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             DateTimeOffset anotherRandomDate = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDateTime);
@@ -139,13 +139,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -168,7 +168,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
             int invalidSeconds)
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             DateTimeOffset invalidRandomDateTime = randomDateTime.AddSeconds(invalidSeconds);
             User randomInvalidUser = CreateRandomUser(invalidRandomDateTime);
@@ -185,13 +185,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(
                 exceptedUserValidationException);
 

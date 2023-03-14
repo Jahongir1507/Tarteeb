@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlErrorOccursAndLogIt()
         {
-            //given
+            // given
             SqlException sqlException = CreateSqlException();
 
             var failedTeamStorageException =
@@ -29,14 +29,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTeams()).Throws(sqlException);
 
-            //when
+            // when
             Action retrieveAllTeamsAction = () =>
                 this.teamService.RetrieveAllTeams();
 
             TeamDependencyException actualTeamDependencyException =
                 Assert.Throws<TeamDependencyException>(retrieveAllTeamsAction);
 
-            //then
+            // then
             actualTeamDependencyException.Should().BeEquivalentTo(expectedTeamDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
@@ -54,7 +54,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
         {
-            //given
+            // given
             string exceptionMessage = GetRandomString();
             var serviceException = new Exception(exceptionMessage);
 
@@ -67,14 +67,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTeams()).Throws(serviceException);
 
-            //when
+            // when
             Action retrieveAllTeamAction = () =>
                 this.teamService.RetrieveAllTeams();
 
             TeamServiceException actualTeamServiceException =
                 Assert.Throws<TeamServiceException>(retrieveAllTeamAction);
 
-            //then
+            // then
             actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
 
             this.storageBrokerMock.Verify(broker =>

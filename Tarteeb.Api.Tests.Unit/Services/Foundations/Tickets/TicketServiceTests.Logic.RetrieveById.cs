@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldRetriveTicketByIdAsync()
         {
-            //given
+            // given
             Guid randomTicketId = Guid.NewGuid();
             Guid inputTicketId = randomTicketId;
             Ticket randomTicket = CreateRandomTicket();
@@ -28,11 +28,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.storageBrokerMock.Setup(broker =>
               broker.SelectTicketByIdAsync(randomTicketId)).ReturnsAsync(storedTicket);
 
-            //when
+            // when
             Ticket actualTicket =
                 await this.ticketService.RetrieveTicketByIdAsync(inputTicketId);
 
-            //then
+            // then
             actualTicket.Should().BeEquivalentTo(expectedTicket);
 
             this.storageBrokerMock.Verify(broker =>

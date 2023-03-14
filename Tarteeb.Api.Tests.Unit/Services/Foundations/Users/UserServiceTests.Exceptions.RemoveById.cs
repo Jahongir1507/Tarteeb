@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
         {
-            //given 
+            // given 
             Guid someUserId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
 
@@ -34,14 +34,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
 
-            //when
+            // when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(someUserId);
 
             UserDependencyException actualUserDependencyException =
                 await Assert.ThrowsAsync<UserDependencyException>(removeUserByIdTask.AsTask);
 
-            //then
+            // then
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>

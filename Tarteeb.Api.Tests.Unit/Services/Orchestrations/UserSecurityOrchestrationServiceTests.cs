@@ -3,11 +3,17 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Moq;
+using RESTFulSense.Models;
 using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
+using Tynamix.ObjectFiller;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 {
@@ -29,5 +35,39 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
                 securityService: securityServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
+        private static DateTimeOffset GetRandomDate() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 9).GetValue();
+
+        private IQueryable<User> CreateRandomUsersIncluding(User user)
+        {
+            List<User> users = CreateUserFiller()
+                .Create(count: GetRandomNumber()).ToList();
+
+            users.Add(user);
+
+            return users.AsQueryable();
+        }
+
+        private User CreateRandomUser() =>
+            CreateUserFiller().Create();
+
+
+        private static Filler<User> CreateUserFiller()
+        {
+            DateTimeOffset dates = GetRandomDate();
+            var filler = new Filler<User>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dates);
+
+            return filler;
+        }
+
     }
 }

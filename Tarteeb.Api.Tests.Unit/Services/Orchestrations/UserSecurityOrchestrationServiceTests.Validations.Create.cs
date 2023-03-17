@@ -8,6 +8,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
 using Xunit;
 

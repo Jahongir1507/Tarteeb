@@ -4,6 +4,7 @@
 //=================================
 
 using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
 
 namespace Tarteeb.Api.Services.Orchestrations

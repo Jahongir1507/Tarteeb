@@ -49,6 +49,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
            actualException => actualException.SameExceptionAs(expectedException);
 
+        private IQueryable<User> CreateRandomUsers() =>
+            CreateUserFiller().Create(count: GetRandomNumber()).AsQueryable();
+
         private IQueryable<User> CreateRandomUsersIncluding(User user)
         {
             List<User> users = CreateUserFiller()

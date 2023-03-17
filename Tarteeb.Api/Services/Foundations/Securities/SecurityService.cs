@@ -6,9 +6,8 @@
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Models.Foundations.Users;
-using Tarteeb.Api.Services.Foundations.Securities;
 
-namespace Tarteeb.Api.Services.Foundations;
+namespace Tarteeb.Api.Services.Foundations.Securities;
 
 public partial class SecurityService : ISecurityService
 {

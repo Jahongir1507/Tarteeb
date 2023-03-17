@@ -163,7 +163,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(invalidTicket.Id), Times.Never);
-            
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

@@ -65,7 +65,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(lockedUserException);
             }
-            catch(DbUpdateException databaseUpdateException)
+            catch (DbUpdateException databaseUpdateException)
             {
                 var failedUserStorageException =
                     new FailedUserStorageException(databaseUpdateException);
@@ -115,7 +115,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
 
         private UserDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-           var userDependencyException = new UserDependencyException(exception);
+            var userDependencyException = new UserDependencyException(exception);
             this.loggingBroker.LogError(userDependencyException);
 
             return userDependencyException;

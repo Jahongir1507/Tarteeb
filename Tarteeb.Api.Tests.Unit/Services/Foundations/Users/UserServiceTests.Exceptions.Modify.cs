@@ -4,8 +4,7 @@
 //=================================
 
 using System;
-using Xunit;
-using Moq;
+using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;

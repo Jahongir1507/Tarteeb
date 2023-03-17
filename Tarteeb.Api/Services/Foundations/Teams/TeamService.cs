@@ -59,7 +59,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         {
             ValidateTeamOnModify(team);
 
-            var maybeTeam = 
+            var maybeTeam =
                 await this.storageBroker.SelectTeamByIdAsync(team.Id);
 
             ValidateAgainstStorageTeamOnModify(inputTeam: team, storageTeam: maybeTeam);

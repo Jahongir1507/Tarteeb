@@ -4,8 +4,6 @@
 //=================================
 
 using System;
-using Moq;
-using Xunit;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;

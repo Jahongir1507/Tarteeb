@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Tarteeb.Api.Models.Foundations.Users;
@@ -21,7 +21,7 @@ namespace Tarteeb.Api.Brokers.Tokens
         public TokenBroker(IConfiguration configuration)
         {
             this.tokenConfiguration = new TokenConfiguration();
-            configuration.Bind("Jwt",this.tokenConfiguration);
+            configuration.Bind("Jwt", this.tokenConfiguration);
         }
 
         public string GenerateJWT(User user)

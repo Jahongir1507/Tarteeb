@@ -1,8 +1,12 @@
-﻿using FluentAssertions;
-using Moq;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Tarteeb.Api.Models;
 using Xunit;
 
@@ -11,7 +15,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
     public partial class UserProcessingsServiceTests
     {
         [Fact]
-        public async Task ShoulRetrieveUserByCredentails()
+        public void ShoulRetrieveUserByCredentails()
         {
             // given
             string inputEmail = GetrandomString();
@@ -24,7 +28,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                     .Returns(users.AsQueryable());
 
             // when
-            var actualUser = await userProcessingsService.RetrieveUserByCredentails(inputEmail, inputPassword);
+            User actualUser = userProcessingsService.
+                RetrieveUserByCredentails(inputEmail, inputPassword);
 
             // then
             actualUser.Should().BeEquivalentTo(expectedUser);

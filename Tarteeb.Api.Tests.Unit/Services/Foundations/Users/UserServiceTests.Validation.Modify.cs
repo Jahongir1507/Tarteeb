@@ -4,9 +4,9 @@
 //=================================
 
 using System;
-using Moq;
-using FluentAssertions;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
 using Xunit;
@@ -127,7 +127,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             DateTimeOffset randomDatetime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDatetime);
             User invalidUser = randomUser;
-            var invalidUserException =new InvalidUserException();
+            var invalidUserException = new InvalidUserException();
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),

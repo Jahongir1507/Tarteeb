@@ -1,6 +1,11 @@
-﻿using FluentAssertions;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System;
+using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
 using Xunit;
@@ -10,7 +15,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
     public partial class UserProcessingsServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnUpsertIfEmailAndPasswordAreInvalidAndLogItAsync()
+        public void ShouldThrowValidationExceptionOnUpsertIfEmailAndPasswordAreInvalidAndLogItAsync()
         {
             //given
             string invalidEmail = string.Empty;
@@ -29,11 +34,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                 new UserProcessingValidationException(invalidUserProcessingException);
 
             //when
-            ValueTask<User> retrieveUserByTask =
+            Action retrieveUserByAction = () =>
                 this.userProcessingsService.RetrieveUserByCredentails(invalidEmail, invalidPassword);
 
             UserProcessingValidationException actualUserProcessingValidationException =
-                await Assert.ThrowsAsync<UserProcessingValidationException>(retrieveUserByTask.AsTask);
+                 Assert.Throws<UserProcessingValidationException>(retrieveUserByAction);
 
             //then
             actualUserProcessingValidationException.Should().BeEquivalentTo(

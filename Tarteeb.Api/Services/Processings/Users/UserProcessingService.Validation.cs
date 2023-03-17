@@ -1,4 +1,9 @@
-﻿using Tarteeb.Api.Models;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
 
 namespace Tarteeb.Api.Services.Processings.Users

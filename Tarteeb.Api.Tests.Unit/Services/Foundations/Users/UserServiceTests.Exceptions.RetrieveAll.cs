@@ -4,11 +4,11 @@
 //=================================
 
 using System;
-using Moq;
-using Xunit;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Moq;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {

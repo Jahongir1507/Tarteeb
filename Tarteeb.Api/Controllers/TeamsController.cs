@@ -3,11 +3,11 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.AspNetCore.Mvc;
-using RESTFulSense.Controllers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Teams;
 using Tarteeb.Api.Models.Teams.Exceptions;
 using Tarteeb.Api.Services.Foundations.Teams;

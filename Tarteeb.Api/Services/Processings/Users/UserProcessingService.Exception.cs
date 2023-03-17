@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
 using Xeptions;
@@ -7,13 +11,13 @@ namespace Tarteeb.Api.Services.Processings.Users
 {
     public partial class UserProcessingService
     {
-        private delegate ValueTask<User> ReturningUserFunction();
+        private delegate User ReturningUserFunction();
 
-        private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
+        private User TryCatch(ReturningUserFunction returningUserFunction)
         {
             try
             {
-                return await returningUserFunction();
+                return returningUserFunction();
             }
             catch (NullUserProcessingException nullUserProcessingException)
             {

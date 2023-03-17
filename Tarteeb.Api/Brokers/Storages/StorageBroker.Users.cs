@@ -3,10 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models;
 
 namespace Tarteeb.Api.Brokers.Storages

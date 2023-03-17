@@ -11,11 +11,13 @@ using Moq;
 using RESTFulSense.Models;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 {
@@ -37,6 +39,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
                 securityService: securityServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+
+        public static TheoryData<Xeption> UserDependencyExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new UserDependencyException(someInnerException),
+                new UserServiceException(someInnerException)
+            };
+        }
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 

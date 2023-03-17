@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Models.Tickets;
 using Tarteeb.Api.Models.Tickets.Exceptions;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace Tarteeb.Api.Controllers
 {
@@ -54,6 +56,7 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpGet]
+        [EnableQuery]
         public ActionResult<IQueryable<Ticket>> GetAllTickets()
         {
             try

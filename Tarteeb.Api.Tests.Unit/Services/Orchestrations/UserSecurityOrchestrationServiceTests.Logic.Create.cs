@@ -18,13 +18,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
         public void ShoudCreateUserToken()
         {
             // given
+            string randomString = GetRandomString();
+            string token = randomString;
             User randomUser = CreateRandomUser();
             User existingUser = randomUser;
-            string anotherRandomString = GetRandomString();
-            IQueryable<User> randomUsers = CreateRandomUsersIncluding(existingUser);
-            IQueryable<User> retrievedUsers = randomUsers;
 
-            string token = anotherRandomString;
+            IQueryable<User> randomUsers =
+                CreateRandomUsersIncluding(existingUser);
+
+            IQueryable<User> retrievedUsers = randomUsers;
 
             UserToken expectedUserToken = new UserToken
             {

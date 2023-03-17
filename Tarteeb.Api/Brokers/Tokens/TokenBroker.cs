@@ -9,8 +9,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Tokens;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Brokers.Tokens
 {

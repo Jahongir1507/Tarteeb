@@ -5,7 +5,6 @@
 
 using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;

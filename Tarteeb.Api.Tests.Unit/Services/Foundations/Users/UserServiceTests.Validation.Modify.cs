@@ -6,9 +6,10 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {

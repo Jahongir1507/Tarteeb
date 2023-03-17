@@ -7,7 +7,7 @@ using System;
 using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Processings.Users;
 using Tynamix.ObjectFiller;

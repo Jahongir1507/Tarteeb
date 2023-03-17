@@ -5,7 +5,7 @@
 
 using System;
 using Tarteeb.Api.Models.Foundations.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {

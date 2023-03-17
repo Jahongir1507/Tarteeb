@@ -5,7 +5,7 @@
 
 using System.Linq;
 using Tarteeb.Api.Brokers.Loggings;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Processings.Users

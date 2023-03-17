@@ -4,12 +4,8 @@
 //=================================
 
 using System;
-using System.Data;
-using System.Data.Common;
-using System.Reflection.Metadata;
 using Tarteeb.Api.Models.Foundations.Users;
-using Tarteeb.Api.Models.Users.Exceptions;
-using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {

@@ -59,7 +59,7 @@ namespace Tarteeb.Api
             app.UseSwaggerUI(config => config.SwaggerEndpoint(
                 url: "/swagger/v1/swagger.json",
                 name: "Tarteeb.Api v1"));
-            
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();

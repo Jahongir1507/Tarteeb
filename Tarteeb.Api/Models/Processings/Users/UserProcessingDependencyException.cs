@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Processings.Users

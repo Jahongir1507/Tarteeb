@@ -6,7 +6,7 @@
 using System;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Processings.Users;
 using Xunit;
 

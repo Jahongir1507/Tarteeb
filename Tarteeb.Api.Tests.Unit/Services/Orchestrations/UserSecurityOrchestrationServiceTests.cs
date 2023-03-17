@@ -11,7 +11,7 @@ using Tarteeb.Api.Services.Orchestrations;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 {
-    public class UserSecurityOrchestrationServiceTests
+    public partial class UserSecurityOrchestrationServiceTests
     {
         private readonly Mock<IUserService> userServiceMock;
         private readonly Mock<ISecurityService> securityServiceMock;

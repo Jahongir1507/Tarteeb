@@ -30,11 +30,7 @@ namespace Tarteeb.Api.Services.Orchestrations
 
         public UserToken CreateUserToken(string email, string password)
         {
-            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
-
-            User existingUser = allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
-                    && retrievedUser.Password.Equals(password));
-
+            User existingUser = RetrieveUserByEmailAndPassword(email, password);
             string token = this.securityService.CreateToken(existingUser);
 
             return new UserToken
@@ -42,6 +38,14 @@ namespace Tarteeb.Api.Services.Orchestrations
                 UserId = existingUser.Id,
                 Token = token
             };
+        }
+
+        private User RetrieveUserByEmailAndPassword(string email, string password)
+        {
+            IQueryable<User> allUser = this.userService.RetrieveAllUsers();
+
+            return allUser.FirstOrDefault(retrievedUser => retrievedUser.Email.Equals(email)
+                    && retrievedUser.Password.Equals(password));
         }
     }
 }

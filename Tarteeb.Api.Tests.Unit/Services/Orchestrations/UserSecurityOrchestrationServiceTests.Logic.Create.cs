@@ -18,12 +18,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
         public void ShoudCreateUserToken()
         {
             // given
-            string randomString = GetRandomString();
-            string email = randomString;
-            string password = randomString;
-            string anotherRandomString = GetRandomString();
             User randomUser = CreateRandomUser();
             User existingUser = randomUser;
+            string anotherRandomString = GetRandomString();
             IQueryable<User> randomUsers = CreateRandomUsersIncluding(existingUser);
             IQueryable<User> retrievedUsers = randomUsers;
 
@@ -43,7 +40,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 
             // when
             UserToken actualUserToken = this.userSecurityOrchestrationService
-                .CreateUserToken(email, password);
+                .CreateUserToken(existingUser.Email, existingUser.Password);
 
             // then
             actualUserToken.Should().BeEquivalentTo(expectedUserToken);

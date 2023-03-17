@@ -6,7 +6,7 @@
 using System;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Processings.Users;
 using Xunit;
 
@@ -47,9 +47,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserProcessingValidationException))), Times.Once);
-
-            this.userServiceMock.Verify(service =>
-                service.AddUserAsync(It.IsAny<User>()), Times.Never);
 
             this.userServiceMock.Verify(service =>
                 service.RetrieveAllUsers(), Times.Never);

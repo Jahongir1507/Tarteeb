@@ -4,8 +4,8 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Tickets
 {

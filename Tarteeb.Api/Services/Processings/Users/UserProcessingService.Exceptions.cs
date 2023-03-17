@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Processings.Users;
-using Tarteeb.Api.Models.Users.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Processings.Users

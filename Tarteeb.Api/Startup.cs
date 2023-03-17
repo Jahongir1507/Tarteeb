@@ -19,6 +19,7 @@ using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Tickets;
 using Tarteeb.Api.Services.Foundations.Users;
+using Tarteeb.Api.Services.Orchestrations;
 using Tarteeb.Api.Services.Processings.Users;
 
 namespace Tarteeb.Api
@@ -36,6 +37,8 @@ namespace Tarteeb.Api
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
             AddFoundationServices(services);
+            AddProcessingServices(services);
+            AddOrchestrationServices(services);
             RegisterJwtConfigurations(services, Configuration);
 
             services.AddSwaggerGen(config =>
@@ -59,7 +62,7 @@ namespace Tarteeb.Api
             app.UseSwaggerUI(config => config.SwaggerEndpoint(
                 url: "/swagger/v1/swagger.json",
                 name: "Tarteeb.Api v1"));
-            
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
@@ -86,6 +89,9 @@ namespace Tarteeb.Api
 
         private static void AddProcessingServices(IServiceCollection services) =>
             services.AddTransient<IUserProcessingService, UserProcessingService>();
+
+        private static void AddOrchestrationServices(IServiceCollection services) =>
+            services.AddTransient<IUserSecurityOrchestrationService, UserSecurityOrchestrationService>();
 
         private static void RegisterJwtConfigurations(IServiceCollection services,
             IConfiguration configuration)

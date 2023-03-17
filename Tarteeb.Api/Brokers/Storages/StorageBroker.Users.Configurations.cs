@@ -4,7 +4,7 @@
 //=================================
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Brokers.Storages
 {

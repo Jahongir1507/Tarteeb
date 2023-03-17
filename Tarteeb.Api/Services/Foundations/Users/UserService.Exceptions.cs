@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Users.Exceptions;
-using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Users

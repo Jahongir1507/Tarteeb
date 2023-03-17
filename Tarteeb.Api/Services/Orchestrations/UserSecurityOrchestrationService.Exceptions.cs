@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
@@ -36,6 +37,13 @@ namespace Tarteeb.Api.Services.Orchestrations
             {
                 throw CreateAndLogDependencyException(userServiceException);
             }
+            catch(Exception exception)
+            {
+                var failedUserTokenOrchestrationException = 
+                    new FailedUserTokenOrchestrationException(exception);
+
+                throw CreateAndLogServiceException(failedUserTokenOrchestrationException);
+            }
         }
 
         private UserTokenOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -52,6 +60,16 @@ namespace Tarteeb.Api.Services.Orchestrations
             this.loggingBroker.LogError(userTokenOrchestrationDependencyException);
 
             return userTokenOrchestrationDependencyException;
+        }
+
+        private UserTokenOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var userTokenOrchestrationServiceException = 
+                new UserTokenOrchestrationServiceException(exception);
+
+            this.loggingBroker.LogError(userTokenOrchestrationServiceException);
+
+            return userTokenOrchestrationServiceException;
         }
     }
 }

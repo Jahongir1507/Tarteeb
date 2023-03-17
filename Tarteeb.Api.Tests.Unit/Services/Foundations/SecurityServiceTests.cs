@@ -10,6 +10,7 @@ using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Services.Foundations;
+using Tarteeb.Api.Services.Foundations.Securities;
 using Tynamix.ObjectFiller;
 using Xeptions;
 

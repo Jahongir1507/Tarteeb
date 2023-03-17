@@ -5,7 +5,7 @@
 
 using Tarteeb.Api.Models;
 
-namespace Tarteeb.Api.Services.Foundations;
+namespace Tarteeb.Api.Services.Foundations.Securities;
 
 public interface ISecurityService
 {

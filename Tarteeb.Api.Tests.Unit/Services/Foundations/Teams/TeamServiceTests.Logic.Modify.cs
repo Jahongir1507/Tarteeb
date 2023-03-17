@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldModifyTeamAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDate = GetRandomDateTime();
             Team randomTeam = CreateRandomModifyTeam(randomDate);
             Team inputTeam = randomTeam;
@@ -39,11 +39,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.UpdateTeamAsync(inputTeam))
                     .ReturnsAsync(updatedTeam);
 
-            //when
+            // when
             Team actualTeam =
                 await this.teamService.ModifyTeamAsync(inputTeam);
 
-            //then
+            // then
             actualTeam.Should().BeEquivalentTo(exceptedTeam);
 
             this.dateTimeBrokerMock.Verify(broker =>

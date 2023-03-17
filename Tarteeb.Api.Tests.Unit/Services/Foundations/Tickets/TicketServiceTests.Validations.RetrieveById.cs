@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
         {
-            //given 
+            // given 
             var invalidTicketId = Guid.Empty;
 
             var invalidTicketException =
@@ -31,14 +31,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             var expectedTicketValidationException = new
                 TicketValidationException(invalidTicketException);
 
-            //when 
+            // when 
             ValueTask<Ticket> retrieveTicketByIdTask =
                 this.ticketService.RetrieveTicketByIdAsync(invalidTicketId);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(retrieveTicketByIdTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfTicketNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid someTicketId = Guid.NewGuid();
             Ticket noTicket = null;
 
@@ -68,7 +68,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTicket);
 
-            //when
+            // when
             ValueTask<Ticket> retrieveByIdTicketTask =
                 this.ticketService.RetrieveTicketByIdAsync(someTicketId);
 
@@ -76,7 +76,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 await Assert.ThrowsAsync<TicketValidationException>(
                     retrieveByIdTicketTask.AsTask);
 
-            //then
+            // then
             actualValidationException.Should().BeEquivalentTo(expectedValidationException);
 
             this.storageBrokerMock.Verify(broker =>

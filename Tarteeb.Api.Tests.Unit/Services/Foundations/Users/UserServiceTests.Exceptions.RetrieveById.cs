@@ -52,7 +52,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someId = Guid.NewGuid();
             var serviceException = new Exception();
 
@@ -65,7 +65,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
 
-            //when
+            // when
             ValueTask<User> retrieveUserById =
                 this.userService.RetrieveUserByIdAsync(someId);
 

@@ -8,8 +8,8 @@ using Moq;
 using FluentAssertions;
 using Force.DeepCloner;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models;
 using Xunit;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {

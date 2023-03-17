@@ -8,8 +8,8 @@ using RESTFulSense.Controllers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Services.Foundations.Teams;
 
 namespace Tarteeb.Api.Controllers

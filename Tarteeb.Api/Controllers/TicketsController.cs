@@ -8,9 +8,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Controllers
 {

@@ -6,7 +6,7 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Foundations.Teams;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams

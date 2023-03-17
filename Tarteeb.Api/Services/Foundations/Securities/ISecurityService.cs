@@ -3,7 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Securities;
 

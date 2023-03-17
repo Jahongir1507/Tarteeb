@@ -8,10 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
-using Tarteeb.Api.Tests.Unit.Services.Foundations.Users;
 
 namespace Tarteeb.Api.Controllers
 {

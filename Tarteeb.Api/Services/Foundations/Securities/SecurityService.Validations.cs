@@ -4,7 +4,7 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Users.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations

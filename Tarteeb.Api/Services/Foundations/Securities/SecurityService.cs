@@ -6,7 +6,7 @@
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Tokens;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 

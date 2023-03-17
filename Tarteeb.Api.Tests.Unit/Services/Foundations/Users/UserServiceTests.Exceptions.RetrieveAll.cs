@@ -8,7 +8,7 @@ using Moq;
 using Xunit;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {

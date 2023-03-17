@@ -7,10 +7,13 @@ using System;
 using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Processings.Users;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 {
@@ -30,6 +33,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        public static TheoryData<Xeption> UserDependencyExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new UserDependencyException(someInnerException),
+                new UserServiceException(someInnerException)
+            };
+        }
+
         private static string GetrandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
@@ -38,5 +52,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
+
+        private static DateTimeOffset GetRandomDate() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
     }
 }

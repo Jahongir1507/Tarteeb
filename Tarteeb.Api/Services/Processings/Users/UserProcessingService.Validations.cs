@@ -12,19 +12,9 @@ namespace Tarteeb.Api.Services.Processings.Users
     {
         private static void ValidateEmailAndPassword(string email, string password)
         {
-            ValidateUserIsNotNull(email, password);
-
             Validate(
                 (Rule: IsInvalid(email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(password), Parameter: nameof(User.Password)));
-        }
-
-        private static void ValidateUserIsNotNull(string email, string password)
-        {
-            if (email == null || password == null)
-            {
-                throw new NullUserProcessingException();
-            }
         }
 
         private static dynamic IsInvalid(string text) => new

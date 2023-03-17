@@ -5,6 +5,7 @@
 
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Processings.Users;
+using Tarteeb.Api.Models.Users.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Processings.Users
@@ -19,13 +20,17 @@ namespace Tarteeb.Api.Services.Processings.Users
             {
                 return returningUserFunction();
             }
-            catch (NullUserProcessingException nullUserProcessingException)
-            {
-                throw CreateAndLogValidationException(nullUserProcessingException);
-            }
             catch (InvalidUserProcessingException invalidUserProcessingException)
             {
                 throw CreateAndLogValidationException(invalidUserProcessingException);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                throw CreateAndLogDependencyException(userDependencyException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                throw CreateAndLogDependencyException(userServiceException);
             }
         }
 
@@ -37,6 +42,14 @@ namespace Tarteeb.Api.Services.Processings.Users
             this.loggingBroker.LogError(userProcessingValidationException);
 
             return userProcessingValidationException;
+        }
+
+        private UserProcessingDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var userProcessingDependencyException = new UserProcessingDependencyException(exception);
+            this.loggingBroker.LogError(userProcessingDependencyException);
+
+            return userProcessingDependencyException;
         }
     }
 }

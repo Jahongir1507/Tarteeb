@@ -49,9 +49,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
                     expectedUserProcessingValidationException))), Times.Once);
 
             this.userServiceMock.Verify(service =>
-                service.AddUserAsync(It.IsAny<User>()), Times.Never);
-
-            this.userServiceMock.Verify(service =>
                 service.RetrieveAllUsers(), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

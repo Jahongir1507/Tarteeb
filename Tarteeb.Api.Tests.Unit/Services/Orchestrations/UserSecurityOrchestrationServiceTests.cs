@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moq;
 using RESTFulSense.Models;
 using Tarteeb.Api.Brokers.Loggings;
@@ -14,6 +15,7 @@ using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 {
@@ -43,6 +45,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 9).GetValue();
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+           actualException => actualException.SameExceptionAs(expectedException);
 
         private IQueryable<User> CreateRandomUsersIncluding(User user)
         {

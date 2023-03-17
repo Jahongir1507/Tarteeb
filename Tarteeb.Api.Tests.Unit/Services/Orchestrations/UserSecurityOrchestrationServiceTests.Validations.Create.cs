@@ -8,7 +8,6 @@ using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
-using Tarteeb.Api.Models.Processings.Users;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
@@ -21,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             //given
             string invalidEmail = string.Empty;
             string invalidPassword = string.Empty;
-            var invalidUserCreadentialOrchestrationException = new InvalidUserCreadentialOrchestrationException();
+            var invalidUserCreadentialOrchestrationException = new InvalidUserCredentialOrchestrationException();
 
             invalidUserCreadentialOrchestrationException.AddData(
                 key: nameof(User.Email),
@@ -38,11 +37,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             Action createUserTokenAction = () =>
                 this.userSecurityOrchestrationService.CreateUserToken(invalidEmail, invalidPassword);
 
-            UserProcessingValidationException actualUserProcessingValidationException =
-                 Assert.Throws<UserProcessingValidationException>(createUserTokenAction);
+            UserTokenOrchestrationValidationException actualUserTokenOrchestrationValidationException =
+                 Assert.Throws<UserTokenOrchestrationValidationException>(createUserTokenAction);
 
             //then
-            actualUserProcessingValidationException.Should().BeEquivalentTo(
+            actualUserTokenOrchestrationValidationException.Should().BeEquivalentTo(
                expectedUserOrchestrationValidationException);
 
             this.loggingBrokerMock.Verify(broker =>

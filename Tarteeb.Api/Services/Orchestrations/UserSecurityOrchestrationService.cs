@@ -28,8 +28,10 @@ namespace Tarteeb.Api.Services.Orchestrations
             this.loggingBroker = loggingBroker;
         }
 
-        public UserToken CreateUserToken(string email, string password)
+        public UserToken CreateUserToken(string email, string password) =>
+        TryCatch(() =>
         {
+            ValidateEmailAndPassword(email, password);
             User existingUser = RetrieveUserByEmailAndPassword(email, password);
             string token = this.securityService.CreateToken(existingUser);
 
@@ -38,7 +40,7 @@ namespace Tarteeb.Api.Services.Orchestrations
                 UserId = existingUser.Id,
                 Token = token
             };
-        }
+        });
 
         private User RetrieveUserByEmailAndPassword(string email, string password)
         {

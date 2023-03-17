@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Services.Orchestrations
             {
                 return returningUserTokenFunction();
             }
-            catch (InvalidUserCreadentialOrchestrationException invalidUserCreadentialOrchestrationException)
+            catch (InvalidUserCredentialOrchestrationException invalidUserCreadentialOrchestrationException)
             {
                 throw CreateAndLogValidationException(invalidUserCreadentialOrchestrationException);
             }

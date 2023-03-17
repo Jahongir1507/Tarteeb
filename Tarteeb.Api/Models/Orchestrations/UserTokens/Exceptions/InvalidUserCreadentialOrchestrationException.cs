@@ -7,9 +7,9 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions
 {
-    public class InvalidUserCreadentialOrchestrationException : Xeption
+    public class InvalidUserCredentialOrchestrationException : Xeption
     {
-        public InvalidUserCreadentialOrchestrationException()
+        public InvalidUserCredentialOrchestrationException()
             : base(message: "Credential missing. Fix the error and try again.")
         { }
     }

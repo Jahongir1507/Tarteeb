@@ -32,12 +32,13 @@ namespace Tarteeb.Api.Services.Orchestrations
         TryCatch(() =>
         {
             ValidateEmailAndPassword(email, password);
-            User existingUser = RetrieveUserByEmailAndPassword(email, password);
-            string token = this.securityService.CreateToken(existingUser);
+            User maybeUser = RetrieveUserByEmailAndPassword(email, password);
+            ValidateUserExists(maybeUser);
+            string token = this.securityService.CreateToken(maybeUser);
 
             return new UserToken
             {
-                UserId = existingUser.Id,
+                UserId = maybeUser.Id,
                 Token = token
             };
         });

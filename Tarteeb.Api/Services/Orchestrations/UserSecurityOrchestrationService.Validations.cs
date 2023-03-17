@@ -17,6 +17,14 @@ namespace Tarteeb.Api.Services.Orchestrations
                 (Rule: IsInvalid(password), Parameter: nameof(User.Password)));
         }
 
+        private void ValidateUserExists(User user)
+        {
+            if (user is null)
+            {
+                throw new NotFoundUserException();
+            }
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),

@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Security.Authentication;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
 using Xeptions;
@@ -23,6 +22,10 @@ namespace Tarteeb.Api.Services.Orchestrations
             catch (InvalidUserCredentialOrchestrationException invalidUserCreadentialOrchestrationException)
             {
                 throw CreateAndLogValidationException(invalidUserCreadentialOrchestrationException);
+            }
+            catch (NotFoundUserException notFoundUserException)
+            {
+                throw CreateAndLogValidationException(notFoundUserException);
             }
         }
 

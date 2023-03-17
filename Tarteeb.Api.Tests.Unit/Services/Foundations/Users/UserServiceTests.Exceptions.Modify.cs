@@ -4,15 +4,15 @@
 //=================================
 
 using System;
-using Xunit;
-using Moq;
+using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using Moq;
 using Tarteeb.Api.Models;
 using Tarteeb.Api.Models.Users.Exceptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 {

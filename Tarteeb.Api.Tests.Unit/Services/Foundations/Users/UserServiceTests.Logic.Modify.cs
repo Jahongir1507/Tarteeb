@@ -4,10 +4,10 @@
 //=================================
 
 using System;
-using Moq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
-using System.Threading.Tasks;
+using Moq;
 using Tarteeb.Api.Models;
 using Xunit;
 

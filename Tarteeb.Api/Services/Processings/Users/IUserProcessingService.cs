@@ -3,12 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
+using Tarteeb.Api.Models;
 
-namespace Tarteeb.Api.Brokers.DateTimes
+namespace Tarteeb.Api.Services.Processings.Users
 {
-    public interface IDateTimeBroker
+    public interface IUserProcessingService
     {
-        DateTimeOffset GetCurrentDateTime();
+        User RetrieveUserByCredentails(string email, string password);
     }
 }

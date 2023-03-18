@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
@@ -47,10 +46,6 @@ namespace Tarteeb.Api.Controllers
             catch (UserTokenOrchestrationServiceException userTokenOrchestrationServiceException)
             {
                 return InternalServerError(userTokenOrchestrationServiceException.InnerException);
-            }
-            catch(Exception ex)
-            {
-
             }
         }
     }

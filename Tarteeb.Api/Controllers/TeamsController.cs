@@ -119,9 +119,8 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(teamValidationException.InnerException);
             }
             catch (TeamDependencyValidationException teamDependencyValidationException)
-                when (teamDependencyValidationException.InnerException is AlreadyExistsTeamException)
             {
-                return Conflict(teamDependencyValidationException.InnerException);
+                return BadRequest(teamDependencyValidationException.InnerException);
             }
             catch (TeamDependencyException teamDependencyException)
             {

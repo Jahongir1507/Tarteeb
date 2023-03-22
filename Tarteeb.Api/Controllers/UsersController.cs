@@ -120,9 +120,8 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(userValidationException.InnerException);
             }
             catch (UserDependencyValidationException userDependencyValidationException)
-                when (userDependencyValidationException.InnerException is AlreadyExistsUserException)
             {
-                return Conflict(userDependencyValidationException.InnerException);
+                return BadRequest(userDependencyValidationException.InnerException);
             }
             catch (UserDependencyException userDependencyException)
             {

@@ -122,9 +122,8 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(ticketValidationException.InnerException);
             }
             catch (TicketDependencyValidationException ticketDependencyValidationException)
-                when (ticketDependencyValidationException.InnerException is AlreadyExistsTicketException)
             {
-                return Conflict(ticketDependencyValidationException.InnerException);
+                return BadRequest(ticketDependencyValidationException.InnerException);
             }
             catch (TicketDependencyException ticketDependencyException)
             {

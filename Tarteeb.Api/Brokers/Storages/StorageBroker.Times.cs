@@ -12,6 +12,7 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial class StorageBroker
     {
         public DbSet<Time> Times { get; set; }
+
         public async ValueTask<Time> DeleteTimeAsync(Time time) =>
            await DeleteAsync(time);
     }

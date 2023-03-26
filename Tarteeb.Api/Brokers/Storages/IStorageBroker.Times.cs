@@ -11,6 +11,7 @@ namespace Tarteeb.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
+        ValueTask<Time> InsertTimeAsync(Time time);
         ValueTask<Time> DeleteTimeAsync(Time time);
     }
 }

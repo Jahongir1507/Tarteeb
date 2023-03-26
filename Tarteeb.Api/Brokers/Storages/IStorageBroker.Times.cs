@@ -18,5 +18,4 @@ namespace Tarteeb.Api.Brokers.Storages
         ValueTask<Time> UpdateTimeAsync(Time time);
         ValueTask<Time> DeleteTimeAsync(Time time);
     }
-    
 }

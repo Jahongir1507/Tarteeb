@@ -30,6 +30,5 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Time> DeleteTimeAsync(Time time) =>
             await DeleteAsync(time);
- 
     }
 }

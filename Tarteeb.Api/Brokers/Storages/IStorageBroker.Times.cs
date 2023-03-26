@@ -4,7 +4,6 @@
 //=================================
 
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Brokers.Storages

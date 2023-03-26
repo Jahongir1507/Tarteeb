@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Brokers.Storages
@@ -23,6 +24,9 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public IQueryable<Time> SelectAllTimes() =>
             SelectAll<Time>();
+
+        public async ValueTask<Time> UpdateTimeAsync(Time time) =>
+            await UpdateAsync(time);
 
         public async ValueTask<Time> DeleteTimeAsync(Time time) =>
             await DeleteAsync(time);

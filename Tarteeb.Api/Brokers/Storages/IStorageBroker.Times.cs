@@ -15,6 +15,7 @@ namespace Tarteeb.Api.Brokers.Storages
         ValueTask<Time> InsertTimeAsync(Time time);
         ValueTask<Time> SelectTimeByIdAsync(Guid id);
         IQueryable<Time> SelectAllTimes();
+        ValueTask<Time> UpdateTimeAsync(Time time);
         ValueTask<Time> DeleteTimeAsync(Time time);
     }
 }

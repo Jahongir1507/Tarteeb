@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Brokers.Storages
         public async ValueTask<Time> InsertTimeAsync(Time time) =>
             await InsertTimeAsync(time);
 
-        public IQueryable<Time> SelectAllTimes(Time time) =>
+        public IQueryable<Time> SelectAllTimes() =>
             SelectAll<Time>();
 
         public async ValueTask<Time> DeleteTimeAsync(Time time) =>

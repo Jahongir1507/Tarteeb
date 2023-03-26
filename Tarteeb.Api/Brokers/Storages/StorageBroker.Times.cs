@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,9 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Time> InsertTimeAsync(Time time) =>
             await InsertTimeAsync(time);
+
+        public async ValueTask<Time> SelectTimeByIdAsync(Guid id) =>
+            await SelectAsync<Time>(id);
 
         public IQueryable<Time> SelectAllTimes() =>
             SelectAll<Time>();

@@ -12,6 +12,7 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         IQueryable<Score> SelectAllScores();
-        ValueTask<Score> DeleteScoreAsync(Score score);
+        ValueTask<Score> UpdateScoreAsync(Score score);
+        ValueTask<Score> DeleteScoreAsync(Score score);       
     }
 }

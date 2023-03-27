@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 
@@ -11,5 +12,8 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial class StorageBroker
     {
         DbSet<Score> Scores { get; set; }
+
+        public async ValueTask<Score> DeleteScoreAsync(Score score) =>
+            await DeleteAsync(score);
     }
 }

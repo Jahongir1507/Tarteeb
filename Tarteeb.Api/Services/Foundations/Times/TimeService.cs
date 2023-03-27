@@ -9,7 +9,7 @@ using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {
-    public class TimeService : ITimeService
+    public class TimeService : ITimeService 
     {
         private readonly IStorageBroker storageBroker;
 

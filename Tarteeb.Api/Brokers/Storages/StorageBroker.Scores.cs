@@ -13,7 +13,7 @@ namespace Tarteeb.Api.Brokers.Storages
     {
         DbSet<Score> Scores { get; set; }
 
-        public async ValueTask<Score> UpdateSocreAsync(Score score)=>
+        public async ValueTask<Score> UpdateScoreAsync(Score score)=>
             await UpdateAsync(score);
 
         public async ValueTask<Score> DeleteScoreAsync(Score score) =>

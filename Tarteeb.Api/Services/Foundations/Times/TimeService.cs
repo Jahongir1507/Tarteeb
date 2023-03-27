@@ -10,7 +10,7 @@ using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {
-    public class TimeService : ITimeService 
+    public partial class TimeService : ITimeService 
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -20,7 +20,13 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
-        public async ValueTask<Time> AddTimeAsync(Time time) =>
-            await this.storageBroker.InsertTimeAsync(time);
+        public  ValueTask<Time> AddTimeAsync(Time time) =>
+        TryCatch(async () =>
+        {
+            ValidateTimeOnAdd(time);
+
+            return await this.storageBroker.InsertTimeAsync(time);
+
+        });
     }
 }

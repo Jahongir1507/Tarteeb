@@ -14,6 +14,9 @@ namespace Tarteeb.Api.Brokers.Storages
     {
         DbSet<Score> Scores { get; set; }
 
+        public async ValueTask<Score> InsertScoreAsync(Score score) =>
+            await InsertAsync(score);
+
         public IQueryable<Score> SelectAllScores() =>
             SelectAll<Score>();
 

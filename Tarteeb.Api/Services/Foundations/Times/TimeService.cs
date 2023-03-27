@@ -16,9 +16,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
         public TimeService(IStorageBroker storageBroker) =>
             this.storageBroker = storageBroker;        
 
-        public ValueTask<Time> AddTimeAsync(Time time)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async ValueTask<Time> AddTimeAsync(Time time) =>
+            await this.storageBroker.InsertTimeAsync(time);
     }
 }

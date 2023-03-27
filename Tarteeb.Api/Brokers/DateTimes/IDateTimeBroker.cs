@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models.Tickets;
 
 namespace Tarteeb.Api.Brokers.DateTimes
 {

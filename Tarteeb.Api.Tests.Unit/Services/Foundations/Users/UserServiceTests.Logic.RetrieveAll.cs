@@ -6,7 +6,7 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public void ShouldRetrieveAllUsers()
         {
-            //given
+            // given
             IQueryable<User> randomUsers = CreateRandomUsers();
             IQueryable<User> storageUsers = randomUsers;
             IQueryable<User> expectedUser = storageUsers;
@@ -24,10 +24,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllUsers()).Returns(storageUsers);
 
-            //when
+            // when
             IQueryable<User> actualUser = this.userService.RetrieveAllUsers();
 
-            //then
+            // then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.storageBrokerMock.Verify(broker =>

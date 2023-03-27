@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Teams
 {
@@ -59,7 +59,7 @@ namespace Tarteeb.Api.Services.Foundations.Teams
         {
             ValidateTeamOnModify(team);
 
-            var maybeTeam = 
+            var maybeTeam =
                 await this.storageBroker.SelectTeamByIdAsync(team.Id);
 
             ValidateAgainstStorageTeamOnModify(inputTeam: team, storageTeam: maybeTeam);

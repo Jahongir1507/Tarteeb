@@ -7,8 +7,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfTeamIsNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid someTeamId = Guid.NewGuid();
             Team noTeam = null;
 
@@ -69,7 +69,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.SelectTeamByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noTeam);
 
-            //when
+            // when
             ValueTask<Team> retrieveTeamByIdTask =
                 this.teamService.RetrieveTeamByIdAsync(someTeamId);
 

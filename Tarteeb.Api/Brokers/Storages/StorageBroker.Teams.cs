@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Brokers.Storages
 {

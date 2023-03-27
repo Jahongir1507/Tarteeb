@@ -6,7 +6,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {

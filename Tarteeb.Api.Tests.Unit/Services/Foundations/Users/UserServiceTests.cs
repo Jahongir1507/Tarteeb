@@ -12,7 +12,7 @@ using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -44,7 +44,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             return CreateUserFiller(dates: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber())
                     .AsQueryable();
-        } 
+        }
 
         public static TheoryData<int> InvalidSeconds()
         {
@@ -79,11 +79,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             randomUser.CreatedDate =
                 randomUser.CreatedDate.AddDays(randomDaysInPast);
-            
+
             return randomUser;
         }
 
-        private static SqlException GetSqlException()=>
+        private static SqlException GetSqlException() =>
            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
@@ -104,11 +104,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         public static TheoryData MinutsBeforeOrAfter()
         {
             int randomNumber = GetRandomNumber();
-            int randomNegativeNumber=GetRandomNegativeNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
 
             return new TheoryData<int>
             {
-                randomNumber, 
+                randomNumber,
                 randomNegativeNumber
             };
         }
@@ -121,6 +121,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
-        }  
+        }
     }
 }

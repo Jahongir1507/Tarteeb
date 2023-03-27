@@ -7,8 +7,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
@@ -38,7 +38,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(removeTicketByIdTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -56,7 +56,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowNotFoundExceptionOnRemoveIfTicketIsNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid randomTicketId = Guid.NewGuid();
             Guid inputTicketId = randomTicketId;
             Ticket noTicket = null;
@@ -71,7 +71,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noTicket);
 
-            //when
+            // when
             ValueTask<Ticket> removeTicketByIdTask =
                 this.ticketService.RemoveTicketByIdAsync(inputTicketId);
 
@@ -79,7 +79,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 await Assert.ThrowsAsync<TicketValidationException>(
                     removeTicketByIdTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should()
                 .BeEquivalentTo(expectedTicketValidationException);
 

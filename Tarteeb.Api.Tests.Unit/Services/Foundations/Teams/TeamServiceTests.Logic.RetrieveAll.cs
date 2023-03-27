@@ -6,7 +6,7 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Foundations.Teams;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public void ShouldRetrieveAllTeams()
         {
-            //given
+            // given
             IQueryable<Team> randomTeams = CreateRandomTeams();
             IQueryable<Team> storageTeams = randomTeams;
             IQueryable<Team> expectedTeams = storageTeams;
@@ -24,10 +24,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTeams()).Returns(storageTeams);
 
-            //when
+            // when
             IQueryable<Team> actualTeams = this.teamService.RetrieveAllTeams();
 
-            //then
+            // then
             actualTeams.Should().BeEquivalentTo(expectedTeams);
 
             this.storageBrokerMock.Verify(broker =>

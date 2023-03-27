@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models.Teams;
+using Tarteeb.Api.Models.Foundations.Teams;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldAddTeamAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Team randomTeam = CreateRandomTeam(randomDateTime);
             Team inputTeam = randomTeam;
@@ -32,11 +32,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 broker.InsertTeamAsync(inputTeam))
                     .ReturnsAsync(persistedTeam);
 
-            //when
+            // when
             Team actuaTeam = await this.teamService
                 .AddTeamAsync(inputTeam);
 
-            //then
+            // then
             actuaTeam.Should().BeEquivalentTo(expectedTeam);
 
             this.dateTimeBrokerMock.Verify(broker =>

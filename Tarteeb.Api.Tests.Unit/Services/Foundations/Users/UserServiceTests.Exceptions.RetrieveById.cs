@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -52,7 +52,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someId = Guid.NewGuid();
             var serviceException = new Exception();
 
@@ -65,7 +65,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
 
-            //when
+            // when
             ValueTask<User> retrieveUserById =
                 this.userService.RetrieveUserByIdAsync(someId);
 

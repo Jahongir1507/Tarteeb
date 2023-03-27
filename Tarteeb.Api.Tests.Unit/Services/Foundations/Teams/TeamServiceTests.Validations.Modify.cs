@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -101,7 +101,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
                 await Assert.ThrowsAsync<TeamValidationException>(
                     modifyTeamTask.AsTask);
 
-            //then
+            // then
             actualTeamValidationException.Should()
                 .BeEquivalentTo(expectedTeamValidationException);
 

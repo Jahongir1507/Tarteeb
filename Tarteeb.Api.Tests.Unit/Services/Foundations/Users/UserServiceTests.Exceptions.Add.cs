@@ -10,8 +10,8 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -21,7 +21,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             User someUser = CreateRandomUser();
             SqlException sqlException = CreateSqlException();
             var failedUserStorageException = new FailedUserStorageException(sqlException);
@@ -33,13 +33,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime())
                     .Throws(sqlException);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
 
             UserDependencyException actualUserDependencyException =
                 await Assert.ThrowsAsync<UserDependencyException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -60,7 +60,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDuplicateKeyErrorOccurrsandLogItAsync()
         {
-            //given
+            // given
             User someUser = CreateRandomUser();
             string someMessage = GetRandomString();
             var duplicateKeyException = new DuplicateKeyException(someMessage);
@@ -74,13 +74,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(duplicateKeyException);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
 
             UserDependencyValidationException actualUserDependencyValidationException =
                await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserDependencyValidationException.Should().BeEquivalentTo(
                 expectedUserDependencyValidationException);
 
@@ -102,7 +102,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             User someUser = CreateRandomUser();
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
             var lockedUserException = new LockedUserException(dbUpdateConcurrencyException);
@@ -114,13 +114,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime())
                     .Throws(dbUpdateConcurrencyException);
 
-            //when
+            // when
             ValueTask<User> addUserTask = this.userService.AddUserAsync(someUser);
 
             UserDependencyValidationException actualUserDependencyValidationException =
                 await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserDependencyValidationException.Should().BeEquivalentTo(expectedUserDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -139,7 +139,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             User someUser = CreateRandomUser();
             var serviceException = new Exception();
 
@@ -153,14 +153,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.GetCurrentDateTime())
                     .Throws(serviceException);
 
-            //when
+            // when
             ValueTask<User> addUserTask =
                 this.userService.AddUserAsync(someUser);
 
             UserServiceException actualUserServiceException =
                 await Assert.ThrowsAsync<UserServiceException>(addUserTask.AsTask);
 
-            //then
+            // then
             actualUserServiceException.Should().BeEquivalentTo(
                 expectedUserServiceException);
 

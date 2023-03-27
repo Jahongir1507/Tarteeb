@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -60,7 +60,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someId = Guid.NewGuid();
             var serviceException = new Exception();
 
@@ -73,7 +73,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTeamByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
 
-            //when
+            // when
             ValueTask<Team> retrieveTeamById =
             this.teamService.RetrieveTeamByIdAsync(someId);
 

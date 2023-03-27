@@ -7,8 +7,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models;
-using Tarteeb.Api.Models.Users.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRemoveIfIdIsInvalidAndLogItAsync()
         {
-            //given
+            // given
             Guid invalidUserId = Guid.Empty;
             var invalidUserException = new InvalidUserException();
 
@@ -29,14 +29,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
-            //when
+            // when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(invalidUserId);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(removeUserByIdTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -54,7 +54,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowNotFoundExceptionOnRemoveIfUserIsNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid randomUserId = Guid.NewGuid();
             Guid inputUserId = randomUserId;
             User noUser = null;
@@ -69,14 +69,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noUser);
 
-            //when
+            // when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(inputUserId);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(removeUserByIdTask.AsTask);
 
-            //then
+            // then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.storageBrokerMock.Verify(broker =>

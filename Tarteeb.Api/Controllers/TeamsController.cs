@@ -3,13 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.AspNetCore.Mvc;
-using RESTFulSense.Controllers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using RESTFulSense.Controllers;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Services.Foundations.Teams;
 
 namespace Tarteeb.Api.Controllers
@@ -119,9 +119,8 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(teamValidationException.InnerException);
             }
             catch (TeamDependencyValidationException teamDependencyValidationException)
-                when (teamDependencyValidationException.InnerException is AlreadyExistsTeamException)
             {
-                return Conflict(teamDependencyValidationException.InnerException);
+                return BadRequest(teamDependencyValidationException.InnerException);
             }
             catch (TeamDependencyException teamDependencyException)
             {

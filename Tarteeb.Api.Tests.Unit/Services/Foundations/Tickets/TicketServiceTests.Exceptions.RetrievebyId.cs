@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
@@ -19,7 +19,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowCriticalDependencyExceptionOnRetrieveByIdAsyncIfSqlErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
 
@@ -32,14 +32,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ThrowsAsync(sqlException);
 
-            //when
+            // when
             ValueTask<Ticket> retrieveTicketByIdTask =
                 this.ticketService.RetrieveTicketByIdAsync(someId);
 
             TicketDependencyException actualTicketDependencyException =
                 await Assert.ThrowsAsync<TicketDependencyException>(retrieveTicketByIdTask.AsTask);
 
-            //then
+            // then
             actualTicketDependencyException.Should().BeEquivalentTo(expectedTicketDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
@@ -57,7 +57,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someId = Guid.NewGuid();
             var serviceException = new Exception();
 
@@ -70,7 +70,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTicketByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
 
-            //when
+            // when
             ValueTask<Ticket> retrieveTicketById =
                 this.ticketService.RetrieveTicketByIdAsync(someId);
 

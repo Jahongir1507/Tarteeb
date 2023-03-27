@@ -10,8 +10,8 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Tarteeb.Api.Models.Teams;
-using Tarteeb.Api.Models.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
@@ -21,7 +21,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Team someTeam = CreateRandomTeam();
             SqlException sqlException = CreateSqlException();
             var failedTeamStorageException = new FailedTeamStorageException(sqlException);
@@ -32,13 +32,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Throws(sqlException);
 
-            //when
+            // when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
 
             TeamDependencyException actualTeamDependencyException =
                 await Assert.ThrowsAsync<TeamDependencyException>(addTeamTask.AsTask);
 
-            //then
+            // then
             actualTeamDependencyException.Should().BeEquivalentTo(expectedTeamDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -100,7 +100,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Team someTeam = CreateRandomTeam();
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
             var lockedTeamException = new LockedTeamException(dbUpdateConcurrencyException);
@@ -111,13 +111,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(dbUpdateConcurrencyException);
 
-            //when
+            // when
             ValueTask<Team> addTeamTask = this.teamService.AddTeamAsync(someTeam);
 
             TeamDependencyValidationException actualTeamDependencyValidationException =
                 await Assert.ThrowsAsync<TeamDependencyValidationException>(addTeamTask.AsTask);
 
-            //then
+            // then
             actualTeamDependencyValidationException.Should()
                 .BeEquivalentTo(expectedTeamDependencyValidationException);
 
@@ -151,14 +151,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
                 .Throws(serviceException);
 
-            //when
+            // when
             ValueTask<Team> addTeamTask =
                 this.teamService.AddTeamAsync(someTeam);
 
             TeamServiceException actualTeamServiceException =
                 await Assert.ThrowsAsync<TeamServiceException>(addTeamTask.AsTask);
 
-            //then
+            // then
             actualTeamServiceException.Should().BeEquivalentTo(expectedTeamServiceException);
 
             this.dateTimeBrokerMock.Verify(broker =>

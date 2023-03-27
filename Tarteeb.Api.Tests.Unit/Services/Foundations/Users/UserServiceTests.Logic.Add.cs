@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldAddUserAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             User randomUser = CreateRandomUser(randomDateTime);
             User inputUser = randomUser;
@@ -32,10 +32,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 broker.InsertUserAsync(inputUser))
                    .ReturnsAsync(persistedUser);
 
-            //when
+            // when
             User actualUser = await this.userService.AddUserAsync(inputUser);
 
-            //then
+            // then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.dateTimeBrokerMock.Verify(broker =>

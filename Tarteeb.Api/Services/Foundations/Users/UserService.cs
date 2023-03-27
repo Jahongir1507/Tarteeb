@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
-using Tarteeb.Api.Models;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Users
 {
@@ -58,7 +58,7 @@ namespace Tarteeb.Api.Services.Foundations.Users
         {
             ValidateUserOnModify(user);
             var maybeUser = await this.storageBroker.SelectUserByIdAsync(user.Id);
-            ValidateAginstStorageUserOnModify(inputUser:user, storageUser:maybeUser);
+            ValidateAginstStorageUserOnModify(inputUser: user, storageUser: maybeUser);
 
             return await this.storageBroker.UpdateUserAsync(user);
         });

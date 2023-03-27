@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Brokers.Storages
 {

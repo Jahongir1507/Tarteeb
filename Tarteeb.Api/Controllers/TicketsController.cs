@@ -5,12 +5,14 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using System.Threading.Tasks;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace Tarteeb.Api.Controllers
 {
@@ -54,6 +56,7 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpGet]
+        [EnableQuery]
         public ActionResult<IQueryable<Ticket>> GetAllTickets()
         {
             try
@@ -119,9 +122,8 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(ticketValidationException.InnerException);
             }
             catch (TicketDependencyValidationException ticketDependencyValidationException)
-                when (ticketDependencyValidationException.InnerException is AlreadyExistsTicketException)
             {
-                return Conflict(ticketDependencyValidationException.InnerException);
+                return BadRequest(ticketDependencyValidationException.InnerException);
             }
             catch (TicketDependencyException ticketDependencyException)
             {

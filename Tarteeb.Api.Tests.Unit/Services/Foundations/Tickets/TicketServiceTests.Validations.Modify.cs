@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models.Tickets;
-using Tarteeb.Api.Models.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
@@ -19,21 +19,21 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfTicketIsNullAndLogItAsync()
         {
-            //given
+            // given
             Ticket nullTicket = null;
             var nullTicketException = new NullTicketException();
 
             var expectedTicketValidationException =
                 new TicketValidationException(nullTicketException);
 
-            //when
+            // when
             ValueTask<Ticket> modifyTicketTask =
                 this.ticketService.ModifyTicketAsync(nullTicket);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should()
                 .BeEquivalentTo(expectedTicketValidationException);
 
@@ -59,7 +59,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async Task ShouldThrowValidationExceptionOnModifyIfTicketIsInvalidAndLogItAsync(
             string invalidString)
         {
-            //given
+            // given
             var invalidTicket = new Ticket
             {
                 Title = invalidString
@@ -103,13 +103,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
 
-            //when
+            // when
             ValueTask<Ticket> modifyTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
@@ -129,7 +129,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Ticket randomTicket = CreateRandomTicket(randomDateTime);
             Ticket invalidTicket = randomTicket;
@@ -145,13 +145,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
-            //when
+            // when
             ValueTask<Ticket> modifyTicketTask = this.ticketService.ModifyTicketAsync(invalidTicket);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(
                 expectedTicketValidationException);
 
@@ -163,7 +163,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTicketByIdAsync(invalidTicket.Id), Times.Never);
-            
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -174,7 +174,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(
             int invalidSeconds)
         {
-            //given
+            // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Ticket randomTicket = CreateRandomTicket(randomDateTime);
             Ticket inputTicket = randomTicket;
@@ -191,13 +191,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
-            //when
+            // when
             ValueTask<Ticket> modifyTicketTask = this.ticketService.ModifyTicketAsync(inputTicket);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(
                 expectedTicketValidationException);
 
@@ -218,7 +218,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfTicketDoesNotExistAndLogItAsync()
         {
-            //given
+            // given
             int randomNegativeMInutes = GetRandomNegativeNumber();
             DateTimeOffset dateTime = GetRandomDateTime();
             Ticket randomTicket = CreateRandomTicket(dateTime);
@@ -238,14 +238,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime()).Returns(dateTime);
 
-            //when
+            // when
             ValueTask<Ticket> modifyTicketTask =
                 this.ticketService.ModifyTicketAsync(nonExistTicket);
 
             TicketValidationException actualTicketValidationException =
                 await Assert.ThrowsAsync<TicketValidationException>(modifyTicketTask.AsTask);
 
-            //then
+            // then
             actualTicketValidationException.Should().BeEquivalentTo(expectedTicketValidationException);
 
             this.storageBrokerMock.Verify(broker =>

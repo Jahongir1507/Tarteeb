@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Tarteeb.Api.Models.Tickets;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         [Fact]
         public async Task ShouldRemoveTicketByIdAsync()
         {
-            //given
+            // given
             Guid randomId = Guid.NewGuid();
             Guid inputTicketId = randomId;
             Ticket randomTicket = CreateRandomTicket();
@@ -35,11 +35,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                 broker.DeleteTicketAsync(expectedInputTicket))
                     .ReturnsAsync(deletedTicket);
 
-            //when
+            // when
             Ticket actualTicket = await this.ticketService
                 .RemoveTicketByIdAsync(inputTicketId);
 
-            //then
+            // then
             actualTicket.Should().BeEquivalentTo(expectedTicket);
 
             this.storageBrokerMock.Verify(broker =>

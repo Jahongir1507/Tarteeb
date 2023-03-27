@@ -15,6 +15,5 @@ namespace Tarteeb.Api.Brokers.Storages
         IQueryable<Score> SelectAllScores();
         ValueTask<Score> UpdateScoreAsync(Score score);
         ValueTask<Score> DeleteScoreAsync(Score score);       
-
     }
 }

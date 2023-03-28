@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
     public class ScoreDependencyException : Xeption
     {
         public ScoreDependencyException(Exception innerException)
-            : base(message: "Team dependency error occurred, contact support.", innerException)
+            : base(message: "Score dependency error occurred, contact support.", innerException)
         { }
     }
 }

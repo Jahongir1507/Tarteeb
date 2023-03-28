@@ -10,6 +10,7 @@ using Tarteeb.Api.Models.Foundations.Scores;
 using Xeptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -42,6 +43,20 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedScoreException = new FailedScoreServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedScoreException);
+            }
+        }
+
+        private ScoreServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var scoreServiceException = new ScoreServiceException(exception);
+            this.loggingBroker.LogError(scoreServiceException);
+
+            return scoreServiceException;
         }
 
         private Exception CreateAndLogCriticalDependencyException(FailedScoreStorageException failedScoreStorageException)

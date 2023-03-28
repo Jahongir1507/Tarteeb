@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Times;
 using Xunit;
 
-namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Times
+namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 {
     public partial class TimeServiceTests
     {

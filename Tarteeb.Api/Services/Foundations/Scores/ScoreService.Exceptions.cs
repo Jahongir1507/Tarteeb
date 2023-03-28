@@ -3,12 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xeptions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using Microsoft.Data.SqlClient;
 
 namespace Tarteeb.Api.Services.Foundations.Scores

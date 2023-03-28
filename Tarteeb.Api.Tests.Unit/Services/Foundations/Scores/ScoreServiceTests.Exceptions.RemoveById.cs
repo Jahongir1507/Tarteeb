@@ -91,11 +91,53 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 expectedScoreDepenedencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectScoreByIdAsync(It.IsAny<Guid>()),Times.Once);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedScoreDepenedencyException))),Times.Once);
+                    expectedScoreDepenedencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            //given
+            Guid someScoreId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedScoreServiceException = 
+                new FailedScoreServiceException(serviceException);
+
+            var expectedScoreServiceException = new ScoreServiceException(
+                failedScoreServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<Score> removeScoreByIdTask =
+                this.scoreService.RemoveScoreByIdAsync(someScoreId);
+
+            ScoreServiceException actualScoreServiceException =
+                await Assert.ThrowsAsync<ScoreServiceException>(
+                    removeScoreByIdTask.AsTask);
+
+            //then
+            actualScoreServiceException.Should().BeEquivalentTo(
+                expectedScoreServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedScoreServiceException))),
+                    Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

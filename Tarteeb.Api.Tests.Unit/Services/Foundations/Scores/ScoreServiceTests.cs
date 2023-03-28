@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -11,6 +12,7 @@ using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -32,6 +34,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();

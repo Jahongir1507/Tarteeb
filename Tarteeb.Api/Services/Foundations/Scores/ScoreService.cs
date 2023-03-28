@@ -12,7 +12,7 @@ using Tarteeb.Api.Models.Foundations.Scores;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
-    public class ScoreService : IScoreService
+    public partial class ScoreService : IScoreService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -28,12 +28,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId)
+        public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
+        TryCatch(async () =>
         {
             Score maybeScore = await this.storageBroker.SelectScoreByIdAsync(scoreId);
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
-        }
-            
+
+        });   
     }
 }

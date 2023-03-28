@@ -17,31 +17,34 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
     public partial class TimeServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
-        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly ITimeService timeService;
+
         public TimeServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+
             this.timeService = new TimeService(
                 storageBroker: this.storageBrokerMock.Object,
-                dateTimeBroker: this.dateTimeBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
         private Time CreateRandomModifyTime(DateTimeOffset randomDate)
         {
             int randomDaysInPast = GetRandomNegativeNumber();
-            Time randomtime = CreateRandomTime(randomDate);
+            Time randomTime = CreateRandomTime(randomDate);
 
-            randomtime.CreatedDate = randomtime.CreatedDate.AddDays(randomDaysInPast);
+            randomTime.CreatedDate = 
+                randomTime.CreatedDate.AddDays(randomDaysInPast);
 
-            return randomtime;
+            return randomTime;
         }
 
-        private static DateTimeOffset GetRandomDateTime() =>
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNegativeNumber() =>
@@ -53,8 +56,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Time>();
+
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);
+
             return filler;
         }
     }

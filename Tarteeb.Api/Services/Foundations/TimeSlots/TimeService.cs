@@ -30,6 +30,14 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
         }
 
         public ValueTask<Time> ModifyTimeAsync(Time time) =>
-               throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            ValidateTimeOnModify(time);
+            var maybeTime = await this.storageBroker.SelectTimeByIdAsync(time.Id);
+
+            ValidateStorageTime(maybeTime, maybeTime.Id);
+
+            return await this.storageBroker.UpdateTimeAsync(time);
+        });
     }
 }

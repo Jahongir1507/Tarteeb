@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Times;
@@ -17,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             IQueryable<Time> storageTimes = randomTimes;
             IQueryable<Time> expectedTimes = storageTimes;
 
-            this.storageBrokerMock.Setup(broker=>
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTimes()).Returns(storageTimes);
             //when
             IQueryable<Time> actualTime =
@@ -26,7 +25,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             //then
             actualTime.Should().BeEquivalentTo(expectedTimes);
 
-            this.storageBrokerMock.Verify(broker=> 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllTimes(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

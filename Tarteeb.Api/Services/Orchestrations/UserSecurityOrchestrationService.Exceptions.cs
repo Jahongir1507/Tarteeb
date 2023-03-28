@@ -37,9 +37,9 @@ namespace Tarteeb.Api.Services.Orchestrations
             {
                 throw CreateAndLogDependencyException(userServiceException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedUserTokenOrchestrationException = 
+                var failedUserTokenOrchestrationException =
                     new FailedUserTokenOrchestrationException(exception);
 
                 throw CreateAndLogServiceException(failedUserTokenOrchestrationException);
@@ -64,7 +64,7 @@ namespace Tarteeb.Api.Services.Orchestrations
 
         private UserTokenOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
         {
-            var userTokenOrchestrationServiceException = 
+            var userTokenOrchestrationServiceException =
                 new UserTokenOrchestrationServiceException(exception);
 
             this.loggingBroker.LogError(userTokenOrchestrationServiceException);

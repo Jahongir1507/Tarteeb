@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Moq;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xunit;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;

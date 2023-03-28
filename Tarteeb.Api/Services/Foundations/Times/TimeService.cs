@@ -17,6 +17,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.storageBroker = storageBroker;
 
         public IQueryable<Time> RetrieveAllTimes()=>
-            throw new System.NotImplementedException();
+           this.storageBroker.SelectAllTimes();
     }
 }

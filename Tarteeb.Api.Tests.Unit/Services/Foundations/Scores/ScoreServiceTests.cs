@@ -19,6 +19,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         public ScoreServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            
             this.scoreService = new ScoreService(
                 storageBroker: storageBrokerMock.Object);
         }

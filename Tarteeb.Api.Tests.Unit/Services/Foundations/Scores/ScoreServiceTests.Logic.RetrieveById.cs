@@ -35,10 +35,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             actualScore.Should().BeEquivalentTo(expectedScore);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectScoreByIdAsync(inputScoreId), Times.Once());
+                broker.SelectScoreByIdAsync(inputScoreId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-
         }
     }
 }

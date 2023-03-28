@@ -13,10 +13,9 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     public class ScoreService : IScoreService
     {
         private readonly IStorageBroker storageBroker;
-        public ScoreService(IStorageBroker storageBroker)
-        {
+        public ScoreService(IStorageBroker storageBroker) =>
             this.storageBroker = storageBroker;
-        }
+
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid id) =>
             throw new NotImplementedException();
     }

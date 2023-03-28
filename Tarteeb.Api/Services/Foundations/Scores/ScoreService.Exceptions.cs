@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xeptions;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -27,6 +29,20 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 throw CreateAndLogValidationException(notFoundScoreException);
             }
+            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedScoreException = new LockedScoreException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedScoreException);
+            }
+        }
+
+        private Exception CreateAndLogDependencyValidationException(LockedScoreException lockedScoreException)
+        {
+            var scoreDependencyValidationException = new ScoreDependencyValidationException(lockedScoreException);
+            this.loggingBroker.LogError(scoreDependencyValidationException);
+
+            return scoreDependencyValidationException;
         }
 
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)

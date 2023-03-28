@@ -23,6 +23,10 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 throw CreateAndLogValidationException(invalidScoreException);
             }
+            catch(NotFoundScoreException notFoundScoreException)
+            {
+                throw CreateAndLogValidationException(notFoundScoreException);
+            }
         }
 
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)

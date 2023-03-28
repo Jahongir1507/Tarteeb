@@ -10,7 +10,6 @@ using Tarteeb.Api.Models.Foundations.Scores;
 using Xeptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {

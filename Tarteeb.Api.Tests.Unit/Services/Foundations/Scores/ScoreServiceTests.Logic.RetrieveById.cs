@@ -26,7 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             Score expectedScore = storageScore.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.SelectScoreByIdAsync(inputScoreId)).ReturnsAsync(storageScore);
+                broker.SelectScoreByIdAsync(inputScoreId)).ReturnsAsync(storageScore);
 
             // when
             Score actualScore = await this.scoreService.RetrieveScoreByIdAsync(inputScoreId);

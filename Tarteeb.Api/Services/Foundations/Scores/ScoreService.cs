@@ -17,6 +17,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.storageBroker = storageBroker;
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid id) =>
-            throw new NotImplementedException();
+            this.storageBroker.SelectScoreByIdAsync(id);
     }
 }

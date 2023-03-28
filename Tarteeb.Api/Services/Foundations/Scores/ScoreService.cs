@@ -1,4 +1,9 @@
-﻿using System;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -23,7 +28,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
-            throw new NotImplementedException();
+        public async ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId)
+        {
+            Score maybeScore = await this.storageBroker.SelectScoreByIdAsync(scoreId);
+
+            return await this.storageBroker.DeleteScoreAsync(maybeScore);
+        }
+            
     }
 }

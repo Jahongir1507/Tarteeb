@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Brokers.Storages
         public async ValueTask<Score> SelectScoreByIdAsync(Guid id) =>
            await SelectAsync<Score>(id);
 
-        public async ValueTask<Score> UpdateScoreAsync(Score score)=>
+        public async ValueTask<Score> UpdateScoreAsync(Score score) =>
             await UpdateAsync(score);
 
         public async ValueTask<Score> DeleteScoreAsync(Score score) =>

@@ -35,7 +35,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates);
-            
+
             return filler;
         }
     }

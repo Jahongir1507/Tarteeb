@@ -1,9 +1,19 @@
-﻿using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+﻿using System;
+using Tarteeb.Api.Models.Foundations.Scores;
+using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
+        private static dynamic IsInvalid(Guid id) => new
+        {
+            Condition = id == default,
+            Message = "Id is required"
+        };
+
+        private void ValidateScoreId(Guid scoreId) =>
+            Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

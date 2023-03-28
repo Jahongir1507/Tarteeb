@@ -31,6 +31,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>
         {
+            ValidateScoreId(scoreId);
             Score maybeScore = await this.storageBroker.SelectScoreByIdAsync(scoreId);
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);

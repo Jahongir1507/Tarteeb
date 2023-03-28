@@ -38,7 +38,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             int randomDaysInPast = GetRandomNegativeNumber();
             Time randomTime = CreateRandomTime(randomDate);
 
-            randomTime.CreatedDate = 
+            randomTime.CreatedDate =
                 randomTime.CreatedDate.AddDays(randomDaysInPast);
 
             return randomTime;

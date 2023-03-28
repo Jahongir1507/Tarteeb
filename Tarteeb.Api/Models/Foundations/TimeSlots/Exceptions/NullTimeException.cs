@@ -9,7 +9,7 @@ namespace Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions
 {
     public class NullTimeException : Xeption
     {
-        public NullTimeException() : base("Time is null.") 
+        public NullTimeException() : base("Time is null.")
         { }
     }
 }

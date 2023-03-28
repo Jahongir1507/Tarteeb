@@ -9,7 +9,7 @@ namespace Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions
 {
     public class TimeValidationException : Xeption
     {
-        public TimeValidationException(Xeption innerException) 
+        public TimeValidationException(Xeption innerException)
             : base(message: "Time validation error occurred, fix the errors and try again.", innerException)
         { }
     }

@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models.Foundations.Tickets;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions

@@ -4,25 +4,34 @@
 //=================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
+using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
     public partial class ScoreServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IScoreService scoreService;
         public ScoreServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
+
             this.scoreService = new ScoreService(
-                storageBroker: storageBrokerMock.Object);
+                storageBroker: storageBrokerMock.Object,
+                loggingBroker: loggingBrokerMock.Object);
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();

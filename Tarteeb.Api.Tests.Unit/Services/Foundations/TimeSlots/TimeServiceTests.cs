@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -11,6 +12,7 @@ using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Services.Foundations.TimeSlots;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 {
@@ -52,6 +54,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
         private static Time CreateRandomTime(DateTimeOffset dates) =>
            CreateTimeFiller(dates).Create();
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {

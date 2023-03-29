@@ -6,6 +6,7 @@
 using System;
 using System.Linq.Expressions;
 using Moq;
+using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
@@ -19,11 +20,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+
         private readonly IScoreService scoreService;
         public ScoreServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.scoreService = new ScoreService(
                 storageBroker: storageBrokerMock.Object,

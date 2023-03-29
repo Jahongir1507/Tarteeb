@@ -48,6 +48,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfScoreIsNotFoundAndLogItAsync()
+        {
+            // given
+            Guid someScoreId = Guid.NewGuid();
+            Score noScore = null;
+
+            var notFoundScoreException =
+                new NotFoundScoreException(someScoreId);
+
+            var expectedScoreValidationException =
+                new ScoreValidationException(notFoundScoreException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noScore);
+
+            // when
+            ValueTask<Score> retrieveScoreByIdTask =
+                this.scoreService.RetrieveScoreByIdAsync(someScoreId);
+
+            ScoreValidationException actualScoreValidationException =
+                await Assert.ThrowsAsync<ScoreValidationException>(
+                    retrieveScoreByIdTask.AsTask);
+
+            // then
+            actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

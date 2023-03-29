@@ -20,7 +20,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         {
             //given
             Guid invalidScoreId = Guid.Empty;
-
             var invalidScoreException = new InvalidScoreException();
 
             invalidScoreException.AddData(

@@ -22,7 +22,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         {
             //given
             Guid someScoreId = Guid.NewGuid();
-
             var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedScoreException =

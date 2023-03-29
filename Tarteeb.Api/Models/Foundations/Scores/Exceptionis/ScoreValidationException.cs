@@ -10,7 +10,7 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptionis
     public class ScoreValidationException : Xeption
     {
         public ScoreValidationException(Xeption innterException)
-            : base(message: "Score validation error occured, fix the errors and try again.", innterException) 
+            : base(message: "Score validation error occured, fix the errors and try again.", innterException)
         { }
     }
 }

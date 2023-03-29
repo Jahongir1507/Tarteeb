@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -23,6 +24,10 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             catch (InvalidScoreException invalidScoreException)
             {
                 throw CreateAndLogValidationException(invalidScoreException);
+            }
+            catch(NotFoundScoreException notFoundScoreException)
+            {
+                throw CreateAndLogValidationException(notFoundScoreException);
             }
         }
 

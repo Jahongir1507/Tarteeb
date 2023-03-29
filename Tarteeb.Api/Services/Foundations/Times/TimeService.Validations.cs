@@ -20,6 +20,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
             Message = "Id is required"
         };
 
+        private static void ValidateStorageTimeExists(Time maybeTime, Guid timeId)
+        {
+            if (maybeTime is null)
+            {
+                throw new NotFoundTimeException(timeId);
+            }
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidTimeException = new InvalidTimeException();

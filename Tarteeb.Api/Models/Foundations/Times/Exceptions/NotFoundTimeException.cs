@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
     public class NotFoundTimeException : Xeption
     {
         public NotFoundTimeException(Guid timeId)
-            : base(message: $"Couldn't find team with id: {timeId}.")
+            : base(message: $"Couldn't find time with id: {timeId}.")
         { }
     }
 }

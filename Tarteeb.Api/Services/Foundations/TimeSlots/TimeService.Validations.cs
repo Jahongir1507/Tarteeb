@@ -22,12 +22,12 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
                 (Rule: IsInvalid(time.HoursWorked), nameof(Time.HoursWorked)),
                 (Rule: IsInvalid(time.Comment), nameof(Time.Comment)),
                 (Rule: IsInvalid(time.UserId), nameof(Time.UserId)),
-                (Rule: IsInvalid(time.TicketId), nameof(Time.Ticket)),
+                (Rule: IsInvalid(time.TicketId), nameof(Time.TicketId)),
                 (Rule: IsInvalid(time.CreatedDate), nameof(Time.CreatedDate)),
-                (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),
-                (Rule: IsNotRecent(time.UpdatedDate), nameof(Time.UpdatedDate)),
+                (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),             
                 (Rule: IsInvalid(time.Ticket), nameof(Time.Ticket)),
                 (Rule: IsInvalid(time.User), nameof(Time.User)),
+                (Rule: IsNotRecent(time.UpdatedDate), nameof(Time.UpdatedDate)),
 
                 (Rule: IsSame(
                         firstDate: time.UpdatedDate,
@@ -52,19 +52,19 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
         private static dynamic IsInvalid(DateTimeOffset dates) => new
         {
             Condition = dates == default,
-            Message = "Value is required"
+            Message = "Date is required"
         };
 
         private static dynamic IsInvalid(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
-            Message = "Text is required"
+            Message = "Comment is required"
         };
 
         private static dynamic IsInvalid(decimal number) => new
         {
             Condition = number == default,
-            Message = "Number is required"
+            Message = "Value is required"
         };
 
         private static dynamic IsInvalid(Guid id) => new

@@ -46,7 +46,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             return randomTime;
         }
 
-        private static DateTimeOffset GetRandomDateTimeOffset() =>
+        private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static int GetRandomNegativeNumber() =>

@@ -6,6 +6,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
 using Xunit;
@@ -29,7 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 this.timeService.ModifyTimeAsync(nullTime);
 
             var actualTimeValidationException =
-             await   Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
+                 await Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
 
             // then
             actualTimeValidationException.Should()
@@ -45,6 +47,89 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnModifyIfTimeIsInvalidAndLogItAsync(string invalidString)
+        {
+            // given 
+            var invalidTime = new Time()
+            {
+                Comment = invalidString
+            };
+
+            var invalidTimeException = new InvalidTimeException();
+
+            invalidTimeException.AddData(
+                key: nameof(Time.Id),
+                values: "Id is required");
+
+            invalidTimeException.AddData(
+               key: nameof(Time.HoursWorked),
+               values: "Value is required");
+
+            invalidTimeException.AddData(
+               key: nameof(Time.Comment),
+               values: "Comment is required");
+
+            invalidTimeException.AddData(
+               key: nameof(Time.UserId),
+               values: "Id is required");
+
+            invalidTimeException.AddData(
+               key: nameof(Time.TicketId),
+               values: "Id is required");
+
+            invalidTimeException.AddData(
+               key: nameof(Time.CreatedDate),
+               values: "Date is required");
+
+            invalidTimeException.AddData(
+                key: nameof(Ticket.UpdatedDate),
+                 "Date is required",
+                "Date is not recent",
+                $"Date is the same as {nameof(Time.CreatedDate)}");
+
+            invalidTimeException.AddData(
+            key: nameof(Time.User),
+            values: "User is required");
+
+            invalidTimeException.AddData(
+            key: nameof(Time.Ticket),
+            values: "Ticket is required");
+
+            var expectedTimeValidationException =
+                new TimeValidationException(invalidTimeException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(GetRandomDateTime);
+
+            // when
+            ValueTask<Time> modifyTimeTask =
+                this.timeService.ModifyTimeAsync(invalidTime);
+
+            TimeValidationException actualTimeValidationException =
+                await Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
+
+            // then
+            actualTimeValidationException.Should()
+                .BeEquivalentTo(expectedTimeValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedTimeValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                 broker.UpdateTimeAsync(It.IsAny<Time>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

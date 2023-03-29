@@ -19,7 +19,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         public async Task ShouldModifyTimeAsync()
         {
             // given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            DateTimeOffset randomDate = GetRandomDateTime();
             Time randomTime = CreateRandomModifyTime(randomDate);
             Time inputTime = randomTime;
             Time storageTime = inputTime.DeepClone();

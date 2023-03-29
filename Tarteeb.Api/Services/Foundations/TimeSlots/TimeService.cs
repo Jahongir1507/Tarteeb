@@ -34,7 +34,8 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
             ValidateTimeOnModify(time);
             var maybeTime = await this.storageBroker.SelectTimeByIdAsync(time.Id);
 
-            ValidateStorageTime(maybeTime, maybeTime.Id);
+            ValidateStorageTime(maybeTime, time.Id);
+            ValidateAgainstStorageTimeOnModify(inputTime: time, storageTime: maybeTime);
 
             return await this.storageBroker.UpdateTimeAsync(time);
         });

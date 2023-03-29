@@ -31,4 +31,10 @@
 		<PackageReference Include="Xeption" Version="2.5.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Services\Foundations\Scores\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Services\Foundations\Scores\" />
+	</ItemGroup>
 </Project>

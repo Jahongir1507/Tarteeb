@@ -29,7 +29,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 this.timeService.ModifyTimeAsync(nullTime);
 
             var actualTimeValidationException =
-                Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
+             await   Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
 
             // then
             actualTimeValidationException.Should()

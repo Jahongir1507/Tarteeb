@@ -56,5 +56,43 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedScoreServiceException =
+                new FailedScoreServiceException(serviceException);
+
+            var expectedScoreServiceExcpetion =
+                new ScoreServiceException(failedScoreServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Score> retrieveScoreById =
+            this.scoreService.RetrieveScoreByIdAsync(someId);
+
+            ScoreServiceException actualScoreServiceException =
+                await Assert.ThrowsAsync<ScoreServiceException>(retrieveScoreById.AsTask);
+
+            // then
+            actualScoreServiceException.Should().BeEquivalentTo(expectedScoreServiceExcpetion);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedScoreServiceExcpetion))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

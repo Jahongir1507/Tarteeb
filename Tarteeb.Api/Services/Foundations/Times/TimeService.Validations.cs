@@ -4,6 +4,8 @@
 //=================================
 
 using System;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 
@@ -19,6 +21,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
             Condition = id == default,
             Message = "Id is required"
         };
+
+        private static void ValidateStorageTimeExists(Time maybeTime, Guid timeId)
+        {
+            if (maybeTime is null)
+            {
+                throw new NotFoundTimeException(timeId);
+            }
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

@@ -36,6 +36,8 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 Time maybeTime =
                     await this.storageBroker.SelectTimeByIdAsync(timeId);
 
+                ValidateStorageTimeExists(maybeTime, timeId);
+
                 return await this.storageBroker.DeleteTimeAsync(maybeTime);
             });
     }

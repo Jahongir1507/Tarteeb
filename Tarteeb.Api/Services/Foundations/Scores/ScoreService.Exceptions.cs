@@ -4,8 +4,10 @@
 //=================================
 
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
+using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -28,6 +30,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 throw CreateAndLogValidationException(notFoundScoreException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedScoreStorageException =
+                    new FailedScoreStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
+            }
         }
 
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)
@@ -38,6 +47,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker.LogError(scoreValidationException);
 
             return scoreValidationException;
+        }
+
+        private ScoreDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
+        {
+            var scoreDependencyException = new ScoreDependencyException(exeption);
+            this.loggingBroker.LogCritical(scoreDependencyException);
+
+            return scoreDependencyException;
         }
     }
 }

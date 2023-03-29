@@ -46,7 +46,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 expectedScoreDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedScoreDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

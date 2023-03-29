@@ -16,6 +16,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     public partial class ScoreService
     {
         private delegate ValueTask<Score> ReturningScoresFunction();
+
         private async ValueTask<Score> TryCatch(ReturningScoresFunction returningTeamFunction)
         {
             try
@@ -30,17 +31,17 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 throw CreateAndLogValidationException(notFoundScoreException);
             }
+            catch(SqlException sqlException)
+            {
+                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
+            }
             catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedScoreException = new LockedScoreException(dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedScoreException);
-            }
-            catch(SqlException  sqlException)
-            {
-                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
-
-                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
             catch (Exception serviceException)
             {

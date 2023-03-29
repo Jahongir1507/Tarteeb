@@ -24,9 +24,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             var expectedTimeValidationException =
                 new TimeValidationException(nullTimeException);
 
-
             // whe
-            ValueTask<Time> modifyTimeTask = 
+            ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(nullTime);
 
             var actualTimeValidationException =

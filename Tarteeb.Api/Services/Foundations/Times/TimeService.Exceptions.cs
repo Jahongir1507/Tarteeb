@@ -3,7 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
@@ -28,6 +30,12 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 throw CreateAndLogValidationException(notFoundTimeException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTimeException);
+            }
         }
 
         private TimeValidationException CreateAndLogValidationException(Xeption exception)
@@ -36,6 +44,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.loggingBroker.LogError(timeValidationException);
 
             return timeValidationException;
+        }
+
+        private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var timeDependencyValidationException = new TimeDependencyValidationException(exception);
+            this.loggingBroker.LogError(timeDependencyValidationException);
+
+            return timeDependencyValidationException;
         }
     }
 }

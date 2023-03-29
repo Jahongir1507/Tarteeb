@@ -130,6 +130,5 @@ namespace Tarteeb.Api.Services.Foundations.Teams
 
             return teamDependencyValidationException;
         }
-
     }
 }

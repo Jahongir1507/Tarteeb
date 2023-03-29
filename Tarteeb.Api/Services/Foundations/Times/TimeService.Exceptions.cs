@@ -20,13 +20,9 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 return await returningTimeFunction();
             }
-            catch (InvalidTimeException invalidTimeException)
+            catch(InvalidTimeException invalidTimeException)
             {
                 throw CreateAndLogValidationException(invalidTimeException);
-            }
-            catch (NotFoundTimeException notFoundTimeException) 
-            {
-                throw CreateAndLogValidationException(notFoundTimeException);
             }
         }
 

@@ -90,8 +90,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                     expectedTimeValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

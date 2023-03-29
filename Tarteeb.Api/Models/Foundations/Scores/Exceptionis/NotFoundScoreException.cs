@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Scores.Exceptionis
 {
-    public class InvalidScoreExpetion : Xeption
+    public partial class NotFoundScoreException : Xeption
     {
-        public InvalidScoreExpetion()
-            : base(message: "Score is invalid.")
+        public NotFoundScoreException(Guid id)
+            : base(message: $"Could not find score with id: {id}")
         { }
     }
 }

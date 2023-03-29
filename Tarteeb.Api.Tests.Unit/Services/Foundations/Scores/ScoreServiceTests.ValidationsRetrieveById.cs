@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         {
             // given
             Guid invalidScoreId = Guid.Empty;
-            var invalidScoreException = new InvalidScoreExpetion();
+            var invalidScoreException = new InvalidScoreException();
 
             invalidScoreException.AddData(
                 key: nameof(invalidScoreId),
@@ -40,11 +40,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             actualScoreValidationException.Should().BeEquivalentTo(expectedValidationScoreException);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptionAs(
-                expectedValidationScoreException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedValidationScoreException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-            broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Never);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

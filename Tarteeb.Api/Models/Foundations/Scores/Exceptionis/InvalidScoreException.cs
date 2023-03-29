@@ -7,10 +7,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Scores.Exceptionis
 {
-    public class ScoreValidationException : Xeption
+    public class InvalidScoreException : Xeption
     {
-        public ScoreValidationException(Xeption innerException)
-            : base(message: "Score validation error occurred, fix the errors and try again.", innerException)
+        public InvalidScoreException()
+            : base(message: "Score is invalid.")
         { }
     }
 }

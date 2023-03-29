@@ -11,7 +11,7 @@ using Tarteeb.Api.Models.Foundations.Scores;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
-    public class ScoreService : IScoreService
+    public partial class ScoreService : IScoreService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -22,6 +22,16 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         }
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid id) =>
-            this.storageBroker.SelectScoreByIdAsync(id);
+            TryCatch(async () =>
+            {
+                ValidateScoreId(id);
+
+                Score maybeScore =
+                    await this.storageBroker.SelectScoreByIdAsync(id);
+
+                ValidateStorageScore(maybeScore, id);
+
+                return maybeScore;
+            });
     }
 }

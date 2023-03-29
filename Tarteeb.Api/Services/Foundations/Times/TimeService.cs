@@ -28,9 +28,11 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Time> RemoveTimeByIdAsync(Guid timeId)
+        public async ValueTask<Time> RemoveTimeByIdAsync(Guid timeId)
         {
-            throw new NotImplementedException();
+            Time maybeTime = await this.storageBroker.SelectTimeByIdAsync(timeId);
+
+            return await this.storageBroker.DeleteTimeAsync(maybeTime);
         }
     }
 }

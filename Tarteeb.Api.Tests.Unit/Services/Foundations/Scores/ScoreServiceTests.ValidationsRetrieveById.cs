@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {

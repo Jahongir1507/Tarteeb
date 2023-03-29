@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -11,27 +12,31 @@ using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Services.Foundations.Times;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 {
     public partial class TimeServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
-        private readonly Mock<IDateTimeBroker> dateTImeBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITimeService timeService;
 
         public TimeServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.dateTImeBrokerMock = new Mock<IDateTimeBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.timeService = new TimeService(
                 storageBroker: this.storageBrokerMock.Object,
-                dateTimeBroker: this.dateTImeBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
 
         private DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();

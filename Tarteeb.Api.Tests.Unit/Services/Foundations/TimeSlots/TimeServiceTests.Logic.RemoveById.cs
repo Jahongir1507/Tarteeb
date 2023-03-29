@@ -49,6 +49,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.DeleteTimeAsync(expectedInputTime), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

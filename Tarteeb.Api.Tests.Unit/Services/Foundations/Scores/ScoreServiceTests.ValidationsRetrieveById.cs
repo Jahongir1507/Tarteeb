@@ -23,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             var invalidScoreException = new InvalidScoreException();
 
             invalidScoreException.AddData(
-                key: nameof(Score.Id),
+                key: nameof(invalidScoreId),
                 values: "Id is required.");
 
             var expectedValidationScoreException = new

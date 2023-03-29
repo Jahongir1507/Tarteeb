@@ -41,11 +41,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             actualTimeDependencyException.Should().BeEquivalentTo(expectedTimeDependencyExcepton);
 
             this.storageBrokerMock.Verify(broker =>
-                this.SelectAllTimes(), Times.Once);
+                broker.SelectAllTickets(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogCritical(It.Is(SameExceptionAs(
-                   expectedTimeDependencyException))), Times.Once);
+                   expectedTimeDependencyExcepton))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

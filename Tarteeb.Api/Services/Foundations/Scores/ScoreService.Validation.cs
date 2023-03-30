@@ -11,8 +11,8 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
-        private void ValidateScoreId(Guid id) =>
-            Validate((Rule: IsInvalid(id), Parameter: nameof(Score.Id)));
+        private void ValidateScoreId(Guid scoreId) =>
+            Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 
         private static dynamic IsInvalid(Guid id) => new
         {

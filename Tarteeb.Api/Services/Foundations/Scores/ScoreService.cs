@@ -36,7 +36,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             Score maybeScore =
                 await this.storageBroker.SelectScoreByIdAsync(id);
 
-            ValidateStorageScoreExist(maybeScore, id);
+            ValidateStorageScoreExists(maybeScore, id);
 
             return maybeScore;
             });
@@ -49,7 +49,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             Score maybeScore =
                 await this.storageBroker.SelectScoreByIdAsync(scoreId);
 
-            ValidateStorageScoreExist(maybeScore, scoreId);
+            ValidateStorageScoreExists(maybeScore, scoreId);
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
         });

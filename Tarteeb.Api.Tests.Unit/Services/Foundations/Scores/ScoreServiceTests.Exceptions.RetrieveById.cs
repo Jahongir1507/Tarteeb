@@ -34,7 +34,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                     .ThrowsAsync(sqlException);
 
             // when
-            ValueTask<Score> retrieveScoreByIdTask = 
+            ValueTask<Score> retrieveScoreByIdTask =
                 this.scoreService.RetrieveScoreByIdAsync(someId);
 
             ScoreDependencyException actualScoreDependencyException =

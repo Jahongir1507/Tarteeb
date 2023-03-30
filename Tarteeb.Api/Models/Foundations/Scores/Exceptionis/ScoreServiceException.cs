@@ -10,8 +10,8 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptionis
 {
     public class ScoreServiceException : Xeption
     {
-        public ScoreServiceException(Exception innerException) 
-            :base(message: "Score service error occurred, contact support.", innerException)
+        public ScoreServiceException(Exception innerException)
+            : base(message: "Score service error occurred, contact support.", innerException)
         { }
     }
 }

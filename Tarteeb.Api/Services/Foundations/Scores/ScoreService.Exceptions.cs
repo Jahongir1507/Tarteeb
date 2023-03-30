@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -38,7 +37,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
-            catch(Exception serviceException)
+            catch (Exception serviceException)
             {
                 var failedScoreServiceException = new FailedScoreServiceException(serviceException);
 

@@ -19,8 +19,8 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         private readonly ILoggingBroker loggingBroker;
 
         public ScoreService(
-            IStorageBroker storageBroker, 
-            IDateTimeBroker dateTimeBroker, 
+            IStorageBroker storageBroker,
+            IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
@@ -39,7 +39,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             ValidateStorageScoreExists(maybeScore, id);
 
             return maybeScore;
-            });
+        });
 
         public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>

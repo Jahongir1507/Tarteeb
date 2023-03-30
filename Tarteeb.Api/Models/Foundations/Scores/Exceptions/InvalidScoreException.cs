@@ -10,7 +10,7 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
     public class InvalidScoreException : Xeption
     {
         public InvalidScoreException()
-            :base(message:"Score is invalid.")
+            : base(message: "Score is invalid.")
         { }
     }
 }

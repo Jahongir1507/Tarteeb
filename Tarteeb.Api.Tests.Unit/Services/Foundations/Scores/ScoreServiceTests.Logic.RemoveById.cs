@@ -5,11 +5,11 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xunit;
-using FluentAssertions;
-using Force.DeepCloner;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {

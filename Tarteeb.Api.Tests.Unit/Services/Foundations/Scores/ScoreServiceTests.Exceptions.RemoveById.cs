@@ -5,13 +5,13 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
-using Xunit;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using FluentAssertions;
-using Microsoft.Data.SqlClient;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -108,7 +108,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             Guid someScoreId = Guid.NewGuid();
             var serviceException = new Exception();
 
-            var failedScoreServiceException = 
+            var failedScoreServiceException =
                 new FailedScoreServiceException(serviceException);
 
             var expectedScoreServiceException = new ScoreServiceException(

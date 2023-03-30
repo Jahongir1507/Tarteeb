@@ -22,16 +22,16 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         }
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid id) =>
-            TryCatch(async () =>
-            {
-                ValidateScoreId(id);
+        TryCatch(async () =>
+        {
+            ValidateScoreId(id);
 
-                Score maybeScore =
-                    await this.storageBroker.SelectScoreByIdAsync(id);
+            Score maybeScore =
+                await this.storageBroker.SelectScoreByIdAsync(id);
 
-                ValidateStorageScore(maybeScore, id);
+            ValidateStorageScore(maybeScore, id);
 
-                return maybeScore;
-            });
+            return maybeScore;
+        });
     }
 }

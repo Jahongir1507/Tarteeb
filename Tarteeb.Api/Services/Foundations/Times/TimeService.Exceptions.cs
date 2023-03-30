@@ -3,9 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
@@ -26,7 +27,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 throw CreateAndLogValidationException(invalidTimeException);
             }
-            catch (NotFoundTimeException  notFoundTimeException) 
+            catch (NotFoundTimeException notFoundTimeException)
             {
                 throw CreateAndLogValidationException(notFoundTimeException);
             }
@@ -36,6 +37,13 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndDependencyValidationException(lockedTimeException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedTimeStorageException = 
+                    new FailedTimeStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
+            }
         }
 
         private TimeValidationException CreateAndLogValidationException(Xeption exception)
@@ -44,6 +52,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.loggingBroker.LogError(timeValidationException);
 
             return timeValidationException;
+        }
+
+        private TimeDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var timeDependecyException = new TimeDependencyException(exception);
+            this.loggingBroker.LogCritical(timeDependecyException);
+
+            return timeDependecyException;
         }
 
         private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)

@@ -14,7 +14,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 {
     public partial class TimeServiceTests
     {
-
         [Fact]
         public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllWhenSqlExceptionOccursAndLogIt()
         {
@@ -41,7 +40,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             actualTimeDependencyException.Should().BeEquivalentTo(expectedTimeDependencyExcepton);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllTickets(), Times.Once);
+                broker.SelectAllTimes(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogCritical(It.Is(SameExceptionAs(

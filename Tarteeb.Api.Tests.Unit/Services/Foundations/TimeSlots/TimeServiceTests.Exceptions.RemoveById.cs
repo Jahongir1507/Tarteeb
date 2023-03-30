@@ -103,5 +103,46 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someTimeId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedTimeServiceException =
+                new FailedTimeServiceException(serviceException);
+
+            var expectedTimeServiceException =
+                new TimeServiceException(failedTimeServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTimeByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Time> removeTimeByIdTask = 
+                this.timeService.RemoveTimeByIdAsync(someTimeId);
+
+            TimeServiceException actualTimeServiceException =
+                await Assert.ThrowsAsync<TimeServiceException>(
+                    removeTimeByIdTask.AsTask);
+
+            // then
+            actualTimeServiceException.Should()
+                .BeEquivalentTo(expectedTimeServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTimeByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

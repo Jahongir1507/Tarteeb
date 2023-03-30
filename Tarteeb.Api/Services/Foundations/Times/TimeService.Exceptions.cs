@@ -39,11 +39,26 @@ namespace Tarteeb.Api.Services.Foundations.Times
             }
             catch (SqlException sqlException)
             {
-                var failedTimeStorageException = 
+                var failedTimeStorageException =
                     new FailedTimeStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedTimeServiceException = new FailedTimeServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTimeServiceException);
+            }
+        }
+
+        private TimeServiceException CreateAndLogServiceException(
+            Exception exception)
+        {
+            var timeServiceException = new TimeServiceException(exception);
+            this.loggingBroker.LogError(timeServiceException);
+
+            return timeServiceException;
         }
 
         private TimeValidationException CreateAndLogValidationException(Xeption exception)

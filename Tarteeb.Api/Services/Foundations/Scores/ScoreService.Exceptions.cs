@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Scores;
@@ -37,6 +38,21 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
+            catch(Exception serviceException)
+            {
+                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
+
+                throw CreateAndLogCriticalServiceException(failedScoreServiceException);
+            }
+        }
+
+        private ScoreServiceException CreateAndLogCriticalServiceException(
+            Exception exception)
+        {
+            var scoreServiceException = new ScoreServiceException(exception);
+            this.loggingBroker.LogError(scoreServiceException);
+
+            return scoreServiceException;
         }
 
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)

@@ -121,7 +121,7 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
-            Message = "Date is not recent."
+            Message = "Date is not recent"
         };
 
         private bool IsDateNotRecent(DateTimeOffset date)

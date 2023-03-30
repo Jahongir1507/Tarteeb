@@ -25,8 +25,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             }
         }
 
-
-
         private void ValidateScoreId(Guid scoreId) =>
             Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 

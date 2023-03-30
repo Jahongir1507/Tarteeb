@@ -52,24 +52,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             }
         }
 
-        private ScoreDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
-        {
-            var scoreDependencyValidationException = new ScoreDependencyValidationException(exception);
-            this.loggingBroker.LogError(scoreDependencyValidationException);
-
-            return scoreDependencyValidationException;
-
-        }
-
-        private ScoreServiceException CreateAndLogCriticalServiceException(
-            Exception exception)
-        {
-            var scoreServiceException = new ScoreServiceException(exception);
-            this.loggingBroker.LogError(scoreServiceException);
-
-            return scoreServiceException;
-        }
-
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)
         {
             var scoreValidationException =
@@ -86,6 +68,22 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker.LogCritical(scoreDependencyException);
 
             return scoreDependencyException;
+        }
+
+        private ScoreDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var scoreDependencyValidationException = new ScoreDependencyValidationException(exception);
+            this.loggingBroker.LogError(scoreDependencyValidationException);
+
+            return scoreDependencyValidationException;
+        }
+
+        private ScoreServiceException CreateAndLogCriticalServiceException(Exception exception)
+        {
+            var scoreServiceException = new ScoreServiceException(exception);
+            this.loggingBroker.LogError(scoreServiceException);
+
+            return scoreServiceException;
         }
     }
 }

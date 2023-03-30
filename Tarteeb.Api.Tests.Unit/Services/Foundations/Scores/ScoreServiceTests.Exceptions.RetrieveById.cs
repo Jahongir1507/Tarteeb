@@ -75,7 +75,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             // when
             ValueTask<Score> retrieveScoreById =
-            this.scoreService.RetrieveScoreByIdAsync(someId);
+                this.scoreService.RetrieveScoreByIdAsync(someId);
 
             ScoreServiceException actualScoreServiceException =
                 await Assert.ThrowsAsync<ScoreServiceException>(retrieveScoreById.AsTask);

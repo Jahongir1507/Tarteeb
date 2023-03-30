@@ -28,15 +28,15 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Score> RetrieveScoreByIdAsync(Guid id) =>
+        public ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>
         {
-            ValidateScoreId(id);
+            ValidateScoreId(scoreId);
 
             Score maybeScore =
-                await this.storageBroker.SelectScoreByIdAsync(id);
+                await this.storageBroker.SelectScoreByIdAsync(scoreId);
 
-            ValidateStorageScoreExists(maybeScore, id);
+            ValidateStorageScoreExists(maybeScore, scoreId);
 
             return maybeScore;
         });

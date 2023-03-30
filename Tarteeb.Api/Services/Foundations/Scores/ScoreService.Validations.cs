@@ -5,27 +5,30 @@
 
 using System;
 using Tarteeb.Api.Models.Foundations.Scores;
-using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
+using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
-        private void ValidateScoreId(Guid scoreId) =>
-            Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
-
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,
-            Message = "Id is required."
+            Message = "Id is required"
         };
-        private static void ValidateStorageScore(Score maybeScore, Guid id)
+
+        private static void ValidateStorageScoreExist(Score maybeScore, Guid scoreId)
         {
             if (maybeScore is null)
             {
-                throw new NotFoundScoreException(id);
+                throw new NotFoundScoreException(scoreId);
             }
         }
+
+
+
+        private void ValidateScoreId(Guid scoreId) =>
+            Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

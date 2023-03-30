@@ -21,19 +21,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
     public partial class ScoreServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
-
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IScoreService scoreService;
+
         public ScoreServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.scoreService = new ScoreService(
-                storageBroker: storageBrokerMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                this.storageBrokerMock.Object,
+                this.dateTimeBrokerMock.Object,
+                this.loggingBrokerMock.Object);
         }
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

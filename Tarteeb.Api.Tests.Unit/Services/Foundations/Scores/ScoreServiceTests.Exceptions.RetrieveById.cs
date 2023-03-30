@@ -9,7 +9,7 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
-using Tarteeb.Api.Models.Foundations.Scores.Exceptionis;
+using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores

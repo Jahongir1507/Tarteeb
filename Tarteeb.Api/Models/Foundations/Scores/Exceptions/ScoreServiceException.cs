@@ -6,7 +6,7 @@
 using System;
 using Xeptions;
 
-namespace Tarteeb.Api.Models.Foundations.Scores.Exceptionis
+namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
 {
     public class ScoreServiceException : Xeption
     {

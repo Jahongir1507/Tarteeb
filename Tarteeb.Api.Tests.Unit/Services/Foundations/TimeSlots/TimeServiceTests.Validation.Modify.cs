@@ -165,14 +165,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 .BeEquivalentTo(expectedTimeValidationException);
 
             this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTime(), Times.Never());
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
-                broker.SelectTimeByIdAsync(invalidTime.Id), Times.Never());
+                broker.SelectTimeByIdAsync(invalidTime.Id), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

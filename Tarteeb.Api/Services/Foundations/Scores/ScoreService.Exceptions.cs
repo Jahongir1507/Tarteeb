@@ -5,39 +5,40 @@
 
 using System;
 using System.Threading.Tasks;
-using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Scores;
-using Xeptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models.Foundations.Scores;
+using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
-        private delegate ValueTask<Score> ReturningScoresFunction();
+        private delegate ValueTask<Score> ReturningScoreFuncion();
 
-        private async ValueTask<Score> TryCatch(ReturningScoresFunction returningTeamFunction)
+        private async ValueTask<Score> TryCatch(ReturningScoreFuncion returningScoreFuncion)
         {
             try
             {
-                return await returningTeamFunction();
+                return await returningScoreFuncion();
             }
             catch (InvalidScoreException invalidScoreException)
             {
                 throw CreateAndLogValidationException(invalidScoreException);
             }
-            catch(NotFoundScoreException notFoundScoreException)
+            catch (NotFoundScoreException notFoundScoreException)
             {
                 throw CreateAndLogValidationException(notFoundScoreException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
-                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
+                var failedScoreStorageException =
+                    new FailedScoreStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
-            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedScoreException = new LockedScoreException(dbUpdateConcurrencyException);
 
@@ -45,42 +46,44 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             }
             catch (Exception serviceException)
             {
-                var failedScoreException = new FailedScoreServiceException(serviceException);
+                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
 
-                throw CreateAndLogServiceException(failedScoreException);
+                throw CreateAndLogServiceException(failedScoreServiceException);
             }
         }
 
-        private ScoreServiceException CreateAndLogServiceException(Exception exception)
+        private ScoreValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var scoreServiceException = new ScoreServiceException(exception);
-            this.loggingBroker.LogError(scoreServiceException);
+            var scoreValidationException =
+                new ScoreValidationException(exception);
 
-            return scoreServiceException;
+            this.loggingBroker.LogError(scoreValidationException);
+
+            return scoreValidationException;
         }
 
-        private Exception CreateAndLogCriticalDependencyException(FailedScoreStorageException failedScoreStorageException)
+        private ScoreDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
-            var scoreDependencyException = new ScoreDependencyException(failedScoreStorageException);
+            var scoreDependencyException = new ScoreDependencyException(exeption);
             this.loggingBroker.LogCritical(scoreDependencyException);
 
             return scoreDependencyException;
         }
 
-        private Exception CreateAndLogDependencyValidationException(LockedScoreException lockedScoreException)
+        private ScoreDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var scoreDependencyValidationException = new ScoreDependencyValidationException(lockedScoreException);
+            var scoreDependencyValidationException = new ScoreDependencyValidationException(exception);
             this.loggingBroker.LogError(scoreDependencyValidationException);
 
             return scoreDependencyValidationException;
         }
 
-        private ScoreValidationException CreateAndLogValidationException(Xeption exception)
+        private ScoreServiceException CreateAndLogServiceException(Xeption exception)
         {
-            var scoreValidationExpcetion = new ScoreValidationException(exception);
-            this.loggingBroker.LogError(scoreValidationExpcetion);
+            var scoreServiceException = new ScoreServiceException(exception);
+            this.loggingBroker.LogError(scoreServiceException);
 
-            return scoreValidationExpcetion;
+            return scoreServiceException;
         }
     }
 }

@@ -16,36 +16,35 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
     public partial class ScoreServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRemoveIfIdIsInvalidAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
         {
-            //given
+            // given
             Guid invalidScoreId = Guid.Empty;
             var invalidScoreException = new InvalidScoreException();
 
             invalidScoreException.AddData(
                 key: nameof(Score.Id),
-                values: "Id is required");
+                values: "Id is required.");
 
-            var expectedScoreValidationException =
-                new ScoreValidationException(invalidScoreException);
+            var expectedValidationScoreException = new
+                ScoreValidationException(invalidScoreException);
 
-            //when
-            ValueTask<Score> removeScoreByIdTask =
-                this.scoreService.RemoveScoreByIdAsync(invalidScoreId);
+            // when 
+            ValueTask<Score> retrieveScoreByIdAsync =
+                this.scoreService.RetrieveScoreByIdAsync(invalidScoreId);
 
             ScoreValidationException actualScoreValidationException =
-                await Assert.ThrowsAsync<ScoreValidationException>(
-                    removeScoreByIdTask.AsTask);
+                await Assert.ThrowsAsync<ScoreValidationException>(retrieveScoreByIdAsync.AsTask);
 
-            //then
-            actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
+            // then 
+            actualScoreValidationException.Should().BeEquivalentTo(expectedValidationScoreException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedScoreValidationException))), Times.Once);
+                    expectedValidationScoreException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.DeleteScoreAsync(It.IsAny<Score>()), Times.Never);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -53,42 +52,39 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         }
 
         [Fact]
-        public async Task ShouldThrowNotFoundExceptionOnRemoveIfScoreIsNotFoundAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfScoreIsNotFoundAndLogItAsync()
         {
-            //given
-            Guid randomId = Guid.NewGuid();
-            Guid inputScoreId = randomId;
+            // given
+            Guid someScoreId = Guid.NewGuid();
             Score noScore = null;
 
             var notFoundScoreException =
-                new NotFoundScoreException(inputScoreId);
+                new NotFoundScoreException(someScoreId);
 
             var expectedScoreValidationException =
                 new ScoreValidationException(notFoundScoreException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectScoreByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noScore);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noScore);
 
-            //when
-            ValueTask<Score> removeScoreByIdTask =
-                this.scoreService.RemoveScoreByIdAsync(inputScoreId);
+            // when
+            ValueTask<Score> retrieveScoreByIdTask =
+                this.scoreService.RetrieveScoreByIdAsync(someScoreId);
 
             ScoreValidationException actualScoreValidationException =
                 await Assert.ThrowsAsync<ScoreValidationException>(
-                    removeScoreByIdTask.AsTask);
+                    retrieveScoreByIdTask.AsTask);
 
-            //then
+            // then
             actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedScoreValidationException))), Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.DeleteScoreAsync(It.IsAny<Score>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -37,16 +37,16 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 this.loggingBrokerMock.Object);
         }
 
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
-
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-            actualException => actualException.SameExceptionAs(expectedExceptoin);
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private static Score CreatRandomScore() =>
+        private static Score CreateRandomScore() =>
             CreateScoreFiller(GetRandomDateTime()).Create();
 
         private static Filler<Score> CreateScoreFiller(DateTimeOffset dates)

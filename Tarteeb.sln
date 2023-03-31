@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tarteeb.Api", "Tarteeb.Api\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tarteeb.Api.Infrastructure.Build", "Tarteeb.Api.Infrastructure.Build\Tarteeb.Api.Infrastructure.Build.csproj", "{DF3F7A6B-D6B0-4BC5-8567-AD7009146848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tarteeb.Api.Tests.Unit", "Tarteeb.Api.Tests.Unit\Tarteeb.Api.Tests.Unit.csproj", "{3498A3E3-475F-4442-9B9F-60C572DC9B67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tarteeb.Api.Tests.Unit", "Tarteeb.Api.Tests.Unit\Tarteeb.Api.Tests.Unit.csproj", "{3498A3E3-475F-4442-9B9F-60C572DC9B67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

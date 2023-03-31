@@ -5,11 +5,11 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xunit;
-using FluentAssertions;
-using Force.DeepCloner;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -21,7 +21,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             //given
             Guid randomId = Guid.NewGuid();
             Guid inputScoreId = randomId;
-            Score randomScore = CreatRandomScore();
+            Score randomScore = CreateRandomScore();
             Score storageScore = randomScore;
             Score expectedInputScore = storageScore;
             Score deletedScore = expectedInputScore;

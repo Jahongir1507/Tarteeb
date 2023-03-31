@@ -3,14 +3,16 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
-    public class TimeDependencyException : Xeption
+    public class FailedTimeServiceException : Xeption
     {
-        public TimeDependencyException(Xeption innerException)
-            : base(message: "Time dependency error occurred, contact support.", innerException)
+        public FailedTimeServiceException(Exception innerException)
+            : base(message: "Failed time service error occurred, please contact support.",
+                innerException)
         {}
     }
 }

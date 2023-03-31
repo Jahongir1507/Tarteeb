@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
+using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots

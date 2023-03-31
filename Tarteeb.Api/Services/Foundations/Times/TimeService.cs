@@ -11,7 +11,7 @@ using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {
-    public class TimeService : ITimeService
+    public partial class TimeService : ITimeService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -28,10 +28,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.loggingBroker = loggingBroker;
         }
 
-        public TimeService(IStorageBroker storageBroker) =>
-            this.storageBroker = storageBroker;
-
         public IQueryable<Time> RetrieveAllTimes() =>
-           this.storageBroker.SelectAllTimes();
+            TryCatch(() => this.storageBroker.SelectAllTimes());
     }
 }

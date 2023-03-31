@@ -29,16 +29,16 @@ namespace Tarteeb.Api.Services.Foundations.Times
         }
 
         public ValueTask<Time> RemoveTimeByIdAsync(Guid timeId) =>
-            TryCatch(async () =>
-            {
-                ValidateTimeId(timeId);
+        TryCatch(async () =>
+        {
+            ValidateTimeId(timeId);
 
-                Time maybeTime =
-                    await this.storageBroker.SelectTimeByIdAsync(timeId);
+            Time maybeTime =
+                await this.storageBroker.SelectTimeByIdAsync(timeId);
 
-                ValidateStorageTimeExists(maybeTime, timeId);
+            ValidateStorageTimeExists(maybeTime, timeId);
 
-                return await this.storageBroker.DeleteTimeAsync(maybeTime);
-            });
+            return await this.storageBroker.DeleteTimeAsync(maybeTime);
+        });
     }
 }

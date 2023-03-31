@@ -31,6 +31,12 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedTimeServiceException = new FailedTimeServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTimeServiceException);
+            }
         }
 
         private TimeDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -39,6 +45,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
             this.loggingBroker.LogCritical(timeDependencyException);
 
             return timeDependencyException;
+        }
+
+        private TimeServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var timeServiceException = new TimeServiceException(exception);
+            this.loggingBroker.LogError(timeServiceException);
+
+            return timeServiceException;
         }
     }
 }

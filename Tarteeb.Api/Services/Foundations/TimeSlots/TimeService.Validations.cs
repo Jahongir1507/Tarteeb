@@ -75,7 +75,7 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
 
         private void ValidateAgainstStorageTimeOnModify(Time inputTime, Time storageTime)
         {
-            ValidateStorageTime(storageTime, inputTime.Id);
+            ValidateStorageTimeExists(storageTime, inputTime.Id);
 
             Validate(
                 (Rule: IsNotSame(
@@ -91,11 +91,11 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
                 Parameter: nameof(Time.UpdatedDate)));
         }
 
-        private void ValidateStorageTime(Time maybeTime, Guid TimeId)
+        private void ValidateStorageTimeExists(Time maybeTime, Guid TimeId)
         {
             if (maybeTime is null)
             {
-                throw new NotFoundTimeException(maybeTime.Id);
+                throw new NotFoundTimeException(TimeId);
             }
         }
 

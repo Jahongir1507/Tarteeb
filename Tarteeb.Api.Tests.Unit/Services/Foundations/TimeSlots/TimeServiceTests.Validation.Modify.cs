@@ -239,7 +239,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             Time nonExistTime = randomTime;
             Time nullTime = null;
 
-            nonExistTime.UpdatedDate = 
+            nonExistTime.CreatedDate = 
                 randomDateTime.AddMinutes(randomMinutes);
 
             var notFoundTimeException = 

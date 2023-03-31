@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using PostmarkDotNet;
@@ -21,10 +20,10 @@ namespace Tarteeb.Api.Brokers.Emails
             string userEmail, string messageHtmlBody)
         {
             string apiKey = 
-                this.Configuration.GetSection("Postmark").GetValue<string>("ApiKey");
+                this.Configuration.GetValue<string>("Postmark:ApiKey");
 
             string senderSignature = 
-                this.Configuration.GetSection("Postmark").GetValue<string>("SenderSignature");
+                this.Configuration.GetValue<string>("Postmark:SenderSignature");
 
             var client = new PostmarkClient(apiKey);
 

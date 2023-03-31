@@ -34,6 +34,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.SelectAllTimes(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

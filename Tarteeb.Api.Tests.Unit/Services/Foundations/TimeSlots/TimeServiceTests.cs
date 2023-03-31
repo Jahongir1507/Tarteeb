@@ -13,7 +13,6 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Times;
-using Tarteeb.Api.Services.Foundations.Tickets;
 using Tarteeb.Api.Services.Foundations.Times;
 using Tynamix.ObjectFiller;
 using Xeptions;

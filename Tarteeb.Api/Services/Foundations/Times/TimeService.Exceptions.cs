@@ -5,13 +5,10 @@
 
 using System;
 using System.Linq;
-using EFxceptions.Models.Exceptions;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Times;
-using Xeptions;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
+using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {

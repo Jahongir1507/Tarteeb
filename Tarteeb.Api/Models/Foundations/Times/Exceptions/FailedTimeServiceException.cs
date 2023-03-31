@@ -13,6 +13,6 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
         public FailedTimeServiceException(Exception innerException)
             : base(message: "Failed time service error occurred, please contact support.",
                 innerException)
-        {}
+        { }
     }
 }

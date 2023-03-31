@@ -298,7 +298,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             invalidTimeException.AddData(
                 key: nameof(Time.CreatedDate),
-                values: $"Date is not same as{nameof(Time.CreatedDate)}");
+                values: $"Date is not the same as {nameof(Time.CreatedDate)}");
 
             var expectedTimeValidationException =
                 new TimeValidationException(invalidTimeException);

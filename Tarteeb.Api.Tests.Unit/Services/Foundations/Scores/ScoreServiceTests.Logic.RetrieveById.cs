@@ -38,6 +38,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(inputScoreId), Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

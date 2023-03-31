@@ -43,13 +43,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private DateTimeOffset GetRandomDateTime() =>
+        private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private Score CreateRandomScore() =>
+        private static Score CreateRandomScore() =>
             CreateScoreFiller(GetRandomDateTime()).Create();
 
-        private Filler<Score> CreateScoreFiller(DateTimeOffset dates)
+        private static Filler<Score> CreateScoreFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Score>();
 

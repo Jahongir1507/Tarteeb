@@ -78,7 +78,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             return scoreDependencyValidationException;
         }
 
-        private ScoreServiceException CreateAndLogServiceException(Exception exception)
+        private ScoreServiceException CreateAndLogServiceException(Xeption exception)
         {
             var scoreServiceException = new ScoreServiceException(exception);
             this.loggingBroker.LogError(scoreServiceException);

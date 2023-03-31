@@ -27,11 +27,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             var expectedTimeValidationException =
                 new TimeValidationException(nullTimeException);
 
-            // whe
+            // when
             ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(nullTime);
 
-            var actualTimeValidationException =
+            TimeValidationException actualTimeValidationException =
                  await Assert.ThrowsAsync<TimeValidationException>(modifyTimeTask.AsTask);
 
             // then
@@ -123,7 +123,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedTimeValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                  broker.UpdateTimeAsync(It.IsAny<Time>()), Times.Never);
@@ -156,7 +157,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(invalidTime);
 
-            var actualTimeValidationException =
+            TimeValidationException actualTimeValidationException =
                 await Assert.ThrowsAsync<TimeValidationException>(
                     modifyTimeTask.AsTask);
 
@@ -204,7 +205,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(inputTime);
 
-            var actualTimeValidationException =
+            TimeValidationException actualTimeValidationException =
                await Assert.ThrowsAsync<TimeValidationException>(
                    modifyTimeTask.AsTask);
 
@@ -257,7 +258,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(nonExistTime);
 
-            var actualTimeValidationException =
+            TimeValidationException actualTimeValidationException =
                 await Assert.ThrowsAsync<TimeValidationException>(
                     modifyTimeTask.AsTask);
 
@@ -349,7 +350,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 key: nameof(Time.UpdatedDate),
                 values: $"Date is the same as {nameof(Time.UpdatedDate)}");
 
-            var expectedTimeValidationException = 
+            var expectedTimeValidationException =
                 new TimeValidationException(invalidTimeException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -360,10 +361,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when
-            ValueTask<Time> modifyTimeTask = 
+            ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(invalidTime);
 
-            var actualTimeValidationException =
+            TimeValidationException actualTimeValidationException =
                 await Assert.ThrowsAsync<TimeValidationException>(
                     modifyTimeTask.AsTask);
 
@@ -378,7 +379,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(invalidTime.Id), Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

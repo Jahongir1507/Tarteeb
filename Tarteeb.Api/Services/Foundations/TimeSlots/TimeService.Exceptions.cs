@@ -57,5 +57,13 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
 
             return timeValidationException;
         }
+
+        private TimeDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var timeDependencyException = new TimeDependencyException(exception);
+            this.loggingBroker.LogCritical(timeDependencyException);
+
+            return timeDependencyException;
+        }
     }
 }

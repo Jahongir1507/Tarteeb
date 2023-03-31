@@ -339,9 +339,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         {
             // given
             DateTimeOffset randomDateTime = GetRandomDateTime();
-            Time randomTime = CreateRandomTime(randomDateTime);
+            Time randomTime = CreateRandomModifyTime(randomDateTime);
             Time invalidTime = randomTime;
-            Time storageTime = invalidTime.DeepClone();
+            Time storageTime = randomTime.DeepClone();
             invalidTime.UpdatedDate = storageTime.UpdatedDate;
             var invalidTimeException = new InvalidTimeException();
 

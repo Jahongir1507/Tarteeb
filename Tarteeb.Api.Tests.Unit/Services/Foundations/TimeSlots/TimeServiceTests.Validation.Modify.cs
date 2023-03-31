@@ -228,5 +228,58 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfTimeDoesNotExistAndLogItAsync()
+        {
+            // given
+            int randomMinutes = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Time randomTime = CreateRandomTime(randomDateTime);
+            Time nonExistTime = randomTime;
+            Time nullTime = null;
+
+            nonExistTime.UpdatedDate = 
+                randomDateTime.AddMinutes(randomMinutes);
+
+            var notFoundTimeException = 
+                new NotFoundTimeException(nonExistTime.Id);
+
+            var expectedTimeValidationException = 
+                new TimeValidationException(notFoundTimeException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTimeByIdAsync(nonExistTime.Id))
+                    .ReturnsAsync(nullTime);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Time> modifyTimeTask =
+                this.timeService.ModifyTimeAsync(nonExistTime);
+
+            var actualTimeValidationException =
+                await Assert.ThrowsAsync<TimeValidationException>(
+                    modifyTimeTask.AsTask);
+
+            // then
+            actualTimeValidationException.Should()
+                .BeEquivalentTo(expectedTimeValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTimeByIdAsync(nonExistTime.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

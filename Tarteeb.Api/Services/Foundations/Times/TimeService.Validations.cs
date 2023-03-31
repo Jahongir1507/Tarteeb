@@ -4,8 +4,6 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 
@@ -14,7 +12,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
     public partial class TimeService
     {
         private void ValidateTimeId(Guid timeId) =>
-            Validate((IsInvalid(timeId), nameof(Time.Id)));
+            Validate((Rule: IsInvalid(timeId), Parameter: nameof(Time.Id)));
 
         private static dynamic IsInvalid(Guid id) => new
         {

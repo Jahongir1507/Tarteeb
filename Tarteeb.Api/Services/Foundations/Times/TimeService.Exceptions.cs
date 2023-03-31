@@ -35,7 +35,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
 
-                throw CreateAndDependencyValidationException(lockedTimeException);
+                throw CreateAndLogDependencyValidationException(lockedTimeException);
             }
             catch (SqlException sqlException)
             {
@@ -53,7 +53,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
         }
 
         private TimeServiceException CreateAndLogServiceException(
-            Exception exception)
+            Xeption exception)
         {
             var timeServiceException = new TimeServiceException(exception);
             this.loggingBroker.LogError(timeServiceException);
@@ -80,6 +80,17 @@ namespace Tarteeb.Api.Services.Foundations.Times
         private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var timeDependencyValidationException = new TimeDependencyValidationException(exception);
+            this.loggingBroker.LogError(timeDependencyValidationException);
+
+            return timeDependencyValidationException;
+        }
+
+        private TimeDependencyValidationException CreateAndLogDependencyValidationException(
+        Xeption exception)
+        {
+            var timeDependencyValidationException =
+                new TimeDependencyValidationException(exception);
+
             this.loggingBroker.LogError(timeDependencyValidationException);
 
             return timeDependencyValidationException;

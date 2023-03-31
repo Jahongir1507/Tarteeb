@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Times;

@@ -51,5 +51,41 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+            var failedTimeServiceException = new FailedTimeServiceException(serviceException);
+
+            var expectedTimeServiceException =
+                new TimeServiceException(failedTimeServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllTimes()).Throws(serviceException);
+
+            // when
+            Action retrieveAllTimeAction = () =>
+                this.timeService.RetrieveAllTimes();
+
+            TimeServiceException actualTimeServiceException =
+                Assert.Throws<TimeServiceException>(retrieveAllTimeAction);
+
+            // then
+            actualTimeServiceException.Should().BeEquivalentTo(expectedTimeServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTimes(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -30,5 +30,18 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
         public ValueTask<Score> ModifyScoreAsync(Score score) =>
             throw new NotImplementedException();
+
+        public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
+        TryCatch(async () =>
+        {
+            ValidateScoreId(scoreId);
+
+            Score maybeScore =
+                await this.storageBroker.SelectScoreByIdAsync(scoreId);
+
+            ValidateStorageScoreExist(maybeScore, scoreId);
+
+            return await this.storageBroker.DeleteScoreAsync(maybeScore);
+        });
     }
 }

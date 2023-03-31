@@ -4,6 +4,9 @@
 //=================================
 
 using System;
+using Microsoft.Data.SqlClient;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -11,6 +14,7 @@ using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -34,6 +38,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         }
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static Score CreatRandomScore() =>
+            CreateScoreFiller(GetRandomDateTime()).Create();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
+
+        private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static Score CreateRandomScore(DateTimeOffset dateTimeOffset) =>

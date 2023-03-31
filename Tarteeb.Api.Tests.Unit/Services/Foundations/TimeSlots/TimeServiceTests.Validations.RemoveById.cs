@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Tarteeb.Api.Models.Foundations.Teams;
 using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
@@ -49,9 +50,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTimeAsync(It.IsAny<Time>()), Times.Never);
 
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 new TimeValidationException(notFoundTimeException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectTimeByIdAsync(inputTimeId)).ReturnsAsync(noTime);
+                broker.SelectTimeByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTime);
 
             // when
             ValueTask<Time> removeTimeByIdTask = 
@@ -88,6 +89,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteTimeAsync(It.IsAny<Time>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

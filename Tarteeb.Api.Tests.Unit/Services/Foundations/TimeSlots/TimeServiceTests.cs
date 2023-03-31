@@ -44,13 +44,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
             actualException => actualException.SameExceptionAs(expectedExceptoin);
 
-        private DateTimeOffset GetRandomDateTimeOffset() =>
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private Time CreateRandomTime() =>
+        private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
 
-        private Filler<Time> CreateTimeFiller(DateTimeOffset dates)
+        private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Time>();
 

@@ -3,11 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
@@ -57,8 +58,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.DeleteTimeAsync(It.IsAny<Time>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -66,7 +67,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         {
             // given
             Guid someTimeId = Guid.NewGuid();
-            var sqlException = CreateSqlException();
+            SqlException sqlException = CreateSqlException();
 
             var failedTimeStorageException =
                 new FailedTimeStorageException(sqlException);
@@ -79,7 +80,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                     .ThrowsAsync(sqlException);
 
             // when
-            ValueTask<Time> removeTimeByIdTask = 
+            ValueTask<Time> removeTimeByIdTask =
                 this.timeService.RemoveTimeByIdAsync(someTimeId);
 
             TimeDependencyException actualTimeDependencyException =
@@ -91,7 +92,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 .BeEquivalentTo(expectedTimeDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTimeByIdAsync(someTimeId), Times.Once);
+                broker.SelectTimeByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
@@ -120,7 +121,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                     .ThrowsAsync(serviceException);
 
             // when
-            ValueTask<Time> removeTimeByIdTask = 
+            ValueTask<Time> removeTimeByIdTask =
                 this.timeService.RemoveTimeByIdAsync(someTimeId);
 
             TimeServiceException actualTimeServiceException =
@@ -139,8 +140,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                     expectedTimeServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

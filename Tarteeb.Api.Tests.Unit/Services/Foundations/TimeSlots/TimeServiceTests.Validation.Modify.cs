@@ -219,7 +219,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTimeValidationException))), Times.Never);
+                    expectedTimeValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(It.IsAny<Guid>()),Times.Never);

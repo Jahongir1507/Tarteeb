@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
                 (Rule: IsInvalid(time.UserId), nameof(Time.UserId)),
                 (Rule: IsInvalid(time.TicketId), nameof(Time.TicketId)),
                 (Rule: IsInvalid(time.CreatedDate), nameof(Time.CreatedDate)),
-                (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),             
+                (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),
                 (Rule: IsInvalid(time.Ticket), nameof(Time.Ticket)),
                 (Rule: IsInvalid(time.User), nameof(Time.User)),
                 (Rule: IsNotRecent(time.UpdatedDate), nameof(Time.UpdatedDate)),

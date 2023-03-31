@@ -9,7 +9,6 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Tickets;
-using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
 using Xunit;

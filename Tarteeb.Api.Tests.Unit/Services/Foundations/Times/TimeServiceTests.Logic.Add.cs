@@ -37,8 +37,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             //then
             actualTime.Should().BeEquivalentTo(expectedTime);
 
-            this.dateTimeBrokerMock.Verify(broker=>
-                broker.GetCurrentDateTime(), Times.Once);   
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTimeAsync(inputTime), Times.Once);

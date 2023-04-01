@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
@@ -27,7 +26,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 return await returningTimeFunction();
             }
-            catch(NullTimeException nullTimeException)
+            catch (NullTimeException nullTimeException)
             {
                 throw CreateAndLogValidationException(nullTimeException);
             }
@@ -53,7 +52,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndDependencyValidationException(failedTimeDependencyValidationException);
             }
-            catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
             {
                 var invalidTimeReferenceException = new InvalidTimeReferenceException(foreignKeyConstraintConflictException);
 
@@ -65,6 +64,12 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndLogDependencyValidationException(lockedTimeException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedTimeStorageException = new FailedTimeStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedTimeStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedTimeServiceException = new FailedTimeServiceException(serviceException);
@@ -73,12 +78,20 @@ namespace Tarteeb.Api.Services.Foundations.Times
             }
         }
 
+        private TimeDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var timeDependencyException = new TimeDependencyException(exception);
+            this.loggingBroker.LogError(timeDependencyException);
+
+            return timeDependencyException;
+        }
+
         private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
-            var timeDepedencyValitionException= new TimeDependencyValidationException(exception);   
-            this.loggingBroker.LogError(timeDepedencyValitionException);
+            var timeDependencyValidationException = new TimeDependencyValidationException(exception);
+            this.loggingBroker.LogError(timeDependencyValidationException);
 
-            return timeDepedencyValitionException;
+            return timeDependencyValidationException;
         }
 
         private IQueryable<Time> TryCatch(ReturningTimesFunction returningTimesFunction)
@@ -111,10 +124,10 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
         private TimeDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var timeDependecyException = new TimeDependencyException(exception);
-            this.loggingBroker.LogCritical(timeDependecyException);
+            var timeDependencyException = new TimeDependencyException(exception);
+            this.loggingBroker.LogCritical(timeDependencyException);
 
-            return timeDependecyException;
+            return timeDependencyException;
         }
 
         private TimeDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)

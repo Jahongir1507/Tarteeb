@@ -10,7 +10,7 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
     public class TimeDependencyValidationException : Xeption
     {
         public TimeDependencyValidationException(Xeption innerException)
-            : base(message: "Time dependency validation error occurred, fix the errors and try again.",
+             : base(message: "Time dependency validation error occurred, fix the errors and try again.",
                 innerException)
         { }
     }

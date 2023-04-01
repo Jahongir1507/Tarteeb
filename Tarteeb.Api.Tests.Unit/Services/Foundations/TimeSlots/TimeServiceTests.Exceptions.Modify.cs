@@ -127,10 +127,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             Guid TimeId = someTime.Id;
             var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
-            var lockedTimeException = 
-                new LockedTeamException(databaseUpdateConcurrencyException);
+            var lockedTimeException =
+                new LockedTimeException(databaseUpdateConcurrencyException);
 
-            var expectedTimeDependencyValidationException = 
+            var expectedTimeDependencyValidationException =
                 new TimeDependencyValidationException(lockedTimeException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -150,7 +150,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             actualTimeDependencyValidationException.Should().
                 BeEquivalentTo(expectedTimeDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(TimeId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>

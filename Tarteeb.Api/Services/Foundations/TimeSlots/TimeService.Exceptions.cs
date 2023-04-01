@@ -42,6 +42,12 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTimeException);
+            }
             catch (DbUpdateException dbUpdateException)
             {
                 var failedTimeStorageException = new FailedTimeStorageException(dbUpdateException);
@@ -86,6 +92,14 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
             this.loggingBroker.LogCritical(timeDependencyException);
 
             return timeDependencyException;
+        }
+
+        private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var timeDependencyValidationException = new TimeDependencyValidationException(exception);
+            this.loggingBroker.LogError(timeDependencyValidationException);
+
+            return timeDependencyValidationException;
         }
     }
 }

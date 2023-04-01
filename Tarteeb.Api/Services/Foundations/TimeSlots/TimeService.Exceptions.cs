@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
 using Xeptions;

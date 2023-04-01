@@ -175,10 +175,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             someTime.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
             var serviceException = new Exception();
 
-            var failedTimeException = 
+            var failedTimeException =
                 new FailedTimeServiceException(serviceException);
 
-            var expectedTimeServiceException = 
+            var expectedTimeServiceException =
                 new TimeServiceException(failedTimeException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -189,10 +189,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             // when 
-            ValueTask<Time> modifyTimeTask = 
+            ValueTask<Time> modifyTimeTask =
                 this.timeService.ModifyTimeAsync(someTime);
 
-            TimeServiceException actualTimeServiceException = 
+            TimeServiceException actualTimeServiceException =
                 await Assert.ThrowsAsync<TimeServiceException>(
                     modifyTimeTask.AsTask);
 

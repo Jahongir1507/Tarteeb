@@ -10,8 +10,8 @@ namespace Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions
 {
     public class FailedTimeStorageException : Xeption
     {
-      public FailedTimeStorageException(Exception innerException) 
-          : base(message: "Failed time storage error occurred, contact support.", innerException)
+        public FailedTimeStorageException(Exception innerException)
+            : base(message: "Failed time storage error occurred, contact support.", innerException)
         { }
     }
 }

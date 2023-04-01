@@ -41,14 +41,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                     .ReturnsAsync(updatedScore);
 
             // when
-            Score actualScoreTask =
+            Score actualScore =
                  await this.scoreService.ModifyScoreAsync(inputScore);
 
             // then
-            actualScoreTask.Should().BeEquivalentTo(expectedScore);
+            actualScore.Should().BeEquivalentTo(expectedScore);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectScoreByIdAsync(inputScoreId), Times.Once);

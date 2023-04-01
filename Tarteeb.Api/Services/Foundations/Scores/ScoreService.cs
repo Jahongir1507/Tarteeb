@@ -28,8 +28,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Score> ModifyScoreAsync(Score score) =>
-            throw new NotImplementedException();
+        public async ValueTask<Score> ModifyScoreAsync(Score score)
+        {
+            Score maybeScore =
+                await this.storageBroker.SelectScoreByIdAsync(score.Id);
+
+            return await this.storageBroker.UpdateScoreAsync(maybeScore);
+        }
 
         public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>

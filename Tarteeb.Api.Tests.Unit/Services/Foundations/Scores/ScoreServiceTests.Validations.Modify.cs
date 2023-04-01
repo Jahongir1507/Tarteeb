@@ -13,7 +13,6 @@ using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Xunit;
 using FluentAssertions;
-using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -96,7 +95,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                values: "Date is required");
 
             invalidScoreException.AddData(
-                key: nameof(Ticket.UpdatedDate),
+                key: nameof(Score.UpdatedDate),
                  "Date is required",
                 "Date is not recent",
                 $"Date is the same as {nameof(Score.CreatedDate)}");
@@ -224,6 +223,59 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfScoreDoesNotExistAndLogItAsync()
+        {
+            // given
+            int randomMinutes = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Score randomScore = CreateRandomScore(randomDateTime);
+            Score nonExistScore = randomScore;
+            Score nullScore = null;
+
+            nonExistScore.UpdatedDate =
+                randomDateTime.AddMinutes(randomMinutes);
+
+            var notFoundScoreException =
+                new NotFoundScoreException(nonExistScore.Id);
+
+            var expectedScoreValidationException =
+                new ScoreValidationException(notFoundScoreException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(nonExistScore.Id))
+                    .ReturnsAsync(nullScore);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Score> modifyScoreTask =
+                this.scoreService.ModifyScoreAsync(nonExistScore);
+
+            var actualScoreValidationException =
+                await Assert.ThrowsAsync<ScoreValidationException>(
+                    modifyScoreTask.AsTask);
+
+            // then
+            actualScoreValidationException.Should()
+                .BeEquivalentTo(expectedScoreValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(nonExistScore.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

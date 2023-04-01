@@ -107,6 +107,11 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             }
         }
 
+        private static void ValidateAgainstStorageScoreOnModify(Score inputScore, Score storageScore)
+        {
+            ValidateStorageScoreExists(storageScore, inputScore.Id);
+        }
+
         private void ValidateScoreId(Guid scoreId) =>
             Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 

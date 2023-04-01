@@ -37,6 +37,8 @@ namespace Tarteeb.Api.Services.Foundations.Scores
              Score maybeScore =
              await this.storageBroker.SelectScoreByIdAsync(score.Id);
 
+             ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
+
              return await this.storageBroker.UpdateScoreAsync(score);
          });
 

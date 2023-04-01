@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Brokers.Storages
         public DbSet<Time> Times { get; set; }
 
         public async ValueTask<Time> InsertTimeAsync(Time time) =>
-            await InsertTimeAsync(time);
+            await InsertAsync(time);
 
         public async ValueTask<Time> SelectTimeByIdAsync(Guid id) =>
             await SelectAsync<Time>(id);

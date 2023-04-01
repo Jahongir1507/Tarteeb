@@ -17,9 +17,11 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Brokers.Tokens;
+using Tarteeb.Api.Services.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Tarteeb.Api.Services.Foundations.Times;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
 using Tarteeb.Api.Services.Processings.Users;
@@ -87,7 +89,10 @@ namespace Tarteeb.Api
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<IScoreService, ScoreService>();
+            services.AddTransient<ITimeService, TimeService>();
         }
 
         private static void AddProcessingServices(IServiceCollection services) =>

@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -22,8 +23,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
     public partial class TimeServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITimeService timeService;
 
         public TimeServiceTests()
@@ -31,6 +32,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+
 
             this.timeService = new TimeService(
                 storageBroker: this.storageBrokerMock.Object,
@@ -80,6 +82,39 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 secondsInFuture
             };
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static DateTimeOffset GetRandomDateTime() =>
+           new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private IQueryable<Time> CreateRandomTimes()
+        {
+            return CreateTimeFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
+        private static int GetRandomNumber() =>
+             new IntRange(min: 2, max: 99).GetValue();
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
+        private static Time CreateRandomTime() =>
+            CreateTimeFiller(GetRandomDateTimeOffset()).Create();
+
+        private static Time CreateRandomTime(DateTimeOffset dates) =>
+          CreateTimeFiller(dates).Create();
+
+        private static string GetRandomMessage() =>
+           new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {

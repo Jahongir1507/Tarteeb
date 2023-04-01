@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 /Tarteeb.Api/appsettings.Development.json
 /Tarteeb.Api/appsettings.Development.json
+/Tarteeb.Api/Services/Foundations/Times/TimeService.Validation.cs

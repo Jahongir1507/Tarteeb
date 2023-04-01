@@ -46,7 +46,9 @@ namespace Tarteeb.Api.Services.Processings.Users
 
         private UserProcessingDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var userProcessingDependencyException = new UserProcessingDependencyException(exception);
+            var userProcessingDependencyException =
+                new UserProcessingDependencyException(exception.InnerException as Xeption);
+
             this.loggingBroker.LogError(userProcessingDependencyException);
 
             return userProcessingDependencyException;

@@ -14,11 +14,13 @@ namespace Tarteeb.Api.Models.Foundations.Times
         public Guid Id { get; set; }
         public decimal HoursWorked { get; set; }
         public string Comment { get; set; }
-        public Guid UserId { get; set; }
-        public Guid TicketId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public Guid TicketId { get; set; }
         public Ticket Ticket { get; set; }
+
+        public Guid UserId { get; set; }
         public User User { get; set; }
     }
 }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -117,7 +122,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedScoreValidationException))), Times.Once);
+                broker.LogError(It.Is(SameExceptionAs
+                    (expectedScoreValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                  broker.UpdateScoreAsync(It.IsAny<Score>()), Times.Never);

@@ -44,8 +44,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 await Assert.ThrowsAsync<TimeDependencyException>(modifyTimeTask.AsTask);
 
             // then
-            actualTimeDependencyException.Should().
-                BeEquivalentTo(expectedTimeDependencyException);
+            actualTimeDependencyException.Should()
+                 .BeEquivalentTo(expectedTimeDependencyException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
@@ -96,8 +96,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 await Assert.ThrowsAsync<TimeDependencyException>(modifyTimeTask.AsTask);
 
             // then
-            actualTimeDependencyException.Should().
-                BeEquivalentTo(expectedTimeDependencyException);
+            actualTimeDependencyException.Should()
+                 .BeEquivalentTo(expectedTimeDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(TimeId), Times.Once());
@@ -146,8 +146,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 await Assert.ThrowsAsync<TimeDependencyValidationException>(modifyTimeTask.AsTask);
 
             // then 
-            actualTimeDependencyValidationException.Should().
-                BeEquivalentTo(expectedTimeDependencyValidationException);
+            actualTimeDependencyValidationException.Should()
+                 .BeEquivalentTo(expectedTimeDependencyValidationException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(TimeId), Times.Once);
@@ -197,8 +197,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                     modifyTimeTask.AsTask);
 
             // then
-            actualTimeServiceException.Should().
-                BeEquivalentTo(expectedTimeServiceException);
+            actualTimeServiceException.Should()
+                 .BeEquivalentTo(expectedTimeServiceException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                broker.GetCurrentDateTime(), Times.Once());

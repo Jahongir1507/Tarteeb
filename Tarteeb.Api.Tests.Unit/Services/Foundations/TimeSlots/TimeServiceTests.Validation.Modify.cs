@@ -121,9 +121,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                  broker.UpdateTimeAsync(It.IsAny<Time>()), Times.Never);
 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -167,9 +167,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(invalidTime.Id), Times.Never);
 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -215,9 +215,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(It.IsAny<Guid>()), Times.Never);
 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -374,9 +374,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(invalidTime.Id), Times.Once);
 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

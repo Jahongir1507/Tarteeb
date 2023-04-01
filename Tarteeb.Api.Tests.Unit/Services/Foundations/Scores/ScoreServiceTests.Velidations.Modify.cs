@@ -132,5 +132,50 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given 
+            DateTimeOffset randomDateScore = GetRandomDateTime();
+            Score randomScore = CreateRandomScore(randomDateScore);
+            Score invalidScore = randomScore;
+            var invalidScoreException = new InvalidScoreException();
+
+            invalidScoreException.AddData(
+                key: nameof(Score.UpdatedDate),
+                values: $"Date is the same as {nameof(Score.CreatedDate)}");
+
+            var expectedScoreValidationException =
+                new ScoreValidationException(invalidScoreException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateScore);
+
+            // when
+            ValueTask<Score> modifyScoreTask =
+                this.scoreService.ModifyScoreAsync(invalidScore);
+
+            ScoreValidationException actualScoreValidationException =
+                await Assert.ThrowsAsync<ScoreValidationException>(modifyScoreTask.AsTask);
+
+            // then
+            actualScoreValidationException.Should()
+                .BeEquivalentTo(expectedScoreValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Never());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(invalidScore.Id), Times.Never());
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -24,7 +24,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
-                (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)));
+                (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: score.UpdatedDate,
+                    secondDate: score.CreatedDate,
+                    secondDateName: nameof(Score.CreatedDate)),
+                    Parameter: nameof(Score.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -56,6 +62,24 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             Condition = dates == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private static void ValidateStorageScoreExist(Score maybeScore, Guid scoreId)
         {

@@ -58,11 +58,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
         private static DateTimeOffset GetRandomDate() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private User CreateRandomUserWithCredentials(object email, string password)
+        private User CreateRandomUserWithCredentials(string email, string password)
         {
             User randomUser = CreateUserFiller().Create();
 
-            randomUser.Email = password;
+            randomUser.Email = email;
             randomUser.Password = password;
 
             return randomUser;

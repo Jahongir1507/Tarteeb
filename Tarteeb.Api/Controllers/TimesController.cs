@@ -76,7 +76,7 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpDelete("{timeId}")]
-        public async ValueTask<ActionResult<Time>> DeleteLanguageByIdAsync(Guid timeId)
+        public async ValueTask<ActionResult<Time>> DeleteTimeByIdAsync(Guid timeId)
         {
             try
             {

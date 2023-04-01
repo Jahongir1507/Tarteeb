@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Scores;
 
 namespace Tarteeb.Api.Controllers
@@ -47,6 +45,33 @@ namespace Tarteeb.Api.Controllers
             catch (ScoreDependencyException scoreDependencyException)
             {
                 return InternalServerError(scoreDependencyException.InnerException);
+            }
+            catch (ScoreServiceException scoreServiceException)
+            {
+                return InternalServerError(scoreServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{scoreId}")]
+        public async ValueTask<ActionResult<Score>> GetScoreByIdAsync(Guid scoreId)
+        {
+            try
+            {
+                return await this.scoreService.RetrieveScoreByIdAsync(scoreId);
+            }
+            catch (ScoreDependencyException scoreDependencyException)
+            {
+                return InternalServerError(scoreDependencyException.InnerException);
+            }
+            catch (ScoreValidationException scoreValidationException)
+                when (scoreValidationException.InnerException is InvalidScoreException)
+            {
+                return BadRequest(scoreValidationException.InnerException);
+            }
+            catch (ScoreValidationException scoreValidationException)
+                when (scoreValidationException.InnerException is NotFoundScoreException)
+            {
+                return NotFound(scoreValidationException.InnerException);
             }
             catch (ScoreServiceException scoreServiceException)
             {

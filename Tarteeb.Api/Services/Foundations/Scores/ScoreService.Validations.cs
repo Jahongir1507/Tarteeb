@@ -28,6 +28,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         private void ValidateScoreId(Guid scoreId) =>
             Validate((Rule: IsInvalid(scoreId), Parameter: nameof(Score.Id)));
 
+        private static void ValidateScoreNotNull(Score score)
+        {
+            if (score is null)
+            {
+                throw new NullScoreException();
+            }
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidScoreException = new InvalidScoreException();

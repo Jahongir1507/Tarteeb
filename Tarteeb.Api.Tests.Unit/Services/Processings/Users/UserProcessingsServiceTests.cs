@@ -4,9 +4,12 @@
 //=================================
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Processings.Users;
@@ -43,7 +46,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             };
         }
 
-        private static string GetrandomString() =>
+        private static string GetRandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
@@ -54,5 +57,37 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 
         private static DateTimeOffset GetRandomDate() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private User CreateRandomUserWithCredentials(string email, string password)
+        {
+            User randomUser = CreateUserFiller().Create();
+
+            randomUser.Email = email;
+            randomUser.Password = password;
+
+            return randomUser;
+        }
+
+        private IQueryable<User> CreateRandomUsersIncluding(User existingUser)
+        {
+            List<User> randomUsers = CreateUserFiller()
+                .Create(count: GetRandomNumber())
+                    .ToList();
+
+            randomUsers.Add(existingUser);
+
+            return randomUsers.AsQueryable();
+        }
+
+        private Filler<User> CreateUserFiller()
+        {
+            DateTimeOffset dates = GetRandomDate();
+            var filler = new Filler<User>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dates);
+
+            return filler;
+        }
     }
 }

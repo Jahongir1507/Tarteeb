@@ -38,6 +38,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 this.loggingBrokerMock.Object);
         }
 
+<<<<<<< HEAD
         public static TheoryData<int> InvalidSeconds()
         {
             int secondsInPast = -1 * new IntRange(
@@ -60,18 +61,24 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
         private static Score CreatRandomScore() =>
             CreateScoreFiller(GetRandomDateTime()).Create();
+=======
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+>>>>>>> master
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-            actualException => actualException.SameExceptionAs(expectedExceptoin);
-
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+<<<<<<< HEAD
         private static Score CreateRandomScore(DateTimeOffset dateTimeOffset) =>
             CreateScoreFiller(dateTimeOffset).Create();
+=======
+        private static Score CreateRandomScore() =>
+            CreateScoreFiller(GetRandomDateTime()).Create();
+>>>>>>> master
 
         private static Filler<Score> CreateScoreFiller(DateTimeOffset date)
         {

@@ -178,14 +178,14 @@ namespace Tarteeb.Api.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TelegramUsername")
                         .HasColumnType("nvarchar(max)");
@@ -198,6 +198,8 @@ namespace Tarteeb.Api.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Users");
                 });
@@ -219,6 +221,17 @@ namespace Tarteeb.Api.Migrations
                     b.Navigation("Ticket");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Tarteeb.Api.Models.Foundations.Users.User", b =>
+                {
+                    b.HasOne("Tarteeb.Api.Models.Foundations.Teams.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
                 });
 #pragma warning restore 612, 618
         }

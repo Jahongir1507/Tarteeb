@@ -93,7 +93,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
-        private static void ValidateStorageScoreExist(Score maybeScore, Guid scoreId)
+        private static void ValidateStorageScoreExists(Score maybeScore, Guid scoreId)
         {
             if (maybeScore is null)
             {

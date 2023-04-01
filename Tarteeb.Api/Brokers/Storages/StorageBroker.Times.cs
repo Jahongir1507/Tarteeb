@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Brokers.Storages
@@ -17,7 +16,7 @@ namespace Tarteeb.Api.Brokers.Storages
         public DbSet<Time> Times { get; set; }
 
         public async ValueTask<Time> InsertTimeAsync(Time time) =>
-            await InsertTimeAsync(time);
+            await InsertAsync(time);
 
         public async ValueTask<Time> SelectTimeByIdAsync(Guid id) =>
             await SelectAsync<Time>(id);

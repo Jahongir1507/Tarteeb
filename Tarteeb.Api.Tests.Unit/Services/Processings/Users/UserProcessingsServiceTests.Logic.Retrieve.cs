@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Users;
 using Xunit;
@@ -18,21 +18,28 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
         public void ShoulRetrieveUserByCredentails()
         {
             // given
-            string inputEmail = GetrandomString();
-            string inputPassword = GetrandomString();
-            var expectedUser = new User { Email = inputEmail, Password = inputPassword };
-            var users = new List<User> { expectedUser };
+            string randomString = GetRandomString();
+            string inputEmail = randomString;
+            string inputPassword = randomString;
+
+            User randomUser = CreateRandomUserWithCredentials(
+                inputEmail,
+                inputPassword);
+
+            User existingUser = randomUser;
+            User expectedUser = existingUser.DeepClone();
+            IQueryable<User> randomUsers = CreateRandomUsersIncluding(existingUser);
+            IQueryable<User> retrievedUsers = randomUsers;
 
             this.userServiceMock.Setup(service =>
-                service.RetrieveAllUsers())
-                    .Returns(users.AsQueryable());
+                service.RetrieveAllUsers()).Returns(retrievedUsers);
 
             // when
             User actualUser = userProcessingsService.
                 RetrieveUserByCredentails(inputEmail, inputPassword);
 
             // then
-            actualUser.Should().BeEquivalentTo(expectedUser);
+            actualUser.Should().BeEquivalentTo(existingUser);
 
             this.userServiceMock.Verify(service =>
                 service.RetrieveAllUsers(), Times.Once);

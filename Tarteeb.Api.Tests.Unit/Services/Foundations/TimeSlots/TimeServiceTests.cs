@@ -66,6 +66,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
 
+        private static Time CreateRandomTime(DateTimeOffset dates) =>
+          CreateTimeFiller(dates).Create();
+
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 

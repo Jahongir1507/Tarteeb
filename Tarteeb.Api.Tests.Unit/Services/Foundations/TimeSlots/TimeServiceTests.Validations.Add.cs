@@ -3,9 +3,12 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
@@ -92,6 +95,50 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertTimeAsync(It.IsAny<Time>()), Times.Never);
 
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            DateTimeOffset anotherRandomDate = GetRandomDateTime();
+            Time randomTime = CreateRandomTime(randomDateTime);
+            Time invalidTime = randomTime;
+            invalidTime.UpdatedDate = anotherRandomDate;
+            var invalidTimeException = new InvalidTimeException();
+
+            invalidTimeException.AddData(
+                key: nameof(Time.CreatedDate),
+                values: $"Date is not the same as {nameof(Time.UpdatedDate)}");
+
+            var expectedTimeValidationException =
+                new TimeValidationException(invalidTimeException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Time> addTimeTask = this.timeService.AddTimeAsync(invalidTime);
+
+            TimeValidationException actualTimeValidationException =
+                await Assert.ThrowsAsync<TimeValidationException>(addTimeTask.AsTask);
+
+            // then
+            actualTimeValidationException.Should().BeEquivalentTo(expectedTimeValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(
+                It.Is(SameExceptionAs(expectedTimeValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertTimeAsync(
+                It.IsAny<Time>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

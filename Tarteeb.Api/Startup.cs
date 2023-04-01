@@ -81,7 +81,7 @@ namespace Tarteeb.Api
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             services.AddTransient<ITokenBroker, TokenBroker>();
-            services.AddTransient<IEmailConfirmationBroker, EmailConfirmationBroker>();
+            services.AddTransient<IEmailBroker, EmailBroker>();
         }
 
         private static void AddFoundationServices(IServiceCollection services)

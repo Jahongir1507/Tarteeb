@@ -5,12 +5,12 @@
 
 using System.Threading.Tasks;
 using PostmarkDotNet;
+using Tarteeb.Api.Models.Foundations.Emails;
 
 namespace Tarteeb.Api.Brokers.Emails
 {
-    public interface IEmailConfirmationBroker
+    public interface IEmailBroker
     {
-        Task<PostmarkResponse> SendingConfirmationMessage(
-            string userEmail, string messageHtmlBody);
+        Task<PostmarkResponse> SendEmail(Email email);
     }
 }

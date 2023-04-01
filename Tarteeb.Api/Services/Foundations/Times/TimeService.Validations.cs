@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 
@@ -20,7 +21,8 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 (Rule: IsInvalid(time.HoursWorked), Parameter: nameof(Time.HoursWorked)),
                 (Rule: IsInvalid(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
                 (Rule: IsInvalid(time.UpdatedDate), Parameter: nameof(Time.UpdatedDate)),
-
+                (Rule: IsNotRecent(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
+              
                 (Rule: IsNotSame(
                     firstDate: time.CreatedDate,
                     secondDate: time.UpdatedDate,
@@ -52,6 +54,21 @@ namespace Tarteeb.Api.Services.Foundations.Times
              Condition = number is 0,
              Message = "Value is required"
          };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
+
 
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {

@@ -7,8 +7,6 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Tarteeb.Api.Models.Foundations.Teams;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
@@ -73,7 +71,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.SelectTimeByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noTime);
 
             // when
-            ValueTask<Time> removeTimeByIdTask = 
+            ValueTask<Time> removeTimeByIdTask =
                 this.timeService.RemoveTimeByIdAsync(inputTimeId);
 
             TimeValidationException actualTimeValidationException =

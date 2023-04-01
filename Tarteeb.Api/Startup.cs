@@ -89,6 +89,7 @@ namespace Tarteeb.Api
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IScoreService, ScoreService>();
             services.AddTransient<ITimeService, TimeService>();

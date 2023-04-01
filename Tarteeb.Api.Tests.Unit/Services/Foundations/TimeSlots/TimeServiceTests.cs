@@ -16,6 +16,7 @@ using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Services.Foundations.Times;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 {
@@ -32,14 +33,32 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
+
             this.timeService = new TimeService(
                 storageBroker: this.storageBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-            actualException => actualException.SameExceptionAs(expectedExceptoin);
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static DateTimeOffset GetRandomDateTime() =>
            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
@@ -64,6 +83,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
         private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
+
+        private static Time CreateRandomTime(DateTimeOffset dates) =>
+          CreateTimeFiller(dates).Create();
 
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();

@@ -3,13 +3,13 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Tarteeb.Api.Services.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Services.Foundations.Scores;
 
 namespace Tarteeb.Api.Controllers
 {

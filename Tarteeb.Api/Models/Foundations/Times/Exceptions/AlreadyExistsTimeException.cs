@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
-    public class TimeValidationException : Xeption
+    public class AlreadyExistsTimeException : Xeption
     {
-        public TimeValidationException(Xeption innerException)
-            : base(message: "Time validation error occurred, fix the errors and try again", innerException)
+        public AlreadyExistsTimeException(Exception innerException)
+            : base(message: "Time already exists.", innerException)
         { }
     }
 }

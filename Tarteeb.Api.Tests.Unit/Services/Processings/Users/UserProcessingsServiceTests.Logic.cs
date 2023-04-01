@@ -4,7 +4,9 @@
 //=================================
 
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Users;
@@ -36,6 +38,41 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
 
             this.userServiceMock.Verify(service =>
                 service.RetrieveAllUsers(), Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldAddPasswordAndEmailIfNotExistAsync()
+        {
+            //given
+            string randomEmail = GetrandomString();
+            string randomPassword = GetrandomString();
+            var randomUser = new User { Email = randomEmail, Password = randomPassword };
+            var inputUser = randomUser;
+            var addUser = inputUser;
+            var expectedUser = new List<User> { randomUser };
+
+            this.userServiceMock.Setup(service =>
+                service.RetrieveAllUsers()).Returns(expectedUser.AsQueryable());
+
+            this.userServiceMock.Setup(service =>
+                service.AddUserAsync(inputUser))
+                    .ReturnsAsync(addUser);
+
+            //when
+            User actualUser = userProcessingsService.
+                RetrieveUserByCredentails(randomEmail, randomPassword);
+
+            // then
+            actualUser.Should().BeEquivalentTo(expectedUser);
+
+            this.userServiceMock.Verify(service =>
+                service.RetrieveAllUsers(), Times.Once);
+
+            this.userServiceMock.Verify(service=>
+                service.AddUserAsync(inputUser),Times.Once) ;
 
             this.userServiceMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

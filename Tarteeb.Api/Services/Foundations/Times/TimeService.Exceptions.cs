@@ -33,18 +33,18 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 throw CreateAndLogValidationException(notFoundTimeException);
             }
-            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
-            {
-                var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
-
-                throw CreateAndLogDependencyValidationException(lockedTimeException);
-            }
             catch (SqlException sqlException)
             {
                 var failedTimeStorageException =
                     new FailedTimeStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedTimeException);
             }
             catch (Exception serviceException)
             {

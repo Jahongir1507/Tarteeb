@@ -3,14 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
@@ -28,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             var expectedTimeValidationException =
                 new TimeValidationException(nullTimeException);
-                    
+
             //when
             ValueTask<Time> addTimeTask =
                 this.timeService.AddTimeAsync(noTime);

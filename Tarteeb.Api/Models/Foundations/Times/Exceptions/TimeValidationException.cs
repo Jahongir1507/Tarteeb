@@ -7,9 +7,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
-    public class TimeValidationException: Xeption
+    public class TimeValidationException : Xeption
     {
         public TimeValidationException(Xeption innerException)
-        : base(message: "Time validation error occured, fix the errors and try again", innerException) {}
+            : base(message: "Time validation error occured, fix the errors and try again", innerException)
+        { }
     }
 }

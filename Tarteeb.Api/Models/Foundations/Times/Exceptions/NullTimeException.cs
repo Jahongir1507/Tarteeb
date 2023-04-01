@@ -7,9 +7,9 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
-    public class NullTimeException: Xeption
+    public class NullTimeException : Xeption
     {
         public NullTimeException()
-        : base(message: "Time is null") {}
+        : base(message: "Time is null") { }
     }
 }

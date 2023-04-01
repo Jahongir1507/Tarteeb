@@ -44,7 +44,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             return timeDependencyException;
         }
 
-        private TimeServiceException CreateAndLogServiceException(Exception exception)
+        private TimeServiceException CreateAndLogServiceException(Xeption exception)
         {
             var timeServiceException = new TimeServiceException(exception);
             this.loggingBroker.LogError(timeServiceException);

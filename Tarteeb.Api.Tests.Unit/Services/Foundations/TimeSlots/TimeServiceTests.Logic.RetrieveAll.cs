@@ -23,6 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTimes()).Returns(storageTimes);
+
             //when
             IQueryable<Time> actualTime =
                this.timeService.RetrieveAllTimes();

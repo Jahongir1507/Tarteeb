@@ -56,10 +56,5 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
         });
-
-        public ValueTask<Score> AddScoreAsync(Score score)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

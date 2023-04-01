@@ -77,16 +77,9 @@ namespace Tarteeb.Api.Services.Foundations.Times
             return timeDependecyException;
         }
 
-        private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
-        {
-            var timeDependencyValidationException = new TimeDependencyValidationException(exception);
-            this.loggingBroker.LogError(timeDependencyValidationException);
-
-            return timeDependencyValidationException;
-        }
 
         private TimeDependencyValidationException CreateAndLogDependencyValidationException(
-        Xeption exception)
+            Xeption exception)
         {
             var timeDependencyValidationException =
                 new TimeDependencyValidationException(exception);

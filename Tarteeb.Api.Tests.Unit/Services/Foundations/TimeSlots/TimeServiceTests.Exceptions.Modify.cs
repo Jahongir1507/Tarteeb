@@ -9,7 +9,6 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
 using Xunit;
@@ -159,6 +158,57 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given 
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Time randomTime = CreateRandomTime(randomDateTime);
+            Time someTime = randomTime;
+            someTime.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var serviceException = new Exception();
+
+            var failedTimeException = 
+                new FailedTimeServiceException(serviceException);
+
+            var expectedTimeServiceException = 
+                new TimeServiceException(failedTimeException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTimeByIdAsync(someTime.Id)).
+                    ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when 
+            ValueTask<Time> modifyTimeTask = 
+                this.timeService.ModifyTimeAsync(someTime);
+
+            TimeServiceException actualTimeServiceException = 
+                await Assert.ThrowsAsync<TimeServiceException>(
+                    modifyTimeTask.AsTask);
+
+            // then
+            actualTimeServiceException.Should().
+                BeEquivalentTo(expectedTimeServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+               broker.SelectTimeByIdAsync(someTime.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

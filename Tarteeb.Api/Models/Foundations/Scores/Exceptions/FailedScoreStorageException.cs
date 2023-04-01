@@ -8,7 +8,7 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
 {
-    public class FailedScoreStorageException :Xeption
+    public class FailedScoreStorageException : Xeption
     {
         public FailedScoreStorageException(Exception innerException)
             : base(message: "Failed score storage error occurred, contact support.", innerException)

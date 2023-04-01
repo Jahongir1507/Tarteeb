@@ -10,7 +10,7 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
 {
     public class FailedScoreServiceException : Xeption
     {
-        public FailedScoreServiceException(Exception innerException) 
+        public FailedScoreServiceException(Exception innerException)
             : base(message: "Failed score service error occurred, please contact support.",
                 innerException)
         { }

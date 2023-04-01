@@ -52,15 +52,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
             }
         }
 
-        private TimeServiceException CreateAndLogServiceException(
-            Xeption exception)
-        {
-            var timeServiceException = new TimeServiceException(exception);
-            this.loggingBroker.LogError(timeServiceException);
-
-            return timeServiceException;
-        }
-
         private TimeValidationException CreateAndLogValidationException(Xeption exception)
         {
             var timeValidationException = new TimeValidationException(exception);
@@ -84,7 +75,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
             
             this.loggingBroker.LogError(timeDependencyValidationException);
 
-            return timeDependencyValidationException;
+            return timeServiceException;
         }
     }
 }

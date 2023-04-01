@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             Message = "Id is required"
         };
 
-        private static void ValidateStorageScoreExist(Score maybeScore, Guid scoreId)
+        private static void ValidateStorageScoreExists(Score maybeScore, Guid scoreId)
         {
             if (maybeScore is null)
             {

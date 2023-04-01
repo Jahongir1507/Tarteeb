@@ -56,8 +56,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private static int GetRandomNumber() =>
              new IntRange(min: 2, max: 99).GetValue();
 
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
+
+        private static Time CreateRandomTime() =>
+            CreateTimeFiller(GetRandomDateTimeOffset()).Create();
 
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();

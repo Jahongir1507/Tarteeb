@@ -21,6 +21,7 @@ using Tarteeb.Api.Services.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Tickets;
+using Tarteeb.Api.Services.Foundations.Times;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
 using Tarteeb.Api.Services.Processings.Users;
@@ -90,6 +91,7 @@ namespace Tarteeb.Api
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IScoreService, ScoreService>();
+            services.AddTransient<ITimeService, TimeService>();
         }
 
         private static void AddProcessingServices(IServiceCollection services) =>

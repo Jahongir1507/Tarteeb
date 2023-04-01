@@ -3,6 +3,8 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
+using System.Threading.Tasks;
 using System.Linq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -20,8 +22,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
         public TimeService(
             IStorageBroker storageBroker,
             IDateTimeBroker dateTimeBroker,
-            ILoggingBroker loggingBroker
-            )
+            ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
             this.dateTimeBroker = dateTimeBroker;
@@ -30,5 +31,18 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
         public IQueryable<Time> RetrieveAllTimes() =>
             TryCatch(() => this.storageBroker.SelectAllTimes());
+
+        public ValueTask<Time> RemoveTimeByIdAsync(Guid timeId) =>
+        TryCatch(async () =>
+        {
+            ValidateTimeId(timeId);
+
+            Time maybeTime =
+                await this.storageBroker.SelectTimeByIdAsync(timeId);
+
+            ValidateStorageTimeExists(maybeTime, timeId);
+
+            return await this.storageBroker.DeleteTimeAsync(maybeTime);
+        });
     }
 }

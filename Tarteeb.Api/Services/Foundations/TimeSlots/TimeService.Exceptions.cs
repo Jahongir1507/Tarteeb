@@ -56,9 +56,9 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
             }
             catch (Exception serviceException)
             {
-                var failedServiceProfileException = new FailedTicketServiceException(serviceException);
+                var failedServiceTimeException = new FailedTimeServiceException(serviceException);
 
-                throw CreateAndLogServiceException(failedServiceProfileException);
+                throw CreateAndLogServiceException(failedServiceTimeException);
             }
         }
 

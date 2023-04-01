@@ -6,8 +6,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
@@ -44,6 +46,13 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedTimeDependencyValidationException =
+                     new AlreadyExistsTimeException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(failedTimeDependencyValidationException);
+            }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
@@ -56,6 +65,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndLogServiceException(failedTimeServiceException);
             }
+        }
+
+        private TimeDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var timeDepedencyValitionException= new TimeDependencyValidationException(exception);   
+            this.loggingBroker.LogError(timeDepedencyValitionException);
+
+            return timeDepedencyValitionException;
         }
 
         private IQueryable<Time> TryCatch(ReturningTimesFunction returningTimesFunction)

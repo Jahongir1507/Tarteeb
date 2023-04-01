@@ -9,6 +9,7 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
 using Xunit;
@@ -108,6 +109,56 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given 
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Time randomTime = CreateRandomModifyTime(randomDateTime);
+            Time someTime = randomTime;
+            someTime.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid TimeId = someTime.Id;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedTimeException = 
+                new LockedTeamException(databaseUpdateConcurrencyException);
+
+            var expectedTimeDependencyValidationException = 
+                new TimeDependencyValidationException(lockedTimeException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTimeByIdAsync(TimeId)).
+                    ThrowsAsync(databaseUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when 
+            ValueTask<Time> modifyTimeTask = this.timeService.ModifyTimeAsync(someTime);
+
+            TimeDependencyValidationException actualTimeDependencyValidationException =
+                await Assert.ThrowsAsync<TimeDependencyValidationException>(modifyTimeTask.AsTask);
+
+            // then 
+            actualTimeDependencyValidationException.Should().
+                BeEquivalentTo(expectedTimeDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectTimeByIdAsync(TimeId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

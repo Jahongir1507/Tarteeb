@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public void ShouldRetrieveAllScores()
         {
-            //given
+            // given
             IQueryable<Score> randomScores = CreateRandomScores();
             IQueryable<Score> storageScores = randomScores;
             IQueryable<Score> expectedScores = storageScores;
@@ -24,10 +24,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllScores()).Returns(storageScores);
 
-            //when
+            // when
             IQueryable<Score> actualScore =
                 this.scoreService.RetrieveAllScores();
-            //then
+
+            // then
             actualScore.Should().BeEquivalentTo(expectedScores);
 
             this.storageBrokerMock.Verify(broker =>

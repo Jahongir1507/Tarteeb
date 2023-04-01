@@ -58,9 +58,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
         });
 
-        public IQueryable<Score> RetrieveAllScores()
-        {
-            throw new NotImplementedException();
-        }
+        public IQueryable<Score> RetrieveAllScores() =>
+            TryCatch(() => this.storageBroker.SelectAllScores());
     }
 }

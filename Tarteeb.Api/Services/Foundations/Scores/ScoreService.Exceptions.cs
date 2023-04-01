@@ -10,8 +10,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Times.Exceptions;
-using Tarteeb.Api.Models.Foundations.Times;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -19,6 +17,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     public partial class ScoreService
     {
         private delegate ValueTask<Score> ReturningScoreFuncion();
+        private delegate IQueryable<Score> ReturningScoresFunction();
 
         private async ValueTask<Score> TryCatch(ReturningScoreFuncion returningScoreFuncion)
         {
@@ -54,8 +53,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 throw CreateAndLogServiceException(failedScoreServiceException);
             }
         }
-
-        private delegate IQueryable<Score> ReturningScoresFunction();
 
         private IQueryable<Score> TryCatch(ReturningScoresFunction returningScoresFunction)
         {

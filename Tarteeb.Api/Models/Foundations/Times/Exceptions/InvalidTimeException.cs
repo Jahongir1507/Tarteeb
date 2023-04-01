@@ -9,8 +9,8 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
     public class InvalidTimeException : Xeption
     {
-        public InvalidTimeException()
-            : base(message: "Time is invalid.")
+        public InvalidTimeException() : base("Time is invalid.")
         { }
+
     }
 }

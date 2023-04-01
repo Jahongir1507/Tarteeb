@@ -4,10 +4,8 @@
 //=================================
 
 using System;
-using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
-using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {

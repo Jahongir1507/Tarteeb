@@ -16,10 +16,8 @@ namespace Tarteeb.Api.Models.Foundations.Times
         public string Comment { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
         public Guid TicketId { get; set; }
         public Ticket Ticket { get; set; }
-
         public Guid UserId { get; set; }
         public User User { get; set; }
     }

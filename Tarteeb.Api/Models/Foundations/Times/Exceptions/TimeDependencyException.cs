@@ -10,7 +10,7 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
     public class TimeDependencyException : Xeption
     {
         public TimeDependencyException(Xeption innerException)
-            : base(message: "Time dependency error occurred, contact support.", innerException)
+           : base(message: "Time dependency error occurred, contact support.", innerException)
         { }
     }
 }

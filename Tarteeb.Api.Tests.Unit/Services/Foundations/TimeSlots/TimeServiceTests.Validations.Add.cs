@@ -67,11 +67,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             invalidTimeException.AddData(
                key: nameof(Time.CreatedDate),
-               values: "Value is required");
+               values: "Date is required");
 
             invalidTimeException.AddData(
                key: nameof(Time.UpdatedDate),
-               values: "Value is required");
+               values: "Date is required");
 
             var expectedTimeValidationException =
                 new TimeValidationException(invalidTimeException);

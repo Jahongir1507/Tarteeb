@@ -23,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             string someString = GetRandomString();
 
             var expectedUserProcessingDependencyException =
-                new UserProcessingDependencyException(dependencyException.InnerException);
+                new UserProcessingDependencyException(dependencyException.InnerException as Xeption);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(dependencyException);

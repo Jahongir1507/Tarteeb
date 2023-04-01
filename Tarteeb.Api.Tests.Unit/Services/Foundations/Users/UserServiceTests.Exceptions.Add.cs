@@ -100,6 +100,56 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
         }
 
         [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            User someUser = CreateRandomUser();
+            string randomMessage = GetRandomMessage();
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(randomMessage);
+
+            var invalidUserReferenceException =
+                new InvalidUserReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedUserDependencyValidationException =
+                new UserDependencyValidationException(invalidUserReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser);
+
+            UserDependencyValidationException actualUserDependencyValidationException =
+                 await Assert.ThrowsAsync<UserDependencyValidationException>(
+                     addUserTask.AsTask);
+
+            // then
+            actualUserDependencyValidationException.Should().BeEquivalentTo(
+                expectedUserDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>()),
+                        Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
         {
             // given
@@ -178,5 +228,5 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
-    }
+     }
 }

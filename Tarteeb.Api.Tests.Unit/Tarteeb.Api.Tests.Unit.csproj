@@ -33,7 +33,4 @@
 	<ItemGroup>
 	  <None Remove="Services\Foundations\Scores\" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Services\Foundations\Scores\" />
-	</ItemGroup>
 </Project>

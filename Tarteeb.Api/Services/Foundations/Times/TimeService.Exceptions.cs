@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
     public partial class TimeService
     {
         private delegate ValueTask<Time> ReturningTimeFunction();
+        private delegate IQueryable<Time> ReturningTimesFunction();
 
         private async ValueTask<Time> TryCatch(ReturningTimeFunction returningTimeFunction)
         {
@@ -52,6 +54,26 @@ namespace Tarteeb.Api.Services.Foundations.Times
             }
         }
 
+        private IQueryable<Time> TryCatch(ReturningTimesFunction returningTimesFunction)
+        {
+            try
+            {
+                return returningTimesFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTimeStorageException = new FailedTimeStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedTimeServiceException = new FailedTimeServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTimeServiceException);
+            }
+        }
+
         private TimeValidationException CreateAndLogValidationException(Xeption exception)
         {
             var timeValidationException = new TimeValidationException(exception);
@@ -72,8 +94,16 @@ namespace Tarteeb.Api.Services.Foundations.Times
         {
             var timeDependencyValidationException =
                 new TimeDependencyValidationException(exception);
-            
+
             this.loggingBroker.LogError(timeDependencyValidationException);
+
+            return timeDependencyValidationException;
+        }
+
+        private TimeServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var timeServiceException = new TimeServiceException(exception);
+            this.loggingBroker.LogError(timeServiceException);
 
             return timeServiceException;
         }

@@ -4,9 +4,10 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.Data.SqlClient;
 using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -37,18 +38,35 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
+            actualException => actualException.SameExceptionAs(expectedExceptoin);
+
+        private static DateTimeOffset GetRandomDateTime() =>
+           new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
+        private IQueryable<Time> CreateRandomTimes()
+        {
+            return CreateTimeFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedExceptoin) =>
-            actualException => actualException.SameExceptionAs(expectedExceptoin);
+        private static int GetRandomNumber() =>
+             new IntRange(min: 2, max: 99).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
         private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
+
+        private static string GetRandomMessage() =>
+           new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {

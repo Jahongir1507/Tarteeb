@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
@@ -20,13 +21,16 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
         public TimeService(
             IStorageBroker storageBroker,
-            IDateTimeBroker dateTimeBroker, 
+            IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
             this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
+
+        public IQueryable<Time> RetrieveAllTimes() =>
+            TryCatch(() => this.storageBroker.SelectAllTimes());
 
         public ValueTask<Time> RemoveTimeByIdAsync(Guid timeId) =>
         TryCatch(async () =>

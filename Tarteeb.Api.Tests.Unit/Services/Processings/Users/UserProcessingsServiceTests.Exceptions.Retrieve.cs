@@ -20,10 +20,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Processings.Users
             Xeption dependencyException)
         {
             // given
-            string someString = GetrandomString();
+            string someString = GetRandomString();
 
             var expectedUserProcessingDependencyException =
-                new UserProcessingDependencyException(dependencyException);
+                new UserProcessingDependencyException(dependencyException.InnerException);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(dependencyException);

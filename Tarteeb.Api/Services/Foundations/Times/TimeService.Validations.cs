@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 
@@ -11,6 +12,17 @@ namespace Tarteeb.Api.Services.Foundations.Times
 {
     public partial class TimeService
     {
+        private void ValidateTimeOnAdd(Time time)
+        {
+            ValidateTimeNotNull(time);
+
+            Validate(
+                (Rule: IsInvalid(time.Id), Parameter: nameof(Time.Id)),
+                (Rule: IsInvalid(time.HoursWorked), Parameter: nameof(Time.HoursWorked)),
+                (Rule: IsInvalid(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
+                (Rule: IsInvalid(time.UpdatedDate), Parameter: nameof(Time.UpdatedDate)));
+        }
+
         private void ValidateTimeId(Guid timeId) =>
             Validate((Rule: IsInvalid(timeId), Parameter: nameof(Time.Id)));
 
@@ -18,6 +30,18 @@ namespace Tarteeb.Api.Services.Foundations.Times
         {
             Condition = id == default,
             Message = "Id is required"
+        };
+
+         private static dynamic IsInvalid(decimal number) => new
+         {
+             Condition = number is 0,
+             Message = "Value is required"
+         };
+
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Date is required"
         };
 
         private void ValidateTimeNotNull(Time time)

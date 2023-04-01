@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
         public ValueTask<Time> AddTimeAsync(Time time) =>
         TryCatch(async () =>
         {
-            ValidateTimeNotNull(time);
+            ValidateTimeOnAdd(time);
 
             return await this.storageBroker.InsertTimeAsync(time);
 

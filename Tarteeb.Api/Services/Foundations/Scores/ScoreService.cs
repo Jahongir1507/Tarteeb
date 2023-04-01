@@ -31,12 +31,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         public ValueTask<Score> ModifyScoreAsync(Score score) =>
          TryCatch(async () =>
          {
-             ValidateScoreNotNull(score);
+            ValidateScoreOnModify(score);
 
-             Score maybeScore =
-                 await this.storageBroker.SelectScoreByIdAsync(score.Id);
+            Score maybeScore =
+            await this.storageBroker.SelectScoreByIdAsync(score.Id);
 
-             return await this.storageBroker.UpdateScoreAsync(maybeScore);
+            return await this.storageBroker.UpdateScoreAsync(maybeScore);
          });
 
         public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>

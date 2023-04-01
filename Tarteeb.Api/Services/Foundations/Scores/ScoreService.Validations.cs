@@ -12,7 +12,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
-        private void ValidateTimeOnModify(Score score)
+        private void ValidateScoreOnModify(Score score)
         {
             ValidateScoreNotNull(score);
             Validate(

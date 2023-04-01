@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 
@@ -20,7 +19,14 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 (Rule: IsInvalid(time.Id), Parameter: nameof(Time.Id)),
                 (Rule: IsInvalid(time.HoursWorked), Parameter: nameof(Time.HoursWorked)),
                 (Rule: IsInvalid(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
-                (Rule: IsInvalid(time.UpdatedDate), Parameter: nameof(Time.UpdatedDate)));
+                (Rule: IsInvalid(time.UpdatedDate), Parameter: nameof(Time.UpdatedDate)),
+
+                (Rule: IsNotSame(
+                    firstDate: time.CreatedDate,
+                    secondDate: time.UpdatedDate,
+                    secondDateName: nameof(Time.UpdatedDate)),
+
+                    Parameter: nameof(Time.CreatedDate)));
         }
 
         private void ValidateTimeId(Guid timeId) =>
@@ -32,6 +38,15 @@ namespace Tarteeb.Api.Services.Foundations.Times
             Message = "Id is required"
         };
 
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName
+            ) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
          private static dynamic IsInvalid(decimal number) => new
          {
              Condition = number is 0,

@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
@@ -33,6 +34,12 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
             catch (NotFoundTimeException notFoundTimeException)
             {
                 throw CreateAndLogValidationException(notFoundTimeException);
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTimeStorageException = new FailedTimeStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
             catch (Exception serviceException)
             {

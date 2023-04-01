@@ -13,7 +13,7 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Times;
-using Tarteeb.Api.Services.Foundations.TimeSlots;
+using Tarteeb.Api.Services.Foundations.Times;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
@@ -83,21 +83,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             };
         }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
-            actualException => actualException.SameExceptionAs(expectedException);
-
-        private static DateTimeOffset GetRandomDateTime() =>
-           new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-
-        private static SqlException CreateSqlException() =>
-            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
-
-        private IQueryable<Time> CreateRandomTimes()
-        {
-            return CreateTimeFiller(dates: GetRandomDateTime())
-                .Create(count: GetRandomNumber()).AsQueryable();
-        }
-
         private static int GetRandomNumber() =>
              new IntRange(min: 2, max: 99).GetValue();
 
@@ -110,11 +95,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
 
-        private static Time CreateRandomTime(DateTimeOffset dates) =>
-          CreateTimeFiller(dates).Create();
-
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private IQueryable<Time> CreateRandomTimes()
+        {
+            return CreateTimeFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {

@@ -5,8 +5,10 @@
 
 using System;
 using System.Data;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Services.Foundations.Times
 {
@@ -31,6 +33,30 @@ namespace Tarteeb.Api.Services.Foundations.Times
                     Parameter: nameof(Time.CreatedDate)));
         }
 
+        private void ValidateTimeOnModify(Time time)
+        {
+            ValidateTimeNotNull(time);
+
+            Validate(
+                (Rule: IsInvalid(time.Id), nameof(Time.Id)),
+                (Rule: IsInvalid(time.HoursWorked), nameof(Time.HoursWorked)),
+                (Rule: IsInvalid(time.Comment), nameof(Time.Comment)),
+                (Rule: IsInvalid(time.UserId), nameof(Time.UserId)),
+                (Rule: IsInvalid(time.TicketId), nameof(Time.TicketId)),
+                (Rule: IsInvalid(time.CreatedDate), nameof(Time.CreatedDate)),
+                (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),
+                (Rule: IsInvalid(time.Ticket), nameof(Time.Ticket)),
+                (Rule: IsInvalid(time.User), nameof(Time.User)),
+                (Rule: IsNotRecent(time.UpdatedDate), nameof(Time.UpdatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: time.UpdatedDate,
+                        secondDate: time.CreatedDate,
+                        secondDateName: nameof(time.CreatedDate)),
+
+                     Parameter: nameof(time.UpdatedDate)));
+        }
+
         private void ValidateTimeId(Guid timeId) =>
             Validate((Rule: IsInvalid(timeId), Parameter: nameof(Time.Id)));
 
@@ -38,6 +64,24 @@ namespace Tarteeb.Api.Services.Foundations.Times
         {
             Condition = id == default,
             Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(string text) => new
+        {
+            Condition = string.IsNullOrWhiteSpace(text),
+            Message = "Comment is required"
+        };
+
+        private static dynamic IsInvalid(User user) => new
+        {
+            Condition = user == default,
+            Message = "User is required"
+        };
+
+        private static dynamic IsInvalid(Ticket ticket) => new
+        {
+            Condition = ticket == default,
+            Message = "Ticket is required"
         };
 
         private static dynamic IsNotSame(
@@ -49,7 +93,17 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
             };
-         private static dynamic IsInvalid(decimal number) => new
+
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
+        private static dynamic IsInvalid(decimal number) => new
          {
              Condition = number is 0,
              Message = "Value is required"
@@ -69,7 +123,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
             return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
-
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {
             Condition = date == default,
@@ -82,6 +135,24 @@ namespace Tarteeb.Api.Services.Foundations.Times
             {
                 throw new NullTimeException();
             }
+        }
+
+        private void ValidateAgainstStorageTimeOnModify(Time inputTime, Time storageTime)
+        {
+            ValidateStorageTimeExists(storageTime, inputTime.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputTime.CreatedDate,
+                    secondDate: storageTime.CreatedDate,
+                    secondDateName: nameof(Time.CreatedDate)),
+                Parameter: nameof(Time.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputTime.UpdatedDate,
+                    secondDate: storageTime.UpdatedDate,
+                    secondDateName: nameof(Time.UpdatedDate)),
+                Parameter: nameof(Time.UpdatedDate)));
         }
 
         private static void ValidateStorageTimeExists(Time maybeTime, Guid timeId)

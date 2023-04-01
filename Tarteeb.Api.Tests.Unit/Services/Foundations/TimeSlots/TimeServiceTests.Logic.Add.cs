@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
@@ -18,10 +19,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         public async Task ShouldAddTimeAsync()
         {
             //given
-            Time randomTime = CreateRandomTime();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Time randomTime = CreateRandomTime(randomDateTime);
             Time inputTime = randomTime;
             Time storagedTime = inputTime;
             Time expectedTime = storagedTime.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertTimeAsync(inputTime)).ReturnsAsync(storagedTime);

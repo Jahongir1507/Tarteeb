@@ -229,14 +229,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         public async Task ShouldThrowValidationExceptionOnModifyIfScoreDoesNotExistAndLogItAsync()
         {
             // given
-            int randomMinutes = GetRandomNegativeNumber();
+            int randomNegativMinutes = GetRandomNegativeNumber();
             DateTimeOffset randomDateTime = GetRandomDateTime();
             Score randomScore = CreateRandomScore(randomDateTime);
             Score nonExistScore = randomScore;
+            nonExistScore.CreatedDate = randomDateTime.AddMinutes(randomNegativMinutes);
             Score nullScore = null;
 
-            nonExistScore.UpdatedDate =
-                randomDateTime.AddMinutes(randomMinutes);
+            //nonExistScore.UpdatedDate =
+            //    randomDateTime.AddMinutes(randomMinutes);
 
             var notFoundScoreException =
                 new NotFoundScoreException(nonExistScore.Id);
@@ -255,7 +256,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             ValueTask<Score> modifyScoreTask =
                 this.scoreService.ModifyScoreAsync(nonExistScore);
 
-            var actualScoreValidationException =
+            ScoreValidationException actualScoreValidationException =
                 await Assert.ThrowsAsync<ScoreValidationException>(
                     modifyScoreTask.AsTask);
 

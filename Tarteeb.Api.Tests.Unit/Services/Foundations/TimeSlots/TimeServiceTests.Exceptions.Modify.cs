@@ -77,13 +77,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             someTime.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
             var databaseUpdateException = new DbUpdateException();
 
-            var failedTimeException = 
+            var failedTimeException =
                 new FailedTimeStorageException(databaseUpdateException);
 
-            var expectedTimeDependencyException = 
+            var expectedTimeDependencyException =
                 new TimeDependencyException(failedTimeException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTimeByIdAsync(TimeId)).ThrowsAsync(databaseUpdateException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -92,20 +92,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             // when 
             ValueTask<Time> modifyTimeTask = this.timeService.ModifyTimeAsync(someTime);
 
-            TimeDependencyException actualTimeDependencyException = 
+            TimeDependencyException actualTimeDependencyException =
                 await Assert.ThrowsAsync<TimeDependencyException>(modifyTimeTask.AsTask);
 
             // then
             actualTimeDependencyException.Should().
                 BeEquivalentTo(expectedTimeDependencyException);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTimeByIdAsync(TimeId), Times.Once());
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTimeDependencyException))), Times.Once);
 

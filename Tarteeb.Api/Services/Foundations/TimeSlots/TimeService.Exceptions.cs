@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
@@ -41,6 +42,12 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedTimeStorageException = new FailedTimeStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedTimeStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedServiceProfileException = new FailedTicketServiceException(serviceException);
@@ -55,6 +62,14 @@ namespace Tarteeb.Api.Services.Foundations.TimeSlots
             this.loggingBroker.LogError(timeServiceException);
 
             return timeServiceException;
+        }
+
+        private TimeDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var timeDependencyException = new TimeDependencyException(exception);
+            this.loggingBroker.LogError(timeDependencyException);
+
+            return timeDependencyException;
         }
 
         private TimeValidationException CreateAndLogValidationException(Xeption exception)

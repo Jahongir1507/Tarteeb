@@ -9,6 +9,8 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
+using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tynamix.ObjectFiller;
 using Xunit;
 
@@ -21,10 +23,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         {
             // given
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Score randomScore = CreateRandomScore(randomDate);
+            Score randomScore = CreateRandomModifyScore(randomDate);
             Score inputScore = randomScore;
-            inputScore.UpdatedDate = randomDate.AddMinutes(1);
-            Score storageScore = inputScore;
+            Score storageScore = inputScore.DeepClone();
+            storageScore.UpdatedDate = randomScore.CreatedDate;
             Score updatedScore = inputScore;
             Score expectedScore = updatedScore.DeepClone();
             Guid inputScoreId = inputScore.Id;
@@ -41,11 +43,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                     .ReturnsAsync(updatedScore);
 
             // when
-            Score actualScore =
+            Score actualScoreTask =
                  await this.scoreService.ModifyScoreAsync(inputScore);
 
             // then
-            actualScore.Should().BeEquivalentTo(expectedScore);
+            actualScoreTask.Should().BeEquivalentTo(expectedScore);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);

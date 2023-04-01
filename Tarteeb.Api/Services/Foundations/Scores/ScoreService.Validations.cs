@@ -25,7 +25,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
-                (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
+                //(Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
                 (Rule: IsNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
 
                 (Rule: IsSame(

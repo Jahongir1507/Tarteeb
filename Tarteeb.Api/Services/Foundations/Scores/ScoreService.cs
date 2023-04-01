@@ -9,6 +9,7 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
+using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -40,7 +41,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
          });
 
         public ValueTask<Score> AddScoreAsync(Score score) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                    ValidateScoreOnModify(score);
+
+                return await this.storageBroker.InsertScoreAsync(score);
+            });
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>

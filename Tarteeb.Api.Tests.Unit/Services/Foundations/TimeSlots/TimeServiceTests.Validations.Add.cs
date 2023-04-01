@@ -43,7 +43,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

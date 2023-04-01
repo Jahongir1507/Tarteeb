@@ -62,13 +62,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             }
             catch (SqlException sqlException)
             {
-                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
-                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
-            }
-            catch (Exception serviceException)
-            {
-                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
-                throw CreateAndLogServiceException(failedScoreServiceException);
+                throw sqlException;
             }
         }
 

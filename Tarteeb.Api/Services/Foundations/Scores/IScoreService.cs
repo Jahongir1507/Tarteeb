@@ -13,8 +13,8 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     public interface IScoreService
     {
         ValueTask<Score> AddScoreAsync(Score score);
+        IQueryable<Score> RetrieveAllScores();
         ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId);
         ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId);
-        IQueryable<Score> RetrieveAllScores();
     }
 }

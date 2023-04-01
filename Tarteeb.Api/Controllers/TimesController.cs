@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,44 @@ namespace Tarteeb.Api.Controllers
                 IQueryable<Time> allTimes = this.timeService.RetrieveAllTimes();
 
                 return Ok(allTimes);
+            }
+            catch (TimeDependencyException timeDependencyException)
+            {
+                return InternalServerError(timeDependencyException.InnerException);
+            }
+            catch (TimeServiceException timeServiceException)
+            {
+                return InternalServerError(timeServiceException.InnerException);
+            }
+        }
+
+        [HttpDelete("{timeId}")]
+        public async ValueTask<ActionResult<Time>> DeleteTimeByIdAsync(Guid timeId)
+        {
+            try
+            {
+                Time deletedTime =
+                    await this.timeService.RemoveTimeByIdAsync(timeId);
+
+                return Ok(deletedTime);
+            }
+            catch (TimeValidationException timeValidationException)
+                when (timeValidationException.InnerException is NotFoundTimeException)
+            {
+                return NotFound(timeValidationException.InnerException);
+            }
+            catch (TimeValidationException timeValidationException)
+            {
+                return BadRequest(timeValidationException.InnerException);
+            }
+            catch (TimeDependencyValidationException timeDependencyValidationException)
+                when (timeDependencyValidationException.InnerException is LockedTimeException)
+            {
+                return Locked(timeDependencyValidationException.InnerException);
+            }
+            catch (TimeDependencyValidationException timeDependencyValidationException)
+            {
+                return BadRequest(timeDependencyValidationException.InnerException);
             }
             catch (TimeDependencyException timeDependencyException)
             {

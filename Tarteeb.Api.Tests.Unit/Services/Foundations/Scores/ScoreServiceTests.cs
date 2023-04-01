@@ -44,14 +44,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static DateTimeOffset GetRandomDateScore() =>
+        private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static Score CreateRandomScore() =>
-            CreateScoreFiller(GetRandomDateScore()).Create();
+            CreateScoreFiller(GetRandomDateTime()).Create();
+
         private IQueryable<Score> CreateRandomScores()
         {
-            return CreateScoreFiller(dates: GetRandomDateScore())
+            return CreateScoreFiller(dates: GetRandomDateTime())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
 

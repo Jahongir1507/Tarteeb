@@ -94,14 +94,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 "Date is not recent",
                 $"Date is the same as {nameof(Time.CreatedDate)}");
 
-            invalidTimeException.AddData(
-            key: nameof(Time.User),
-            values: "User is required");
-
-            invalidTimeException.AddData(
-            key: nameof(Time.Ticket),
-            values: "Ticket is required");
-
             var expectedTimeValidationException =
                 new TimeValidationException(invalidTimeException);
 

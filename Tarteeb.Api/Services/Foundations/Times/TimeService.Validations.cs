@@ -44,8 +44,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 (Rule: IsInvalid(time.TicketId), nameof(Time.TicketId)),
                 (Rule: IsInvalid(time.CreatedDate), nameof(Time.CreatedDate)),
                 (Rule: IsInvalid(time.UpdatedDate), nameof(Time.UpdatedDate)),
-                (Rule: IsInvalid(time.Ticket), nameof(Time.Ticket)),
-                (Rule: IsInvalid(time.User), nameof(Time.User)),
                 (Rule: IsNotRecent(time.UpdatedDate), nameof(Time.UpdatedDate)),
 
                 (Rule: IsSame(
@@ -69,18 +67,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
         {
             Condition = string.IsNullOrWhiteSpace(text),
             Message = "Comment is required"
-        };
-
-        private static dynamic IsInvalid(User user) => new
-        {
-            Condition = user == default,
-            Message = "User is required"
-        };
-
-        private static dynamic IsInvalid(Ticket ticket) => new
-        {
-            Condition = ticket == default,
-            Message = "Ticket is required"
         };
 
         private static dynamic IsNotSame(

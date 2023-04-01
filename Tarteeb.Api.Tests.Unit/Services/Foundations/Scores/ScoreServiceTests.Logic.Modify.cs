@@ -48,7 +48,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             actualScore.Should().BeEquivalentTo(expectedScore);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectScoreByIdAsync(inputScoreId), Times.Once);

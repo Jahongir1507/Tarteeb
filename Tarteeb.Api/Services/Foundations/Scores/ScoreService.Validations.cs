@@ -26,7 +26,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
-                (Rule: IsDateNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
+                (Rule: IsNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: score.UpdatedDate,
@@ -82,6 +82,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {

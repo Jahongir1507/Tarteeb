@@ -17,7 +17,8 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     {
         private delegate ValueTask<Score> ReturningScoreFuncion();
 
-        private async ValueTask<Score> TryCatch(ReturningScoreFunction returningScoreFunction)
+        private async ValueTask<Score> TryCatch(ReturningScoreFuncion
+            returningScoreFunction)
         {
             try
             {

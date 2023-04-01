@@ -53,6 +53,12 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndDependencyValidationException(failedTimeDependencyValidationException);
             }
+            catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidTimeReferenceException = new InvalidTimeReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidTimeReferenceException);
+            }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);

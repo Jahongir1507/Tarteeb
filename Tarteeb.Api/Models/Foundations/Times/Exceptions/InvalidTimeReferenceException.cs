@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
 {
-    public class TimeValidationException : Xeption
+    public class InvalidTimeReferenceException : Xeption
     {
-        public TimeValidationException(Xeption innerException)
-            : base(message: "Time validation error occurred, fix the errors and try again", innerException)
+        public InvalidTimeReferenceException(Exception innerException)
+            : base(message: "Invalid time reference error occurred.", innerException)
         { }
     }
 }

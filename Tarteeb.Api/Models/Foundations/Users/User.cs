@@ -17,7 +17,7 @@ namespace Tarteeb.Api.Models.Foundations.Users
         public DateTimeOffset BirthDate { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public Guid? ManagerId { get; set; }
+        public Guid? TeamId { get; set; }
         public string Password { get; set; }
         public string IsActive { get; set; }
         public string IsVerififed { get; set; }

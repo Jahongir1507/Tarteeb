@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
 using Tarteeb.Api.Models.Foundations.Times.Exceptions;
@@ -24,7 +23,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 (Rule: IsInvalid(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
                 (Rule: IsInvalid(time.UpdatedDate), Parameter: nameof(Time.UpdatedDate)),
                 (Rule: IsNotRecent(time.CreatedDate), Parameter: nameof(Time.CreatedDate)),
-              
+
                 (Rule: IsNotSame(
                     firstDate: time.CreatedDate,
                     secondDate: time.UpdatedDate,
@@ -104,10 +103,10 @@ namespace Tarteeb.Api.Services.Foundations.Times
             };
 
         private static dynamic IsInvalid(decimal number) => new
-         {
-             Condition = number is 0,
-             Message = "Value is required"
-         };
+        {
+            Condition = number is 0,
+            Message = "Value is required"
+        };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {

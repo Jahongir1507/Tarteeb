@@ -10,7 +10,7 @@ using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Times;
-using Tarteeb.Api.Models.Foundations.TimeSlots.Exceptions;
+using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots

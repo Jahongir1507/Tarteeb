@@ -16,7 +16,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
     public partial class ScoreServiceTests
     {
         [Fact]
-        public async Task ShouldAddScoreAsync()
+        public async Task ShouldRetrieveScoreByIdAsync()
         {
             // given
             Guid randomScoreId = Guid.NewGuid();

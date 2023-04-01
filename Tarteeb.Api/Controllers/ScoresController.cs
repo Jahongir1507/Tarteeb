@@ -23,7 +23,6 @@ namespace Tarteeb.Api.Controllers
             this.scoreService = scoreService;
 
         [HttpDelete("{scoreId}")]
-
         public async ValueTask<ActionResult<Score>> DeleteScoreByIdAsync(Guid scoreId)
         {
             try

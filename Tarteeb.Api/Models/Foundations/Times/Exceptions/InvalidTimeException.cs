@@ -11,6 +11,5 @@ namespace Tarteeb.Api.Models.Foundations.Times.Exceptions
     {
         public InvalidTimeException() : base("Time is invalid.")
         { }
-
     }
 }

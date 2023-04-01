@@ -200,11 +200,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             actualTimeServiceException.Should()
                  .BeEquivalentTo(expectedTimeServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-               broker.GetCurrentDateTime(), Times.Once());
-
             this.storageBrokerMock.Verify(broker =>
                broker.SelectTimeByIdAsync(someTime.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(), Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Data;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Tarteeb.Api.Models.Foundations.Times;
@@ -25,6 +26,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
+                (Rule: IsDateNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: score.UpdatedDate,
@@ -80,6 +82,16 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
 
         private static void ValidateStorageScoreExist(Score maybeScore, Guid scoreId)
         {

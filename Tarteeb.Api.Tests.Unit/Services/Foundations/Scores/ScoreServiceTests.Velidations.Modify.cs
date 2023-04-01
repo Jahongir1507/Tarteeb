@@ -177,5 +177,53 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int seconds)
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Score randomScore = CreateRandomScore(randomDateTime);
+            Score inputScore = randomScore;
+            inputScore.UpdatedDate = randomDateTime.AddMinutes(seconds);
+            var invalidScoreException = new InvalidScoreException();
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            invalidScoreException.AddData(
+                key: nameof(Score.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedScoreValidationException =
+                new ScoreValidationException(invalidScoreException);
+
+            // when
+            ValueTask<Score> modifyScoreTask =
+                this.scoreService.ModifyScoreAsync(inputScore);
+
+            var actualScoreValidationException =
+               await Assert.ThrowsAsync<ScoreValidationException>(
+                   modifyScoreTask.AsTask);
+
+            // then
+            actualScoreValidationException.Should()
+                .BeEquivalentTo(expectedScoreValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

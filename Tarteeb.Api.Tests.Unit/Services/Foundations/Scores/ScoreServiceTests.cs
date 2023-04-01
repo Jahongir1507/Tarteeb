@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -43,11 +44,24 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static DateTimeOffset GetRandomDateTime() =>
+        private static DateTimeOffset GetRandomDateScore() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         private static Score CreateRandomScore() =>
-            CreateScoreFiller(GetRandomDateTime()).Create();
+            CreateScoreFiller(GetRandomDateScore()).Create();
+        private IQueryable<Score> CreateRandomScores()
+        {
+            return CreateScoreFiller(dates: GetRandomDateScore())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
+        private static int GetRandomNumber() =>
+             new IntRange(min: 2, max: 99).GetValue();
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
+        private static string GetRandomMessage() =>
+           new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static Filler<Score> CreateScoreFiller(DateTimeOffset dates)
         {

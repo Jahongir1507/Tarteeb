@@ -4,11 +4,14 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Models.Foundations.Times.Exceptions;
+using Tarteeb.Api.Models.Foundations.Times;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -48,6 +51,26 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 var failedScoreServiceException = new FailedScoreServiceException(serviceException);
 
+                throw CreateAndLogServiceException(failedScoreServiceException);
+            }
+        }
+
+        private delegate IQueryable<Score> ReturningScoresFunction();
+
+        private IQueryable<Score> TryCatch(ReturningScoresFunction returningScoresFunction)
+        {
+            try
+            {
+                return returningScoresFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
                 throw CreateAndLogServiceException(failedScoreServiceException);
             }
         }

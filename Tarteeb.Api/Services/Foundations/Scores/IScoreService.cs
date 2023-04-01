@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Scores;
 
@@ -14,5 +15,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         ValueTask<Score> AddScoreAsync(Score score);
         ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId);
         ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId);
+        IQueryable<Score> RetrieveAllScores();
     }
 }

@@ -45,12 +45,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
 
                 throw CreateAndLogCriticalDependencyException(failedTimeStorageException);
             }
-            catch (DbUpdateException databaseUpdateException)
-            {
-                var failedTimeStorageException = new FailedTimeStorageException(databaseUpdateException);
-
-                throw CreateAndLogDependencyException(failedTimeStorageException);
-            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var failedTimeDependencyValidationException =
@@ -69,6 +63,12 @@ namespace Tarteeb.Api.Services.Foundations.Times
                 var lockedTimeException = new LockedTimeException(dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedTimeException);
+            }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedTimeStorageException = new FailedTimeStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedTimeStorageException);
             }
             catch (Exception serviceException)
             {

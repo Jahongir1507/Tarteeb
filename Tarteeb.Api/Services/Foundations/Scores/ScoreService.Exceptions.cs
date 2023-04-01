@@ -66,6 +66,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedScoreServiceException);
+            }
         }
 
         private ScoreValidationException CreateAndLogValidationException(Xeption exception)

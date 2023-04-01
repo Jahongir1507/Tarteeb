@@ -6,11 +6,26 @@
 using System;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
+        private void ValidateScoreOnAdd(Score score) 
+        {
+            ValidateScoreNotNull(score);
+        }
+
+        private void ValidateScoreNotNull(Score score)
+        {
+            if (score is null)
+            {
+                throw new NullScoreException();
+            }
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == default,

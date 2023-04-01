@@ -136,6 +136,53 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         }
 
         [Fact]
+        public async void ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Time someTime = CreateRandomTime();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidTimeReferenceException =
+                new InvalidTimeReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedTimeValidationException =
+                new TimeDependencyValidationException(invalidTimeReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Time> addTimeTask =
+                this.timeService.AddTimeAsync(someTime);
+
+            TimeDependencyValidationException actualTimeDependencyValidationException =
+                await Assert.ThrowsAsync<TimeDependencyValidationException>(
+                    addTimeTask.AsTask);
+
+            // then
+            actualTimeDependencyValidationException.Should().BeEquivalentTo(
+                expectedTimeValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTimeValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given

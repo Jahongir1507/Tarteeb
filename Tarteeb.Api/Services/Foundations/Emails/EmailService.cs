@@ -23,7 +23,11 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Email> SendEmailAsync(Email email) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<Email> SendEmailAsync(Email email)
+        {
+            await this.emailBroker.SendEmail(email);
+
+            return email;
+        }
     }
 }

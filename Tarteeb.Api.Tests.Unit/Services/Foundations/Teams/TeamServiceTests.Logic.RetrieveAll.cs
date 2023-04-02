@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Teams
             actualTeams.Should().BeEquivalentTo(expectedTeams);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllTeams(), Times.Once());
+                broker.SelectAllTeams(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

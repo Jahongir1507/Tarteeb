@@ -100,10 +100,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                  .BeEquivalentTo(expectedTimeDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectTimeByIdAsync(TimeId), Times.Once());
+                broker.SelectTimeByIdAsync(TimeId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -153,7 +153,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                 broker.SelectTimeByIdAsync(TimeId), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-               broker.GetCurrentDateTime(), Times.Once());
+               broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -204,7 +204,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
                broker.SelectTimeByIdAsync(someTime.Id), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-               broker.GetCurrentDateTime(), Times.Once());
+               broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

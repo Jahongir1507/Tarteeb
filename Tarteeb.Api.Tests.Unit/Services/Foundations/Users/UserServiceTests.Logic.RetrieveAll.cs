@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllUsers(), Times.Once());
+                broker.SelectAllUsers(), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

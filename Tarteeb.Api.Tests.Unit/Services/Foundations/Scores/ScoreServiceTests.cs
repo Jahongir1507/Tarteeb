@@ -90,6 +90,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
         private static Score CreateRandomScore() =>
            CreateScoreFiller(GetRandomDateTime()).Create();
+        
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private IQueryable<Score> CreateRandomScores()
         {

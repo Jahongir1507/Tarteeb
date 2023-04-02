@@ -220,7 +220,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
         {
             Score foreignKeyConflictedScore = CreateRandomScore();
-            string randomMessage = GetRandomString();
+            string randomMessage = GetRandomMessage();
             string exceptionMessage = randomMessage;
 
             var foreignKeyConstraintConflictException =

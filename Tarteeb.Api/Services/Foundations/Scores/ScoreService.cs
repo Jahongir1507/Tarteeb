@@ -32,8 +32,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         TryCatch(async () => {
             ValidateScoreOnAdd(score);
             var date = this.dateTimeBroker.GetCurrentDateTime();
+
             return await this.storageBroker.InsertScoreAsync(score);
         });
+
+        public IQueryable<Score> RetrieveAllScores() =>
+           TryCatch(() => this.storageBroker.SelectAllScores());
  
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>

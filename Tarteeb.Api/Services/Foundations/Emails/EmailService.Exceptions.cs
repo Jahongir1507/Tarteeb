@@ -30,6 +30,10 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             {
                 throw CreateAndLogCriticalDependencyException(failedEmailServerException);
             }
+            catch (InvalidEmailException invalidEmailException)
+            {
+                throw CreateAndLogDependencyValidationException(invalidEmailException);
+            }
         }
 
         private EmailValidationException CreateAndLogValidationException(Xeption exception)
@@ -48,12 +52,25 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             return emailDependencyException;
         }
 
+        private EmailDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var emailDependencyValidationException = new EmailDependencyValidationException(exception);
+            this.loggingBroker.LogError(emailDependencyValidationException);
 
-        private Email ConvertToMeaningfulServerError(PostmarkResponse postmarkResponse)
+            return emailDependencyValidationException;
+        }
+
+
+        private Email ConvertToMeaningfulError(PostmarkResponse postmarkResponse)
         {
             var innerException = new Exception(postmarkResponse.Message);
 
-            throw new FailedEmailServerException(innerException);
+            return postmarkResponse.Status switch
+            {
+                PostmarkStatus.ServerError => throw new FailedEmailServerException(innerException),
+                PostmarkStatus.UserError => throw new InvalidEmailException(innerException),
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 broker.SendEmail(It.IsAny<Email>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptionAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedEmailDependencyValidationException))),
                         Times.Once);
 

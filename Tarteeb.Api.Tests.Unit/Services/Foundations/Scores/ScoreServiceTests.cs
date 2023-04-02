@@ -67,23 +67,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             return randomScore;
         }
 
-        public static TheoryData<int> InvalidSeconds()
-        {
-            int secondsInPast = -1 * new IntRange(
-                min: 60,
-                max: short.MaxValue).GetValue();
-
-            int secondsInFuture = new IntRange(
-                min: 0,
-                max: short.MaxValue).GetValue();
-
-            return new TheoryData<int>
-            {
-                secondsInPast,
-                secondsInFuture
-            };
-        }
-
         private static int GetRandomNegativeNumber() =>
            -1 * new IntRange(min: 2, max: 10).GetValue();
 

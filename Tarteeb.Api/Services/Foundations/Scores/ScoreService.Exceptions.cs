@@ -30,10 +30,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             {
                 throw CreateAndLogValidationException(nullScoreException);
             }
-            catch (NullScoreException nullScoreException)
-            {
-                throw CreateAndLogValidationException(nullScoreException);
-            }
             catch (InvalidScoreException invalidScoreException)
             {
                 throw CreateAndLogValidationException(invalidScoreException);

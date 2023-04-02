@@ -23,13 +23,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
-                (Rule: IsNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
+                (Rule: IsNotRecent(score.CreatedDate), nameof(Score.CreatedDate)),
 
                 (Rule: IsNotSame(
-                    firstDate: score.UpdatedDate,
-                    secondDate: score.CreatedDate,
-                    secondDateName: nameof(Score.CreatedDate)),
-                    Parameter: nameof(Score.UpdatedDate)));
+                    firstDate: score.CreatedDate,
+                    secondDate: score.UpdatedDate,
+                    secondDateName: nameof(Score.UpdatedDate)),
+                    Parameter: nameof(Score.CreatedDate)));
         }
 
         private void ValidateScoreOnModify(Score score)

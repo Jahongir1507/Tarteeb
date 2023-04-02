@@ -61,21 +61,35 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             var invalidScoreException = new InvalidScoreException();
 
+
             invalidScoreException.AddData(
                 key: nameof(Score.Id),
                 values: "Id is required");
 
             invalidScoreException.AddData(
-                key: nameof(Score.EffortLink),
-                    values: "Text is required");
+               key: nameof(Score.Grade),
+               values: "Grade is required");
 
             invalidScoreException.AddData(
-                key: nameof(Score.CreatedDate),
-                values: "Value is required");
+               key: nameof(Score.Weight),
+               values: "Weight is required");
+
+            invalidScoreException.AddData(
+               key: nameof(Score.TicketId),
+               values: "Id is required");
+
+            invalidScoreException.AddData(
+               key: nameof(Score.UserId),
+               values: "Id is required");
+
+            invalidScoreException.AddData(
+               key: nameof(Score.CreatedDate),
+               values: "Date is required");
+
 
             invalidScoreException.AddData(
                 key: nameof(Score.UpdatedDate),
-                values: "Value is required");
+                 "Date is required");
 
             var expectedScoreValidationException =
                 new ScoreValidationException(invalidScoreException);
@@ -113,7 +127,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             invalidScoreException.AddData(
                 key: nameof(Score.CreatedDate),
-                values: $"Date is not same as {nameof(Score.UpdatedDate)}.");
+                values: $"Date is not the same as {nameof(Score.UpdatedDate)}");
 
             var expectedScoreValidationException =
                 new ScoreValidationException(invalidScoreException);
@@ -158,7 +172,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             invalidScoreException.AddData(
                 key: nameof(Score.CreatedDate),
-                values: "Date is not recent.");
+                values: "Date is not recent");
 
             var expectedScoreValidationException =
                 new ScoreValidationException(invalidScoreException);

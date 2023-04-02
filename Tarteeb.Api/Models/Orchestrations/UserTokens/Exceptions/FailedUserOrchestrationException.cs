@@ -3,14 +3,15 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions
 {
-    public class UserTokenOrchestrationDependencyException : Xeption
+    public class FailedUserOrchestrationException : Xeption
     {
-        public UserTokenOrchestrationDependencyException(Xeption innerException)
-            : base(message: "User token dependency error occurred, contact support.", innerException)
+        public FailedUserOrchestrationException(Exception innerException)
+            : base(message: "Failed user token service error occurred, contact support.", innerException)
         { }
     }
 }

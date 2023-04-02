@@ -12,6 +12,7 @@ using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xunit;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using EFxceptions.Models.Exceptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -212,6 +213,59 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+        {
+            Score foreignKeyConflictedScore = CreateRandomScore();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+
+            var  foreignKeyConstraintConflictException = 
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+            
+            var invalidScoreReferenceException =
+                new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
+            
+            var expectedScoreDependencyValidationException = 
+                new ScoreDependencyValidationException(invalidScoreReferenceException);
+            
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+            
+            //when
+            ValueTask<Score> modifyScoreTask =
+                this.scoreService.ModifyScoreAsync(foreignKeyConflictedScore);
+
+            ScoreDependencyValidationException actualScoreDependencyValidationsException =
+                await Assert.ThrowsAsync<ScoreDependencyValidationException>(
+                    modifyScoreTask.AsTask);
+            
+            //then
+            actualScoreDependencyValidationsException.Should().BeEquivalentTo(
+                expectedScoreDependencyValidationException);
+            
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),Times.Once);
+            
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreDependencyValidationException ))), 
+                        Times.Once);
+                
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(foreignKeyConflictedScore.Id), 
+                    Times.Never);
+            
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateScoreAsync(foreignKeyConflictedScore), 
+                    Times.Never);
+            
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

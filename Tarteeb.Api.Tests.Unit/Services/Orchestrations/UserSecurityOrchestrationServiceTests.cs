@@ -9,8 +9,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Models.Foundations.Emails;
+using Tarteeb.Api.Models.Foundations.Emails.Exceptions;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using Tarteeb.Api.Services.Foundations.Emails;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
@@ -24,19 +27,48 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
     {
         private readonly Mock<IUserService> userServiceMock;
         private readonly Mock<ISecurityService> securityServiceMock;
+        private readonly Mock<IEmailService> emailServiceMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IUserSecurityOrchestrationService userSecurityOrchestrationService;
 
         public UserSecurityOrchestrationServiceTests()
         {
-            userServiceMock = new Mock<IUserService>();
-            securityServiceMock = new Mock<ISecurityService>();
-            loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.userServiceMock = new Mock<IUserService>();
+            this.securityServiceMock = new Mock<ISecurityService>();
+            this.emailServiceMock = new Mock<IEmailService>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userSecurityOrchestrationService = new UserSecurityOrchestrationService(
                 userService: userServiceMock.Object,
                 securityService: securityServiceMock.Object,
+                emailService: emailServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
+        }
+
+        public static TheoryData<Xeption> UserEmailDependencyExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new EmailDependencyException(someInnerException),
+                new EmailServiceException(someInnerException),
+                new UserDependencyException(someInnerException),
+                new UserServiceException(someInnerException)
+            };
+        }
+
+        public static TheoryData<Xeption> UserEmailDependencyValidationExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new EmailDependencyValidationException(someInnerException),
+                new EmailValidationException(someInnerException),
+                new UserDependencyValidationException(someInnerException),
+                new UserValidationException(someInnerException)
+            };
         }
 
         public static TheoryData<Xeption> UserDependencyExceptions()
@@ -90,5 +122,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             return filler;
         }
 
+        private static Email CreateUserEmail() =>
+            CreateEmailFiller().Create();
+
+        private static Filler<Email> CreateEmailFiller() =>
+            new Filler<Email>();
     }
 }

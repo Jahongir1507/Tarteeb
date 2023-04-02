@@ -12,6 +12,6 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
     {
         public InvalidScoreReferenceException(Exception innerException)
             : base(message: "Invalid score reference error occurred.", innerException)
-        { }
+        { } 
     }
 }

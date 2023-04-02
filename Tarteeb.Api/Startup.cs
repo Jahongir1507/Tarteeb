@@ -18,6 +18,7 @@ using Tarteeb.Api.Brokers.Emails;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Brokers.Tokens;
+using Tarteeb.Api.Services.Foundations.Emails;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Teams;
@@ -52,8 +53,6 @@ namespace Tarteeb.Api
                     name: "v1",
                     info: new OpenApiInfo { Title = "Tarteeb.Api", Version = "v1" });
             });
-
-            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -95,6 +94,7 @@ namespace Tarteeb.Api
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IScoreService, ScoreService>();
             services.AddTransient<ITimeService, TimeService>();
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         private static void AddProcessingServices(IServiceCollection services) =>

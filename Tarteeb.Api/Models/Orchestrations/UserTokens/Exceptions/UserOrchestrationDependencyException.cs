@@ -7,10 +7,10 @@ using Xeptions;
 
 namespace Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions
 {
-    public class UserTokenOrchestrationServiceException : Xeption
+    public class UserOrchestrationDependencyException : Xeption
     {
-        public UserTokenOrchestrationServiceException(Xeption innerException)
-            : base(message: "User token service error occurred, contact support.", innerException)
+        public UserOrchestrationDependencyException(Xeption innerException)
+            : base(message: "User dependency error occurred, contact support.", innerException)
         { }
     }
 }

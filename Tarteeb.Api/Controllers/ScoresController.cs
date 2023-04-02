@@ -108,27 +108,27 @@ namespace Tarteeb.Api.Controllers
             {
                 Score modifiedScore =
                     await this.scoreService.ModifyScoreAsync(score);
-                
+
                 return Ok(modifiedScore);
             }
-            catch(ScoreValidationException scoreValidationException)
+            catch (ScoreValidationException scoreValidationException)
                 when (scoreValidationException.InnerException is NotFoundScoreException)
             {
                 return NotFound(scoreValidationException.InnerException);
             }
-            catch(ScoreValidationException scoreValidationException)
+            catch (ScoreValidationException scoreValidationException)
             {
                 return BadRequest(scoreValidationException.InnerException);
             }
-            catch(ScoreDependencyValidationException scoreDependencyValidationException)
+            catch (ScoreDependencyValidationException scoreDependencyValidationException)
             {
                 return BadRequest(scoreDependencyValidationException.InnerException);
             }
-            catch(ScoreDependencyException scoreDependencyException)
+            catch (ScoreDependencyException scoreDependencyException)
             {
                 return InternalServerError(scoreDependencyException.InnerException);
             }
-            catch(ScoreServiceException scoreServiceException)
+            catch (ScoreServiceException scoreServiceException)
             {
                 return InternalServerError(scoreServiceException.InnerException);
             }

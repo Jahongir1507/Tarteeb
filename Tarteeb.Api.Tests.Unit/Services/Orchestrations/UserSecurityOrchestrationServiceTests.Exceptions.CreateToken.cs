@@ -23,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             string someString = GetRandomString();
 
             var expectedUserTokenOrchestrationDependencyException =
-                new UserTokenOrchestrationDependencyException(dependencyException);
+                new UserOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(dependencyException);
@@ -32,8 +32,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             Action createTokenAction = () =>
                 this.userSecurityOrchestrationService.CreateUserToken(email: someString, password: someString);
 
-            UserTokenOrchestrationDependencyException actualUserTokenOrchestrationDependencyException =
-                Assert.Throws<UserTokenOrchestrationDependencyException>(createTokenAction);
+            UserOrchestrationDependencyException actualUserTokenOrchestrationDependencyException =
+                Assert.Throws<UserOrchestrationDependencyException>(createTokenAction);
 
             // then
             actualUserTokenOrchestrationDependencyException.Should().BeEquivalentTo(
@@ -59,10 +59,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             var serviceException = new Exception();
 
             var failedUserTokenOrchestrationException = new
-                FailedUserTokenOrchestrationException(serviceException);
+                FailedUserOrchestrationException(serviceException);
 
             var expectedUserTokenOrchestrationServiceException =
-                new UserTokenOrchestrationServiceException(failedUserTokenOrchestrationException);
+                new UserOrchestrationServiceException(failedUserTokenOrchestrationException);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(serviceException);
@@ -71,8 +71,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             Action createTokenAction = () =>
                 this.userSecurityOrchestrationService.CreateUserToken(email: someString, password: someString);
 
-            UserTokenOrchestrationServiceException actualUserTokenOrchestrationServiceException =
-                Assert.Throws<UserTokenOrchestrationServiceException>(createTokenAction);
+            UserOrchestrationServiceException actualUserTokenOrchestrationServiceException =
+                Assert.Throws<UserOrchestrationServiceException>(createTokenAction);
 
             // then
             actualUserTokenOrchestrationServiceException.Should().BeEquivalentTo(

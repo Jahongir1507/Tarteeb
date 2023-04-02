@@ -14,6 +14,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         private void ValidateScoreOnAdd(Score score)
         {
             ValidateScoreNotNull(score);
+
+            Validate(
+                (Rule: IsInvalid(score.Id), Parameter: nameof(Score.Id)),
+                (Rule: IsInvalid(score.EffortLink), Parameter: nameof(Score.EffortLink)),
+                (Rule: IsInvalid(score.CreatedDate), Parameter: nameof(Score.CreatedDate)),
+                (Rule: IsInvalid(score.UpdatedDate), Parameter: nameof(Score.UpdatedDate))
+                );
         }
 
         private void ValidateScoreNotNull(Score score)
@@ -28,6 +35,18 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         {
             Condition = id == default,
             Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(string text) => new
+        {
+            Condition = string.IsNullOrWhiteSpace(text),
+            Message = "Text is required"
+        };
+
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Value is required"
         };
 
         private static void ValidateStorageScoreExists(Score maybeScore, Guid scoreId)

@@ -11,9 +11,8 @@ using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using FluentAssertions;
 using EFxceptions.Models.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -127,6 +126,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedScoreDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertScoreAsync(It.IsAny<Score>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Score someScore = CreateRandomScore();
+            var serviceException = new Exception();
+
+            var failedScoreServiceException =
+                new FailedScoreServiceException(serviceException);
+
+            var expectedScoreServiceException =
+                new ScoreServiceException(failedScoreServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
+                .Throws(serviceException);
+
+            // when
+            ValueTask<Score> addScoreTask =
+                this.scoreService.AddScoreAsync(someScore);
+
+            ScoreServiceException actualScoreServiceException =
+                await Assert.ThrowsAsync<ScoreServiceException>(addScoreTask.AsTask);
+
+            // then
+            actualScoreServiceException.Should().BeEquivalentTo(expectedScoreServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreServiceException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertScoreAsync(It.IsAny<Score>()), Times.Never);

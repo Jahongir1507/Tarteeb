@@ -4,6 +4,9 @@
 //=================================
 
 using System;
+using System.Threading.Tasks;
+using Tarteeb.Api.Models.Foundations.Emails.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
@@ -13,6 +16,7 @@ namespace Tarteeb.Api.Services.Orchestrations
 {
     public partial class UserSecurityOrchestrationService
     {
+        private delegate ValueTask<User> ReturningUserFunction();
         private delegate UserToken ReturningUserTokenFunction();
 
         private UserToken TryCatch(ReturningUserTokenFunction returningUserTokenFunction)
@@ -46,6 +50,30 @@ namespace Tarteeb.Api.Services.Orchestrations
             }
         }
 
+        private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
+        {
+            try
+            {
+                return await returningUserFunction();
+            }
+            catch (EmailDependencyException emailDependencyException)
+            {
+                throw CreateAndLogDependencyException(emailDependencyException);
+            }
+            catch (EmailServiceException emailServiceException)
+            {
+                throw CreateAndLogDependencyException(emailServiceException);
+            }
+            catch (UserDependencyException eserDependencyException)
+            {
+                throw CreateAndLogDependencyException(eserDependencyException);
+            }
+            catch (UserServiceException eserServiceException)
+            {
+                throw CreateAndLogDependencyException(eserServiceException);
+            }
+        }
+
         private UserTokenOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
         {
             var userTokenOrchestrationValidationException = new UserTokenOrchestrationValidationException(exception);
@@ -54,9 +82,9 @@ namespace Tarteeb.Api.Services.Orchestrations
             return userTokenOrchestrationValidationException;
         }
 
-        private UserTokenOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        private UserOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var userTokenOrchestrationDependencyException = new UserTokenOrchestrationDependencyException(exception);
+            var userTokenOrchestrationDependencyException = new UserOrchestrationDependencyException(exception);
             this.loggingBroker.LogError(userTokenOrchestrationDependencyException);
 
             return userTokenOrchestrationDependencyException;

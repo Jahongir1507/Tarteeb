@@ -23,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             string someString = GetRandomString();
 
             var expectedUserTokenOrchestrationDependencyException =
-                new UserTokenOrchestrationDependencyException(dependencyException);
+                new UserOrchestrationDependencyException(dependencyException);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(dependencyException);
@@ -32,8 +32,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             Action createTokenAction = () =>
                 this.userSecurityOrchestrationService.CreateUserToken(email: someString, password: someString);
 
-            UserTokenOrchestrationDependencyException actualUserTokenOrchestrationDependencyException =
-                Assert.Throws<UserTokenOrchestrationDependencyException>(createTokenAction);
+            UserOrchestrationDependencyException actualUserTokenOrchestrationDependencyException =
+                Assert.Throws<UserOrchestrationDependencyException>(createTokenAction);
 
             // then
             actualUserTokenOrchestrationDependencyException.Should().BeEquivalentTo(

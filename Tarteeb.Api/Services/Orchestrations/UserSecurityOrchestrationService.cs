@@ -35,14 +35,15 @@ namespace Tarteeb.Api.Services.Orchestrations
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<User> CreateUserAccountAsync(User user)
+        public ValueTask<User> CreateUserAccountAsync(User user) =>
+        TryCatch(async () =>
         {
             User persistedUser = await this.userService.AddUserAsync(user);
             Email email = CreateUserEmail(persistedUser);
             await this.emailService.SendEmailAsync(email);
 
             return persistedUser;
-        }
+        });
 
         public UserToken CreateUserToken(string email, string password) =>
         TryCatch(() =>

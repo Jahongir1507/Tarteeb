@@ -23,7 +23,6 @@ namespace Tarteeb.Api.Controllers
         public AccountsController(IUserSecurityOrchestrationService userSecurityOrchestrationService) =>
             this.userSecurityOrchestrationService = userSecurityOrchestrationService;
 
-
         [HttpPost]
         public async ValueTask<ActionResult<User>> SignUpAsync(User user)
         {
@@ -80,6 +79,5 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(userTokenOrchestrationServiceException.InnerException);
             }
         }
-
     }
 }

@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRemoveIfIdIsInvalidAndLogItAsync()
         {
-            //given
+            // given
             Guid invalidScoreId = Guid.Empty;
             var invalidScoreException = new InvalidScoreException();
 
@@ -29,7 +29,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             var expectedScoreValidationException =
                 new ScoreValidationException(invalidScoreException);
 
-            //when
+            // when
             ValueTask<Score> removeScoreByIdTask =
                 this.scoreService.RemoveScoreByIdAsync(invalidScoreId);
 
@@ -37,7 +37,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 await Assert.ThrowsAsync<ScoreValidationException>(
                     removeScoreByIdTask.AsTask);
 
-            //then
+            // then
             actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -55,7 +55,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldThrowNotFoundExceptionOnRemoveIfScoreIsNotFoundAndLogItAsync()
         {
-            //given
+            // given
             Guid randomId = Guid.NewGuid();
             Guid inputScoreId = randomId;
             Score noScore = null;
@@ -69,7 +69,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectScoreByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noScore);
 
-            //when
+            // when
             ValueTask<Score> removeScoreByIdTask =
                 this.scoreService.RemoveScoreByIdAsync(inputScoreId);
 
@@ -77,7 +77,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 await Assert.ThrowsAsync<ScoreValidationException>(
                     removeScoreByIdTask.AsTask);
 
-            //then
+            // then
             actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
 
             this.storageBrokerMock.Verify(broker =>

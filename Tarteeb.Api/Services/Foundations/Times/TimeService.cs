@@ -41,6 +41,18 @@ namespace Tarteeb.Api.Services.Foundations.Times
         public IQueryable<Time> RetrieveAllTimes() =>
             TryCatch(() => this.storageBroker.SelectAllTimes());
 
+        public ValueTask<Time> ModifyTimeAsync(Time time) =>
+        TryCatch(async () =>
+        {
+            ValidateTimeOnModify(time);
+            var maybeTime = await this.storageBroker.SelectTimeByIdAsync(time.Id);
+
+            ValidateStorageTimeExists(maybeTime, time.Id);
+            ValidateAgainstStorageTimeOnModify(inputTime: time, storageTime: maybeTime);
+
+            return await this.storageBroker.UpdateTimeAsync(time);
+        });
+
         public ValueTask<Time> RemoveTimeByIdAsync(Guid timeId) =>
         TryCatch(async () =>
         {

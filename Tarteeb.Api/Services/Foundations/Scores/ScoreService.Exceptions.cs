@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
     public partial class ScoreService
     {
         private delegate ValueTask<Score> ReturningScoreFuncion();
+        private delegate IQueryable<Score> ReturningScoresFunction();
 
         private async ValueTask<Score> TryCatch(ReturningScoreFuncion
             returningScoreFunction)
@@ -54,6 +56,26 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 var failedScoreStorageException = new FailedScoreStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedScoreStorageException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedScoreServiceException = new FailedScoreServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedScoreServiceException);
+            }
+        }
+
+        private IQueryable<Score> TryCatch(ReturningScoresFunction returningScoresFunction)
+        {
+            try
+            {
+                return returningScoresFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedScoreStorageException = new FailedScoreStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
             catch (Exception serviceException)
             {

@@ -30,15 +30,41 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         public TimeServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
-            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
 
             this.timeService = new TimeService(
                 storageBroker: this.storageBrokerMock.Object,
-                dateTimeBroker: this.dateTimeBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
+
+        private Time CreateRandomModifyTime(DateTimeOffset randomDate)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Time randomTime = CreateRandomTime(randomDate);
+
+            randomTime.CreatedDate =
+                randomTime.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomTime;
+        }
+
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 9).GetValue();
+
+        private static Time CreateRandomTime(DateTimeOffset dates) =>
+           CreateTimeFiller(dates).Create();
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static SqlException CreateSqlException() =>
+           (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         public static TheoryData<int> InvalidSeconds()
         {
@@ -57,21 +83,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
             };
         }
 
-        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
-            actualException => actualException.SameExceptionAs(expectedException);
-
-        private static DateTimeOffset GetRandomDateTime() =>
-           new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
-
-        private static SqlException CreateSqlException() =>
-            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
-
-        private IQueryable<Time> CreateRandomTimes()
-        {
-            return CreateTimeFiller(dates: GetRandomDateTime())
-                .Create(count: GetRandomNumber()).AsQueryable();
-        }
-
         private static int GetRandomNumber() =>
              new IntRange(min: 2, max: 99).GetValue();
 
@@ -84,11 +95,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         private static Time CreateRandomTime() =>
             CreateTimeFiller(GetRandomDateTimeOffset()).Create();
 
-        private static Time CreateRandomTime(DateTimeOffset dates) =>
-          CreateTimeFiller(dates).Create();
-
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private IQueryable<Time> CreateRandomTimes()
+        {
+            return CreateTimeFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static Filler<Time> CreateTimeFiller(DateTimeOffset dates)
         {

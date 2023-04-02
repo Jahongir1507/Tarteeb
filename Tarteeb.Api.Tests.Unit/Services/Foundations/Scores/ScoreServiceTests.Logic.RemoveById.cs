@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldRemoveScoreByIdAsync()
         {
-            //given
+            // given
             Guid randomId = Guid.NewGuid();
             Guid inputScoreId = randomId;
             Score randomScore = CreateRandomScore();
@@ -35,11 +35,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.DeleteScoreAsync(expectedInputScore))
                     .ReturnsAsync(deletedScore);
 
-            //when
+            // when
             Score actualScore = await this.scoreService
                 .RemoveScoreByIdAsync(inputScoreId);
 
-            //then
+            // then
             actualScore.Should().BeEquivalentTo(expectedScore);
 
             this.storageBrokerMock.Verify(broker =>

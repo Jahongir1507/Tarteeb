@@ -6,11 +6,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xeptions;
+using EFxceptions.Models.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -44,6 +46,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                     new FailedScoreStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
+            }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidScoreReferenceException =
+                    new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidScoreReferenceException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {

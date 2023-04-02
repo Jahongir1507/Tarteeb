@@ -230,7 +230,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
             
             var expectedScoreDependencyValidationException = 
-                new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
+                new ScoreDependencyValidationException(invalidScoreReferenceException);
             
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())

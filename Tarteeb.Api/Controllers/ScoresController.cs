@@ -74,7 +74,6 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
-
         [HttpGet("{scoreId}")]
         public async ValueTask<ActionResult<Score>> GetScoreByIdAsync(Guid scoreId)
         {

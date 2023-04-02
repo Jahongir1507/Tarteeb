@@ -68,7 +68,7 @@ namespace Tarteeb.Api.Controllers
             {
                 return InternalServerError(scoreDependencyException);
             }
-            catch(ScoreServiceException scoreServiceException)
+            catch (ScoreServiceException scoreServiceException)
             {
                 return InternalServerError(scoreServiceException);
             }

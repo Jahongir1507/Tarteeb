@@ -6,10 +6,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -44,6 +46,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                     new FailedScoreStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
+            }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsScoreException = new AlreadyExistsScoreException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsScoreException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
@@ -125,6 +133,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker.LogError(scoreServiceException);
 
             return scoreServiceException;
+        }
+
+        private Exception CreateAndDependencyValidationException(Xeption exception)
+        {
+            var scoreDependencyValidationException = new ScoreDependencyValidationException(exception);
+            this.loggingBroker.LogError(scoreDependencyValidationException);
+
+            return scoreDependencyValidationException;
         }
     }
 }

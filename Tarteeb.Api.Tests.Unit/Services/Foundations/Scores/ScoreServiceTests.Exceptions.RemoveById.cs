@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldThrowDependencyValidationOnRemoveIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someScoreId = Guid.NewGuid();
             var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
@@ -34,7 +34,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(databaseUpdateConcurrencyException);
 
-            //when
+            // when
             ValueTask<Score> removeScoreByIdAsync =
                 this.scoreService.RemoveScoreByIdAsync(someScoreId);
 
@@ -42,7 +42,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 await Assert.ThrowsAsync<ScoreDependencyValidationException>(
                     removeScoreByIdAsync.AsTask);
 
-            //then
+            // then
             actualScoreDependencyValidationException.Should().BeEquivalentTo(
                 expectedScoreDependencyValidationException);
 
@@ -64,7 +64,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someScoreId = Guid.NewGuid();
             SqlException sqlException = CreateSqlException();
 
@@ -78,14 +78,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
 
-            //when
+            // when
             ValueTask<Score> deleteScoreTask =
                 this.scoreService.RemoveScoreByIdAsync(someScoreId);
 
             ScoreDependencyException actualScoreDependencyException =
                 await Assert.ThrowsAsync<ScoreDependencyException>(deleteScoreTask.AsTask);
 
-            //then
+            // then
             actualScoreDependencyException.Should().BeEquivalentTo(
                 expectedScoreDepenedencyException);
 
@@ -104,7 +104,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         [Fact]
         public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
         {
-            //given
+            // given
             Guid someScoreId = Guid.NewGuid();
             var serviceException = new Exception();
 
@@ -118,7 +118,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(serviceException);
 
-            //when
+            // when
             ValueTask<Score> removeScoreByIdTask =
                 this.scoreService.RemoveScoreByIdAsync(someScoreId);
 
@@ -126,7 +126,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 await Assert.ThrowsAsync<ScoreServiceException>(
                     removeScoreByIdTask.AsTask);
 
-            //then
+            // then
             actualScoreServiceException.Should().BeEquivalentTo(
                 expectedScoreServiceException);
 

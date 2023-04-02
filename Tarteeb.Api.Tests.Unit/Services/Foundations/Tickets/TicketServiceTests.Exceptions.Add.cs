@@ -99,14 +99,64 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
         }
 
         [Fact]
+        public async void ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Ticket someTicket = CreateRandomTicket();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidTicketReferenceException =
+                new InvalidTicketReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedTicketValidationException =
+                new TicketDependencyValidationException(invalidTicketReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Ticket> addTicketTask =
+                this.ticketService.AddTicketAsync(someTicket);
+
+            TicketDependencyValidationException actualTicketDependencyValidationException =
+                await Assert.ThrowsAsync<TicketDependencyValidationException>(
+                    addTicketTask.AsTask);
+
+            // then
+            actualTicketDependencyValidationException.Should().BeEquivalentTo(
+                expectedTicketValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
         {
             // given
             Ticket someTicket = CreateRandomTicket();
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
-            var lockedTicketException = new LockedTicketException(dbUpdateConcurrencyException);
-            var expectedTicketDependencyValidationException = new TicketDependencyValidationException(lockedTicketException);
+            var lockedTicketException = 
+                new LockedTicketException(dbUpdateConcurrencyException);
+
+            var expectedTicketDependencyValidationException = 
+                new TicketDependencyValidationException(lockedTicketException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
@@ -119,15 +169,18 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Tickets
                  await Assert.ThrowsAsync<TicketDependencyValidationException>(addTicketTask.AsTask);
 
             // then
-            actualTicketDependencyValidationException.Should().BeEquivalentTo(expectedTicketDependencyValidationException);
+            actualTicketDependencyValidationException.Should().BeEquivalentTo(
+                expectedTicketDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
-                SameExceptionAs(expectedTicketDependencyValidationException))), Times.Once);
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTicketDependencyValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Never);
+            this.storageBrokerMock.Verify(broker => 
+                broker.InsertTicketAsync(It.IsAny<Ticket>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

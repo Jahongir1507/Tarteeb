@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xeptions;
-using EFxceptions.Models.Exceptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {

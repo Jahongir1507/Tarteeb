@@ -4,14 +4,15 @@
 //=================================
 
 using System;
-using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xunit;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using EFxceptions.Models.Exceptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {

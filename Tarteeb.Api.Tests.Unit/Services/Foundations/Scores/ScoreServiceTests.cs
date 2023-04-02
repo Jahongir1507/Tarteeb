@@ -47,6 +47,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+        private static Score CreateRandomScore(DateTimeOffset dates) =>
+            CreateScoreFiller(dates).Create();
+
         private static Score CreateRandomScore() =>
             CreateScoreFiller(GetRandomDateTime()).Create();
 

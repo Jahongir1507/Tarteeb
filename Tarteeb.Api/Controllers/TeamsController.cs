@@ -79,7 +79,7 @@ namespace Tarteeb.Api.Controllers
         {
             try
             {
-                return await this.teamService.RetrieveTeamByIdAsync(Id);
+                return await this.teamService.RetrieveTeamByIdAsync(teamId);
             }
             catch (TeamDependencyException teamDependencyException)
             {

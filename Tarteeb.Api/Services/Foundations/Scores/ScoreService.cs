@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -30,6 +31,9 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
         public ValueTask<Score> AddScoreAsync(Score score) =>
             throw new NotImplementedException();
+            
+        public IQueryable<Score> RetrieveAllScores() =>
+            TryCatch(() => this.storageBroker.SelectAllScores());
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>

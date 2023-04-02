@@ -4,9 +4,11 @@
 //=================================
 
 using System.Linq;
+using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
+using Tarteeb.Api.Services.Foundations.Emails;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 
@@ -16,17 +18,23 @@ namespace Tarteeb.Api.Services.Orchestrations
     {
         private readonly IUserService userService;
         private readonly ISecurityService securityService;
+        private readonly IEmailService emailService;
         private readonly ILoggingBroker loggingBroker;
 
         public UserSecurityOrchestrationService(
             IUserService userService,
             ISecurityService securityService,
+            IEmailService emailService,
             ILoggingBroker loggingBroker)
         {
             this.userService = userService;
             this.securityService = securityService;
+            this.emailService = emailService;
             this.loggingBroker = loggingBroker;
         }
+
+        public ValueTask<User> CreateUserAccountAsync(User user) =>
+            throw new System.NotImplementedException();
 
         public UserToken CreateUserToken(string email, string password) =>
         TryCatch(() =>

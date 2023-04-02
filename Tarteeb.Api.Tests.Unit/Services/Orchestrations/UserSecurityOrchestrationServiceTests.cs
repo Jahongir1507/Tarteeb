@@ -9,8 +9,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
+using Tarteeb.Api.Models.Foundations.Emails;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
+using Tarteeb.Api.Services.Foundations.Emails;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Users;
 using Tarteeb.Api.Services.Orchestrations;
@@ -24,18 +26,21 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
     {
         private readonly Mock<IUserService> userServiceMock;
         private readonly Mock<ISecurityService> securityServiceMock;
+        private readonly Mock<IEmailService> emailServiceMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IUserSecurityOrchestrationService userSecurityOrchestrationService;
 
         public UserSecurityOrchestrationServiceTests()
         {
-            userServiceMock = new Mock<IUserService>();
-            securityServiceMock = new Mock<ISecurityService>();
-            loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.userServiceMock = new Mock<IUserService>();
+            this.securityServiceMock = new Mock<ISecurityService>();
+            this.emailServiceMock = new Mock<IEmailService>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.userSecurityOrchestrationService = new UserSecurityOrchestrationService(
                 userService: userServiceMock.Object,
                 securityService: securityServiceMock.Object,
+                emailService: emailServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
 
@@ -90,5 +95,31 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             return filler;
         }
 
+        private Email CreateUserEmail(User inputUser)
+        {
+            string subject = "Confirm your email";
+            string htmlBody = @$"
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Hey {inputUser.FirstName}</h1>
+    <p>Thank you for registering for our schooling system. Please confirm your email address by clicking the button below.</p>
+    <a href=""https://www.example.com/confirm-email"">
+      <button>Confirm Email</button>
+    </a>
+  </body>
+</html>
+";
+
+            return new Email
+            {
+                Id = Guid.NewGuid(),
+                Subject = subject,
+                HtmlBody = htmlBody,
+                SenderAddress = GetRandomString(),
+                ReceiverAddress = inputUser.Email,
+                TrackOpens = true
+            };
+        }
     }
 }

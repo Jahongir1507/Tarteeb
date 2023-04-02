@@ -31,8 +31,13 @@ namespace Tarteeb.Api.Services.Foundations.Emails
                 throw CreateAndLogCriticalDependencyException(failedEmailServerException);
             }
             catch (InvalidEmailException invalidEmailException)
+                when(invalidEmailException.InnerException is not null)
             {
                 throw CreateAndLogDependencyValidationException(invalidEmailException);
+            }
+            catch (InvalidEmailException invalidEmailException)
+            {
+                throw CreateAndLogValidationException(invalidEmailException);
             }
         }
 

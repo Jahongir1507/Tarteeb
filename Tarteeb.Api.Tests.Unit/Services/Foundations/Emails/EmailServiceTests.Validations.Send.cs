@@ -58,19 +58,19 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
 
             invalidEmailException.AddData(
                 key: nameof(Email.SenderAddress),
-                values: "Value is required.");
+                values: "Value is required");
 
             invalidEmailException.AddData(
-                key: nameof(Email.ReferenceEquals),
-                values: "Value is required.");
+                key: nameof(Email.ReceiverAddress),
+                values: "Value is required");
 
             invalidEmailException.AddData(
                 key: nameof(Email.Subject),
-                values: "Value is required.");
+                values: "Value is required");
 
             invalidEmailException.AddData(
                 key: nameof(Email.HtmlBody),
-                values: "Value is required.");
+                values: "Value is required");
 
             var expectedEmailValidationException =
                 new EmailValidationException(invalidEmailException);

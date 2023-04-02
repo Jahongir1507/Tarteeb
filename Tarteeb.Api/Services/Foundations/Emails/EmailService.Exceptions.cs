@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using PostmarkDotNet;
 using Tarteeb.Api.Models.Foundations.Emails;
@@ -31,13 +32,19 @@ namespace Tarteeb.Api.Services.Foundations.Emails
                 throw CreateAndLogCriticalDependencyException(failedEmailServerException);
             }
             catch (InvalidEmailException invalidEmailException)
-                when(invalidEmailException.InnerException is not null)
+                when (invalidEmailException.InnerException is not null)
             {
                 throw CreateAndLogDependencyValidationException(invalidEmailException);
             }
             catch (InvalidEmailException invalidEmailException)
             {
                 throw CreateAndLogValidationException(invalidEmailException);
+            }
+            catch (Exception exception)
+            {
+                var failedEmailServiceException = new FailedEmailServiceException(exception);
+
+                throw CreateAndLogServiceException(failedEmailServiceException);
             }
         }
 
@@ -65,6 +72,13 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             return emailDependencyValidationException;
         }
 
+        private EmailServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var emailServiceException = new EmailServiceException(exception);
+            this.loggingBroker.LogError(emailServiceException);
+
+            return emailServiceException;
+        }
 
         private Email ConvertToMeaningfulError(PostmarkResponse postmarkResponse)
         {

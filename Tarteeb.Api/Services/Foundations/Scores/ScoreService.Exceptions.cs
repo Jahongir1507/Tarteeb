@@ -9,7 +9,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -97,7 +96,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
             return scoreDependencyException;
         }
-
 
         private ScoreServiceException CreateAndLogServiceException(Xeption exception)
         {

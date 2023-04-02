@@ -47,9 +47,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateScoreAsync(It.IsAny<Score>()), Times.Never);
 
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -129,8 +129,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                  broker.UpdateScoreAsync(It.IsAny<Score>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -174,8 +174,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(invalidScore.Id), Times.Never());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -222,8 +222,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -236,9 +236,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             Score nonExistScore = randomScore;
             nonExistScore.CreatedDate = randomDateTime.AddMinutes(randomNegativMinutes);
             Score nullScore = null;
-
-            //nonExistScore.UpdatedDate =
-            //    randomDateTime.AddMinutes(randomMinutes);
 
             var notFoundScoreException =
                 new NotFoundScoreException(nonExistScore.Id);

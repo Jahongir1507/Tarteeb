@@ -16,7 +16,6 @@ using Tarteeb.Api.Services.Foundations.Scores;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
-using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -55,6 +54,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 secondsInFuture
             };
         }
+
         private Score CreateRandomModifyScore(DateTimeOffset dates)
         {
             int randomDaysAgo = GetRandomNegativeNumber();
@@ -101,4 +101,3 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         }
     }
 }
-

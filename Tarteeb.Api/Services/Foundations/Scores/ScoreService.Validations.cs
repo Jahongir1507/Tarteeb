@@ -7,7 +7,6 @@ using System;
 using System.Data;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Times;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -32,7 +31,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                     secondDate: score.CreatedDate,
                     secondDateName: nameof(Score.CreatedDate)),
                     Parameter: nameof(Score.UpdatedDate)));
-
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -115,14 +113,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsNotSame(
                     firstDate: inputScore.CreatedDate,
                     secondDate: storageScore.CreatedDate,
-                    secondDateName: nameof(Time.CreatedDate)),
-                Parameter: nameof(Time.CreatedDate)),
+                    secondDateName: nameof(Score.CreatedDate)),
+                Parameter: nameof(Score.CreatedDate)),
 
                 (Rule: IsSame(
                     firstDate: inputScore.UpdatedDate,
                     secondDate: storageScore.UpdatedDate,
-                    secondDateName: nameof(Time.UpdatedDate)),
-                Parameter: nameof(Time.UpdatedDate)));
+                    secondDateName: nameof(Score.UpdatedDate)),
+                Parameter: nameof(Score.UpdatedDate)));
         }
 
         private void ValidateScoreId(Guid scoreId) =>

@@ -10,7 +10,6 @@ using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Tickets;
 using Tynamix.ObjectFiller;
 using Xunit;
 
@@ -57,10 +56,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             this.storageBrokerMock.Verify(broker => broker.UpdateScoreAsync(inputScore), Times.Once);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
-

@@ -30,8 +30,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         }
 
         public ValueTask<Score> AddScoreAsync(Score score) =>
-            throw new NotImplementedException();
-            
+        TryCatch(async () =>
+        {
+            ValidateScoreOnModify(score);
+
+            return await this.storageBroker.InsertScoreAsync(score);
+        });
+
         public IQueryable<Score> RetrieveAllScores() =>
             TryCatch(() => this.storageBroker.SelectAllScores());
 
@@ -59,6 +64,19 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             ValidateStorageScoreExists(maybeScore, scoreId);
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
+        });
+
+        public ValueTask<Score> ModifyScoreAsync(Score score) =>
+        TryCatch(async () =>
+        {
+            ValidateScoreOnModify(score);
+
+            Score maybeScore =
+            await this.storageBroker.SelectScoreByIdAsync(score.Id);
+
+            ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
+
+            return await this.storageBroker.UpdateScoreAsync(score);
         });
     }
 }

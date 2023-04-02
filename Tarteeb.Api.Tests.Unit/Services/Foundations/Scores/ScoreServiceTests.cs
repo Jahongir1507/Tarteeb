@@ -4,10 +4,10 @@
 //=================================
 
 using System;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -16,6 +16,7 @@ using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -38,6 +39,43 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 this.loggingBrokerMock.Object);
         }
 
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
+        private Score CreateRandomModifyScore(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            Score randomScore = CreateRandomScore(dates);
+
+            randomScore.CreatedDate =
+                randomScore.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomScore;
+        }
+
+        private static int GetRandomNegativeNumber() =>
+           -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static Score CreatRandomScore() =>
+            CreateScoreFiller(GetRandomDateTime()).Create();
+
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
@@ -47,12 +85,15 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
+        private static Score CreateRandomScore(DateTimeOffset dateTimeOffset) =>
+            CreateScoreFiller(dateTimeOffset).Create();
+
         private static Score CreateRandomScore() =>
-            CreateScoreFiller(GetRandomDateTime()).Create();
+           CreateScoreFiller(GetRandomDateTime()).Create();
 
         private IQueryable<Score> CreateRandomScores()
         {
-            return CreateScoreFiller(dates: GetRandomDateTime())
+            return CreateScoreFiller(date: GetRandomDateTime())
                 .Create(count: GetRandomNumber()).AsQueryable();
         }
 
@@ -62,12 +103,13 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
-        private static Filler<Score> CreateScoreFiller(DateTimeOffset dates)
+
+        private static Filler<Score> CreateScoreFiller(DateTimeOffset date)
         {
             var filler = new Filler<Score>();
 
-            filler.Setup()
-                .OnType<DateTimeOffset>().Use(dates);
+            filler.Setup().
+                OnType<DateTimeOffset>().Use(date);
 
             return filler;
         }

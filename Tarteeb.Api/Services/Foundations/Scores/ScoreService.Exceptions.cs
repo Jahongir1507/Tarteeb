@@ -19,11 +19,16 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         private delegate ValueTask<Score> ReturningScoreFuncion();
         private delegate IQueryable<Score> ReturningScoresFunction();
 
-        private async ValueTask<Score> TryCatch(ReturningScoreFuncion returningScoreFuncion)
+        private async ValueTask<Score> TryCatch(ReturningScoreFuncion
+            returningScoreFunction)
         {
             try
             {
-                return await returningScoreFuncion();
+                return await returningScoreFunction();
+            }
+            catch (NullScoreException nullScoreException)
+            {
+                throw CreateAndLogValidationException(nullScoreException);
             }
             catch (InvalidScoreException invalidScoreException)
             {
@@ -45,6 +50,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 var lockedScoreException = new LockedScoreException(dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedScoreException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedScoreStorageException = new FailedScoreStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedScoreStorageException);
             }
             catch (Exception serviceException)
             {
@@ -98,6 +109,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker.LogError(scoreDependencyValidationException);
 
             return scoreDependencyValidationException;
+        }
+
+        private ScoreDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var scoreDependencyException = new ScoreDependencyException(exception);
+            this.loggingBroker.LogError(scoreDependencyException);
+
+            return scoreDependencyException;
         }
 
         private ScoreServiceException CreateAndLogServiceException(Xeption exception)

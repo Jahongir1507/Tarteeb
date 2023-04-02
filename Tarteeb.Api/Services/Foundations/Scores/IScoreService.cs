@@ -16,5 +16,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         IQueryable<Score> RetrieveAllScores();
         ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId);
         ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId);
+        ValueTask<Score> ModifyScoreAsync(Score score);
     }
 }
+

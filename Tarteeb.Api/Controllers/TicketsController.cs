@@ -79,7 +79,7 @@ namespace Tarteeb.Api.Controllers
         {
             try
             {
-                return await this.ticketService.RetrieveTicketByIdAsync(id);
+                return await this.ticketService.RetrieveTicketByIdAsync(ticketId);
             }
             catch (TicketDependencyException ticketDependencyException)
             {

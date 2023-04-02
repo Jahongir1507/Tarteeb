@@ -78,7 +78,7 @@ namespace Tarteeb.Api.Controllers
         {
             try
             {
-                return await this.userService.RetrieveUserByIdAsync(Id);
+                return await this.userService.RetrieveUserByIdAsync(userId);
             }
             catch (UserDependencyException userDependencyException)
             {

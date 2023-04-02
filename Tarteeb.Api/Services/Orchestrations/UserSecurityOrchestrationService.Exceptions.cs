@@ -105,12 +105,14 @@ namespace Tarteeb.Api.Services.Orchestrations
 
             this.loggingBroker.LogError(userOrchestrationDependencyValidationException);
 
-            return userOrchestrationDependencyValidationException;;
+            return userOrchestrationDependencyValidationException; ;
         }
 
         private UserOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var userTokenOrchestrationDependencyException = new UserOrchestrationDependencyException(exception);
+            var userTokenOrchestrationDependencyException =
+                new UserOrchestrationDependencyException(exception.InnerException as Xeption);
+
             this.loggingBroker.LogError(userTokenOrchestrationDependencyException);
 
             return userTokenOrchestrationDependencyException;

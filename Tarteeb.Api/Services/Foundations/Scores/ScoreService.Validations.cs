@@ -19,7 +19,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.Id), nameof(Score.Id)),
                 (Rule: IsInvalid(score.Grade), nameof(Score.Grade)),
                 (Rule: IsInvalid(score.Weight), nameof(Score.Weight)),
-                (Rule: IsInvalid(score.EffortLink), nameof(Score.EffortLink)),
                 (Rule: IsInvalid(score.TicketId), nameof(Score.TicketId)),
                 (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),

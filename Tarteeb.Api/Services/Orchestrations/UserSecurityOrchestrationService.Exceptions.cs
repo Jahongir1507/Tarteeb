@@ -43,10 +43,10 @@ namespace Tarteeb.Api.Services.Orchestrations
             }
             catch (Exception exception)
             {
-                var failedUserTokenOrchestrationException =
+                var failedUserOrchestrationException =
                     new FailedUserOrchestrationException(exception);
 
-                throw CreateAndLogServiceException(failedUserTokenOrchestrationException);
+                throw CreateAndLogServiceException(failedUserOrchestrationException);
             }
         }
 
@@ -87,6 +87,13 @@ namespace Tarteeb.Api.Services.Orchestrations
             catch (UserValidationException eserValidationException)
             {
                 throw CreateAndLogDependencyValidationException(eserValidationException);
+            }
+            catch (Exception exception)
+            {
+                var failedUserOrchestrationException =
+                    new FailedUserOrchestrationException(exception);
+
+                throw CreateAndLogServiceException(failedUserOrchestrationException);
             }
         }
 

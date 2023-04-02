@@ -52,13 +52,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndDependencyValidationException(alreadyExistsScoreException);
             }
-            // catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
-            // {
-            //     var invalidScoreReferenceException =
-            //         new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
+            catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidScoreReferenceException =
+                    new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
 
-            //     throw CreateAndDependencyValidationException(invalidScoreReferenceException);
-            // }
+                throw CreateAndDependencyValidationException(invalidScoreReferenceException);
+            }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedScoreException = new LockedScoreException(dbUpdateConcurrencyException);

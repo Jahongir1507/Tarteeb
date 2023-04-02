@@ -163,6 +163,57 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given 
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Score randomScore = CreateRandomScore(randomDateTime);
+            Score someScore = randomScore;
+            someScore.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var serviceException = new Exception();
+
+            var failedScoreException =
+                new FailedScoreServiceException(serviceException);
+
+            var expectedScoreServiceException =
+                new ScoreServiceException(failedScoreException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(someScore.Id)).
+                    ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when 
+            ValueTask<Score> modifyScoreTask =
+                this.scoreService.ModifyScoreAsync(someScore);
+
+            ScoreServiceException actualScoreServiceException =
+                await Assert.ThrowsAsync<ScoreServiceException>(
+                    modifyScoreTask.AsTask);
+
+            // then
+            actualScoreServiceException.Should().
+                BeEquivalentTo(expectedScoreServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+               broker.SelectScoreByIdAsync(someScore.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
 

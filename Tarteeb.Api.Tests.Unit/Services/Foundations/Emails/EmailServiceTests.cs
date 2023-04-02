@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
 using PostmarkDotNet;
 using Tarteeb.Api.Brokers.Emails;
@@ -11,6 +12,7 @@ using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models.Foundations.Emails;
 using Tarteeb.Api.Services.Foundations.Emails;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
 {
@@ -32,6 +34,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
 
         private static DateTime GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+         actualException => actualException.SameExceptionAs(expectedException);
 
         private static string GetRandomString()
         {

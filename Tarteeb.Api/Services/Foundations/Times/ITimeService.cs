@@ -14,6 +14,7 @@ namespace Tarteeb.Api.Services.Foundations.Times
     {
         ValueTask<Time> AddTimeAsync(Time time);
         IQueryable<Time> RetrieveAllTimes();
+        ValueTask<Time> ModifyTimeAsync(Time time);
         ValueTask<Time> RemoveTimeByIdAsync(Guid timeId);
     }
 }

@@ -4,8 +4,10 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
@@ -49,6 +51,26 @@ namespace Tarteeb.Api.Controllers
             catch (ScoreServiceException scoreServiceException)
             {
                 return InternalServerError(scoreServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [EnableQuery]
+        public ActionResult<IQueryable<Score>> GetAllScores()
+        {
+            try
+            {
+                IQueryable<Score> allScores = this.scoreService.RetrieveAllScores();
+
+                return Ok(allScores);
+            }
+            catch (ScoreDependencyException scoreDependencyException)
+            {
+                return InternalServerError(scoreDependencyException);
+            }
+            catch (ScoreServiceException scoreServiceException)
+            {
+                return InternalServerError(scoreServiceException);
             }
         }
 

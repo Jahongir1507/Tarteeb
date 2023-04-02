@@ -44,7 +44,7 @@ namespace Tarteeb.Api.Services.Orchestrations
             catch (Exception exception)
             {
                 var failedUserTokenOrchestrationException =
-                    new FailedUserTokenOrchestrationException(exception);
+                    new FailedUserOrchestrationException(exception);
 
                 throw CreateAndLogServiceException(failedUserTokenOrchestrationException);
             }

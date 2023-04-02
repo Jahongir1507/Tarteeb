@@ -59,7 +59,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             var serviceException = new Exception();
 
             var failedUserTokenOrchestrationException = new
-                FailedUserTokenOrchestrationException(serviceException);
+                FailedUserOrchestrationException(serviceException);
 
             var expectedUserTokenOrchestrationServiceException =
                 new UserOrchestrationServiceException(failedUserTokenOrchestrationException);

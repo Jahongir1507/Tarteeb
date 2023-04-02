@@ -37,7 +37,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 new EmailDependencyException(failedEmailServerException);
 
             this.emailBrokerMock.Setup(broker =>
-                broker.SendEmail(someEmail))
+                broker.SendEmailAsync(someEmail))
                     .ReturnsAsync(serverErrorResponse);
 
             // when
@@ -51,7 +51,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 expectedEmailDependencyException);
 
             this.emailBrokerMock.Verify(broker =>
-                broker.SendEmail(It.IsAny<Email>()), Times.Once);
+                broker.SendEmailAsync(It.IsAny<Email>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
@@ -80,7 +80,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 new EmailDependencyValidationException(invalidEmailException);
 
             this.emailBrokerMock.Setup(broker =>
-                broker.SendEmail(someEmail))
+                broker.SendEmailAsync(someEmail))
                     .ReturnsAsync(userErrorResponse);
 
             // when
@@ -94,11 +94,51 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 expectedEmailDependencyValidationException);
 
             this.emailBrokerMock.Verify(broker =>
-                broker.SendEmail(It.IsAny<Email>()), Times.Once);
+                broker.SendEmailAsync(It.IsAny<Email>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedEmailDependencyValidationException))),
+                        Times.Once);
+
+            this.emailBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnSendIfServiceErrorOccurrsAndLogItAsync()
+        {
+            // given
+            Email someEmail = CreateRandomEmail();
+
+            var serviceException = new Exception();
+
+            var failedEmailServiceException =
+                new FailedEmailServiceException(serviceException);
+
+            var expectedEmailServiceException =
+                new EmailServiceException(failedEmailServiceException);
+
+            this.emailBrokerMock.Setup(broker =>
+                broker.SendEmailAsync(someEmail))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Email> sendEmailTask = this.emailService.SendEmailAsync(someEmail);
+
+            EmailServiceException actualEmailServiceException =
+                await Assert.ThrowsAsync<EmailServiceException>(sendEmailTask.AsTask);
+
+            // then
+            actualEmailServiceException.Should().BeEquivalentTo(expectedEmailServiceException);
+
+            this.emailBrokerMock.Verify(broker =>
+                broker.SendEmailAsync(It.IsAny<Email>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedEmailServiceException))),
                         Times.Once);
 
             this.emailBrokerMock.VerifyNoOtherCalls();

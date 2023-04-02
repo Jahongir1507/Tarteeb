@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                 randomPostmarkResponse;
 
             this.emailBrokerMock.Setup(broker =>
-                broker.SendEmail(inputEmail))
+                broker.SendEmailAsync(inputEmail))
                     .ReturnsAsync(receivedPostmarkResponse);
 
             // when
@@ -42,7 +42,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
             actualEmail.Should().BeEquivalentTo(expectedEmail);
 
             this.emailBrokerMock.Verify(broker =>
-                broker.SendEmail(inputEmail), Times.Once);
+                broker.SendEmailAsync(inputEmail), Times.Once);
 
             this.emailBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

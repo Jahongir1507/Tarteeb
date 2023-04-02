@@ -11,6 +11,6 @@ namespace Tarteeb.Api.Brokers.Emails
 {
     public interface IEmailBroker
     {
-        Task<PostmarkResponse> SendEmail(Email email);
+        Task<PostmarkResponse> SendEmailAsync(Email email);
     }
 }

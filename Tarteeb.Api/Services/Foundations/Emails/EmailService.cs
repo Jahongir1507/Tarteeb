@@ -28,7 +28,7 @@ namespace Tarteeb.Api.Services.Foundations.Emails
         TryCatch(async () =>
         {
             ValidateEmailOnSend(email);
-            PostmarkResponse postmarkResponse = await this.emailBroker.SendEmail(email);
+            PostmarkResponse postmarkResponse = await this.emailBroker.SendEmailAsync(email);
 
             return postmarkResponse.Status is PostmarkStatus.Success
                 ? email

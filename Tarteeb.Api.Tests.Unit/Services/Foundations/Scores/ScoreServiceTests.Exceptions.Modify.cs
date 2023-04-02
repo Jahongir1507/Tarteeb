@@ -11,6 +11,7 @@ using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 using Xunit;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {
@@ -64,6 +65,54 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given 
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Score randomScore = CreateRandomScore(randomDateTime);
+            Score someScore = randomScore;
+            Guid ScoreId = someScore.Id;
+            someScore.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedScoreException =
+                new FailedScoreStorageException(databaseUpdateException);
+
+            var expectedScoreDependencyException =
+                new ScoreDependencyException(failedScoreException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectScoreByIdAsync(ScoreId)).ThrowsAsync(databaseUpdateException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when 
+            ValueTask<Score> modifyScoreTask = this.scoreService.ModifyScoreAsync(someScore);
+
+            ScoreDependencyException actualScoreDependencyException =
+                await Assert.ThrowsAsync<ScoreDependencyException>(modifyScoreTask.AsTask);
+
+            // then
+            actualScoreDependencyException.Should().
+                BeEquivalentTo(expectedScoreDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectScoreByIdAsync(ScoreId), Times.Once());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedScoreDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
 
     }
 }

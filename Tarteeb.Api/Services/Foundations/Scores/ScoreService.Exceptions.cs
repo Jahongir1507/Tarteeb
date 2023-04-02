@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
+using Tarteeb.Api.Models.Foundations.Times.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
@@ -49,6 +50,12 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogDependencyValidationException(lockedScoreException);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedScoreStorageException = new FailedScoreStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedScoreStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedScoreServiceException = new FailedScoreServiceException(serviceException);
@@ -82,6 +89,15 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
             return scoreDependencyValidationException;
         }
+
+        private ScoreDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var scoreDependencyException = new ScoreDependencyException(exception);
+            this.loggingBroker.LogError(scoreDependencyException);
+
+            return scoreDependencyException;
+        }
+
 
         private ScoreServiceException CreateAndLogServiceException(Xeption exception)
         {

@@ -34,7 +34,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                 new ScoreDependencyException(failedScoreStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-               broker.GetCurrentDateTime()).Throws(sqlException);
+                broker.GetCurrentDateTime()).Throws(sqlException);
 
             // when 
             ValueTask<Score> modifyScoreTask =

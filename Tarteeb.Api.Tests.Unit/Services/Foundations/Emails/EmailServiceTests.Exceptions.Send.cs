@@ -16,14 +16,17 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
 {
     public partial class EmailServiceTests
     {
-        [Fact]
-        public async Task ShouldThrowCriticalExceptionOnSendIfServerErrorOccurrsAndLogItAsync()
+        [Theory]
+        [InlineData(PostmarkStatus.ServerError)]
+        [InlineData(PostmarkStatus.Unknown)]
+        public async Task ShouldThrowCriticalExceptionOnSendIfServerErrorOccurrsAndLogItAsync(
+            PostmarkStatus postmarkStatus)
         {
             // given
             Email someEmail = CreateRandomEmail();
 
             PostmarkResponse serverErrorResponse =
-                CreatePostmarkResponse(PostmarkStatus.ServerError);
+                CreatePostmarkResponse(postmarkStatus);
 
             var exception = new Exception(serverErrorResponse.Message);
 

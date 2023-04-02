@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using PostmarkDotNet;
 using Tarteeb.Api.Models.Foundations.Emails;

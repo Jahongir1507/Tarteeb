@@ -41,7 +41,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
         private static string GetRandomString()
         {
             return new MnemonicString(
-                wordMinLength: 4, 
+                wordMinLength: 4,
                 wordMaxLength: 9,
                 wordCount: 1)
                     .GetValue();

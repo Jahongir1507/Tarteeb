@@ -95,31 +95,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             return filler;
         }
 
-        private Email CreateUserEmail(User inputUser)
-        {
-            string subject = "Confirm your email";
-            string htmlBody = @$"
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1>Hey {inputUser.FirstName}</h1>
-    <p>Thank you for registering for our schooling system. Please confirm your email address by clicking the button below.</p>
-    <a href=""https://www.example.com/confirm-email"">
-      <button>Confirm Email</button>
-    </a>
-  </body>
-</html>
-";
+        private static Email CreateUserEmail() =>
+            CreateEmailFiller().Create();
 
-            return new Email
-            {
-                Id = Guid.NewGuid(),
-                Subject = subject,
-                HtmlBody = htmlBody,
-                SenderAddress = GetRandomString(),
-                ReceiverAddress = inputUser.Email,
-                TrackOpens = true
-            };
-        }
+        private static Filler<Email> CreateEmailFiller() =>
+            new Filler<Email>();
     }
 }

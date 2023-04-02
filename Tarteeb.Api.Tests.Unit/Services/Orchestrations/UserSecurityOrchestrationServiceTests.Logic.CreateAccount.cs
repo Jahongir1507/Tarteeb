@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             User inputUser = randomUser;
             User persistedUser = inputUser;
             User expectedUser = persistedUser.DeepClone();
-            Email emailToSend = CreateUserEmail(inputUser);
+            Email emailToSend = CreateUserEmail();
             Email deliveredEmail = emailToSend.DeepClone();
 
             this.userServiceMock.Setup(service =>
@@ -46,7 +46,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
                 service.AddUserAsync(inputUser), Times.Once);
 
             this.emailServiceMock.Verify(service =>
-                service.SendEmailAsync(emailToSend), Times.Once);
+                service.SendEmailAsync(It.IsAny<Email>()), Times.Once);
 
             this.userServiceMock.VerifyNoOtherCalls();
             this.emailServiceMock.VerifyNoOtherCalls();

@@ -18,7 +18,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         public async Task ShouldThrowValidationExceptionOnAddIfInputIsNullAndLogItAsync()
         {
             // given
-            Score noScrore = null;
+            Score noScore = null;
             var nullScoreException = new NullScoreException();
 
             var expectedScoreValidationException =
@@ -26,7 +26,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             // when
             ValueTask<Score> addScoreTask =
-                this.scoreService.AddScoreAsync(noScrore);
+                this.scoreService.AddScoreAsync(noScore);
 
             ScoreValidationException actualScoreValidationException =
                 await Assert.ThrowsAsync<ScoreValidationException>(

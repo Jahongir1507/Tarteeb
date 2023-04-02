@@ -29,13 +29,15 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Score> AddScoreAsync(Score score)
+        public ValueTask<Score> AddScoreAsync(Score score) =>
+        TryCatch(async () =>
         {
+            ValidateScoreOnAdd(score);
             var date = this.dateTimeBroker.GetCurrentDateTime();
 
-            return this.storageBroker.InsertScoreAsync(score);
-        }
-            
+            return await this.storageBroker.InsertScoreAsync(score);
+        });
+
         public IQueryable<Score> RetrieveAllScores() =>
             TryCatch(() => this.storageBroker.SelectAllScores());
 

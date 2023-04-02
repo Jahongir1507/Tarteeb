@@ -31,6 +31,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
         public ValueTask<Score> AddScoreAsync(Score score) =>
             throw new NotImplementedException();
+            
         public IQueryable<Score> RetrieveAllScores() =>
             TryCatch(() => this.storageBroker.SelectAllScores());
 

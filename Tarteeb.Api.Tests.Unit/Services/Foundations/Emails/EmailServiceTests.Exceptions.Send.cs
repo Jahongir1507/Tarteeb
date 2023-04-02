@@ -47,7 +47,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
             actualEmailDependencyException.Should().BeEquivalentTo(
                 expectedEmailDependencyException);
 
-
             this.emailBrokerMock.Verify(broker =>
                 broker.SendEmail(It.IsAny<Email>()), Times.Once);
 
@@ -56,8 +55,51 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                     expectedEmailDependencyException))),
                         Times.Once);
 
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.emailBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnSendIfUserErrorOccurrsAndLogItAsync()
+        {
+            // given
+            Email someEmail = CreateRandomEmail();
+
+            PostmarkResponse userErrorResponse =
+                CreatePostmarkResponse(PostmarkStatus.UserError);
+
+            var exception = new Exception(userErrorResponse.Message);
+
+            var invalidEmailException =
+                new InvalidEmailException(exception);
+
+            var expectedEmailDependencyValidationException =
+                new EmailDependencyValidationException(invalidEmailException);
+
+            this.emailBrokerMock.Setup(broker =>
+                broker.SendEmail(someEmail))
+                    .ReturnsAsync(userErrorResponse);
+
+            // when
+            ValueTask<Email> sendEmailTask = this.emailService.SendEmailAsync(someEmail);
+
+            EmailDependencyValidationException actualEmailDependencyValidationException =
+                await Assert.ThrowsAsync<EmailDependencyValidationException>(sendEmailTask.AsTask);
+
+            // then
+            actualEmailDependencyValidationException.Should().BeEquivalentTo(
+                expectedEmailDependencyValidationException);
+
+            this.emailBrokerMock.Verify(broker =>
+                broker.SendEmail(It.IsAny<Email>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedEmailDependencyValidationException))),
+                        Times.Once);
+
+            this.emailBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

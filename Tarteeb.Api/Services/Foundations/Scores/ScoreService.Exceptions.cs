@@ -11,7 +11,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Scores

@@ -3,16 +3,16 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
-using Xunit;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
-using FluentAssertions;
-using EFxceptions.Models.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using System;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 {

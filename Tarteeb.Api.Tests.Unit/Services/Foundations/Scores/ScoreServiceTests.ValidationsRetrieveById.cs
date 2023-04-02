@@ -24,7 +24,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
 
             invalidScoreException.AddData(
                 key: nameof(Score.Id),
-                values: "Id is required.");
+                values: "Id is required");
 
             var expectedValidationScoreException = new
                 ScoreValidationException(invalidScoreException);

@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models.Foundations.Emails;
+using Tarteeb.Api.Models.Foundations.Emails.Exceptions;
 using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Services.Foundations.Emails;
@@ -42,6 +43,19 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
                 securityService: securityServiceMock.Object,
                 emailService: emailServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
+        }
+
+        public static TheoryData<Xeption> UserEmailDependencyExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new EmailDependencyException(someInnerException),
+                new EmailServiceException(someInnerException),
+                new UserDependencyException(someInnerException),
+                new UserServiceException(someInnerException)
+            };
         }
 
         public static TheoryData<Xeption> UserDependencyExceptions()

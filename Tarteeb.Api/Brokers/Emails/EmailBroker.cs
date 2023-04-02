@@ -20,7 +20,7 @@ namespace Tarteeb.Api.Brokers.Emails
                 serverToken: configuration.GetValue<string>("EmailServerToken"));
         }
 
-        public async Task<PostmarkResponse> SendEmail(Email email)
+        public async Task<PostmarkResponse> SendEmailAsync(Email email)
         {
             var message = new PostmarkMessage()
             {

@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Foundations.Scores;
 using Tarteeb.Api.Models.Foundations.Scores.Exceptions;
 

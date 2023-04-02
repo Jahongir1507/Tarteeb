@@ -4,13 +4,12 @@
 //=================================
 
 using System.Threading.Tasks;
-using PostmarkDotNet;
 using Tarteeb.Api.Models.Foundations.Emails;
 
-namespace Tarteeb.Api.Brokers.Emails
+namespace Tarteeb.Api.Services.Foundations.Emails
 {
-    public interface IEmailBroker
+    public interface IEmailService
     {
-        Task<PostmarkResponse> SendEmailAsync(Email email);
+        ValueTask<Email> SendEmailAsync(Email email);
     }
 }

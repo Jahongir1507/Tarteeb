@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         public ValueTask<Score> AddScoreAsync(Score score) =>
         TryCatch(async () =>
         {
-            ValidateScoreOnModify(score);
+            ValidateScoreOnAdd(score);
 
             return await this.storageBroker.InsertScoreAsync(score);
         });

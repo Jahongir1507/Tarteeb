@@ -12,6 +12,26 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 {
     public partial class ScoreService
     {
+        private void ValidateScoreOnAdd(Score score)
+        {
+            ValidateScoreNotNull(score);
+            Validate(
+                (Rule: IsInvalid(score.Id), nameof(Score.Id)),
+                (Rule: IsInvalid(score.Grade), nameof(Score.Grade)),
+                (Rule: IsInvalid(score.Weight), nameof(Score.Weight)),
+                (Rule: IsInvalid(score.TicketId), nameof(Score.TicketId)),
+                (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
+                (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
+                (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
+                (Rule: IsNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
+
+                (Rule: IsNotSame(
+                    firstDate: score.UpdatedDate,
+                    secondDate: score.CreatedDate,
+                    secondDateName: nameof(Score.CreatedDate)),
+                    Parameter: nameof(Score.UpdatedDate)));
+        }
+
         private void ValidateScoreOnModify(Score score)
         {
             ValidateScoreNotNull(score);

@@ -69,12 +69,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             Message = "Weight is required"
         };
 
-        private static dynamic IsInvalid(string effortLink) => new
-        {
-            Condition = String.IsNullOrWhiteSpace(effortLink),
-            Message = "Text is required"
-        };
-
         private static dynamic IsInvalid(DateTimeOffset dates) => new
         {
             Condition = dates == default,

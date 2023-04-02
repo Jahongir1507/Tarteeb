@@ -69,7 +69,7 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             {
                 PostmarkStatus.ServerError => throw new FailedEmailServerException(innerException),
                 PostmarkStatus.UserError => throw new InvalidEmailException(innerException),
-                _ => throw new NotImplementedException()
+                _ => throw new FailedEmailServerException(innerException)
             };
         }
     }

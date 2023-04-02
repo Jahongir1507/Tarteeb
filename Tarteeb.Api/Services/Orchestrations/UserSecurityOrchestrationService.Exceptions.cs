@@ -72,6 +72,22 @@ namespace Tarteeb.Api.Services.Orchestrations
             {
                 throw CreateAndLogDependencyException(eserServiceException);
             }
+            catch (EmailDependencyValidationException emailDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(emailDependencyValidationException);
+            }
+            catch (EmailValidationException emailValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(emailValidationException);
+            }
+            catch (UserDependencyValidationException eserDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(eserDependencyValidationException);
+            }
+            catch (UserValidationException eserValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(eserValidationException);
+            }
         }
 
         private UserTokenOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -80,6 +96,16 @@ namespace Tarteeb.Api.Services.Orchestrations
             this.loggingBroker.LogError(userTokenOrchestrationValidationException);
 
             return userTokenOrchestrationValidationException;
+        }
+
+        private UserOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var userOrchestrationDependencyValidationException =
+                new UserOrchestrationDependencyValidationException(exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(userOrchestrationDependencyValidationException);
+
+            return userOrchestrationDependencyValidationException;;
         }
 
         private UserOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)

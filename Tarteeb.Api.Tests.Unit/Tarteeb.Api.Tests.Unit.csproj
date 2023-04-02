@@ -30,4 +30,7 @@
 		<ProjectReference Include="..\Tarteeb.Api\Tarteeb.Api.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Services\Foundations\Scores\" />
+	</ItemGroup>
 </Project>

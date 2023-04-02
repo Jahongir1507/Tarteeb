@@ -33,7 +33,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         TryCatch(async () =>
         {
             ValidateScoreOnAdd(score);
-            var date = this.dateTimeBroker.GetCurrentDateTime();
 
             return await this.storageBroker.InsertScoreAsync(score);
         });
@@ -52,6 +51,19 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             ValidateStorageScoreExists(maybeScore, scoreId);
 
             return maybeScore;
+        });
+
+        public ValueTask<Score> ModifyScoreAsync(Score score) =>
+        TryCatch(async () =>
+        {
+            ValidateScoreOnModify(score);
+
+            Score maybeScore =
+            await this.storageBroker.SelectScoreByIdAsync(score.Id);
+
+            ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
+
+            return await this.storageBroker.UpdateScoreAsync(score);
         });
 
         public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>

@@ -101,6 +101,39 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<Score>> PutScoreAsync(Score score)
+        {
+            try
+            {
+                Score modifiedScore =
+                    await this.scoreService.ModifyScoreAsync(score);
+                
+                return Ok(modifiedScore);
+            }
+            catch(ScoreValidationException scoreValidationException)
+                when (scoreValidationException.InnerException is NotFoundScoreException)
+            {
+                return NotFound(scoreValidationException.InnerException);
+            }
+            catch(ScoreValidationException scoreValidationException)
+            {
+                return BadRequest(scoreValidationException.InnerException);
+            }
+            catch(ScoreDependencyValidationException scoreDependencyValidationException)
+            {
+                return BadRequest(scoreDependencyValidationException.InnerException);
+            }
+            catch(ScoreDependencyException scoreDependencyException)
+            {
+                return InternalServerError(scoreDependencyException.InnerException);
+            }
+            catch(ScoreServiceException scoreServiceException)
+            {
+                return InternalServerError(scoreServiceException.InnerException);
+            }
+        }
+
         [HttpDelete("{scoreId}")]
         public async ValueTask<ActionResult<Score>> DeleteScoreByIdAsync(Guid scoreId)
         {

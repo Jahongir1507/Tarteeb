@@ -35,7 +35,6 @@ namespace Tarteeb.Api.Services.Foundations.Times
             ValidateTimeOnAdd(time);
 
             return await this.storageBroker.InsertTimeAsync(time);
-
         });
 
         public IQueryable<Time> RetrieveAllTimes() =>

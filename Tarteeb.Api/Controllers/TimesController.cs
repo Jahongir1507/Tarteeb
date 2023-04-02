@@ -75,6 +75,39 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<Time>> PutTimeAsync(Time time)
+        {
+            try
+            {
+                Time modifiedTime =
+                    await this.timeService.ModifyTimeAsync(time);
+
+                return Ok(modifiedTime);
+            }
+            catch (TimeValidationException timeValidationException)
+                when (timeValidationException.InnerException is NotFoundTimeException)
+            {
+                return NotFound(timeValidationException.InnerException);
+            }
+            catch (TimeValidationException timeValidationException)
+            {
+                return BadRequest(timeValidationException.InnerException);
+            }
+            catch (TimeDependencyValidationException timeDependencyValidationException)
+            {
+                return BadRequest(timeDependencyValidationException.InnerException);
+            }
+            catch (TimeDependencyException timeDependencyException)
+            {
+                return InternalServerError(timeDependencyException.InnerException);
+            }
+            catch (TimeServiceException timeServiceException)
+            {
+                return InternalServerError(timeServiceException.InnerException);
+            }
+        }
+
         [HttpDelete("{timeId}")]
         public async ValueTask<ActionResult<Time>> DeleteTimeByIdAsync(Guid timeId)
         {

@@ -80,7 +80,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
             actualScoreValidationException.Should().BeEquivalentTo(expectedScoreValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once());
+                broker.SelectScoreByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Text.Json.Serialization;
 using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Models.Foundations.Users
@@ -25,6 +26,7 @@ namespace Tarteeb.Api.Models.Foundations.Users
         public string TelegramUsername { get; set; }
 
         public Guid TeamId { get; set; }
+        [JsonIgnore]
         public Team Team { get; set; }
     }
 }

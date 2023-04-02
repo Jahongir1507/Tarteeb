@@ -127,7 +127,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.TimeSlots
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             // given 
             DateTimeOffset randomDateTime = GetRandomDateTime();

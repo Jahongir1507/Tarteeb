@@ -118,10 +118,10 @@ namespace Tarteeb.Api.Services.Orchestrations
             return userTokenOrchestrationDependencyException;
         }
 
-        private UserTokenOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
+        private UserOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
         {
             var userTokenOrchestrationServiceException =
-                new UserTokenOrchestrationServiceException(exception);
+                new UserOrchestrationServiceException(exception);
 
             this.loggingBroker.LogError(userTokenOrchestrationServiceException);
 

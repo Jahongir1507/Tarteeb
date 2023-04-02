@@ -43,7 +43,7 @@ namespace Tarteeb.Api.Controllers
             {
                 return InternalServerError(userTokenOrchestrationDependencyException.InnerException);
             }
-            catch (UserTokenOrchestrationServiceException userTokenOrchestrationServiceException)
+            catch (UserOrchestrationServiceException userTokenOrchestrationServiceException)
             {
                 return InternalServerError(userTokenOrchestrationServiceException.InnerException);
             }

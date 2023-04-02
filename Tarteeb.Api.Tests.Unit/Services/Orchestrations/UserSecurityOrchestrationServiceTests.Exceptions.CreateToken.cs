@@ -62,7 +62,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
                 FailedUserTokenOrchestrationException(serviceException);
 
             var expectedUserTokenOrchestrationServiceException =
-                new UserTokenOrchestrationServiceException(failedUserTokenOrchestrationException);
+                new UserOrchestrationServiceException(failedUserTokenOrchestrationException);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(serviceException);
@@ -71,8 +71,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             Action createTokenAction = () =>
                 this.userSecurityOrchestrationService.CreateUserToken(email: someString, password: someString);
 
-            UserTokenOrchestrationServiceException actualUserTokenOrchestrationServiceException =
-                Assert.Throws<UserTokenOrchestrationServiceException>(createTokenAction);
+            UserOrchestrationServiceException actualUserTokenOrchestrationServiceException =
+                Assert.Throws<UserOrchestrationServiceException>(createTokenAction);
 
             // then
             actualUserTokenOrchestrationServiceException.Should().BeEquivalentTo(

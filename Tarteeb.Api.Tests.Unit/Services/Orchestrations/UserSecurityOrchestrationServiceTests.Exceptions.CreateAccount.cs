@@ -25,7 +25,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             User someUser = CreateRandomUser();
 
             var expectedUserOrchestrationDependencyException =
-                new UserOrchestrationDependencyException(dependencyException);
+                new UserOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.userServiceMock.Setup(service => service.AddUserAsync(
                 It.IsAny<User>())).ThrowsAsync(dependencyException);

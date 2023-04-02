@@ -53,19 +53,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             return maybeScore;
         });
 
-        public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
-        TryCatch(async () =>
-        {
-            ValidateScoreId(scoreId);
-
-            Score maybeScore =
-                await this.storageBroker.SelectScoreByIdAsync(scoreId);
-
-            ValidateStorageScoreExists(maybeScore, scoreId);
-
-            return await this.storageBroker.DeleteScoreAsync(maybeScore);
-        });
-
         public ValueTask<Score> ModifyScoreAsync(Score score) =>
         TryCatch(async () =>
         {
@@ -77,6 +64,19 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
 
             return await this.storageBroker.UpdateScoreAsync(score);
+        });
+
+        public ValueTask<Score> RemoveScoreByIdAsync(Guid scoreId) =>
+        TryCatch(async () =>
+        {
+            ValidateScoreId(scoreId);
+
+            Score maybeScore =
+                await this.storageBroker.SelectScoreByIdAsync(scoreId);
+
+            ValidateStorageScoreExists(maybeScore, scoreId);
+
+            return await this.storageBroker.DeleteScoreAsync(maybeScore);
         });
     }
 }

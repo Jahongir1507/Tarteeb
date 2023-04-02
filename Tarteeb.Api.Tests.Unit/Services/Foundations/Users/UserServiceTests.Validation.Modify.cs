@@ -37,7 +37,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), Times.Once());
+                    expectedUserValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(It.IsAny<User>()), Times.Never());
@@ -245,10 +245,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(nonExistUser.Id), Times.Once());
+                broker.SelectUserByIdAsync(nonExistUser.Id), Times.Once);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

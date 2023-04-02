@@ -149,7 +149,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -196,7 +196,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Users
                 exceptedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once());
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

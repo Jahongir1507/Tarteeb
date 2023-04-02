@@ -23,7 +23,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             string someString = GetRandomString();
 
             var expectedUserTokenOrchestrationDependencyException =
-                new UserOrchestrationDependencyException(dependencyException);
+                new UserOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.userServiceMock.Setup(service => service.RetrieveAllUsers())
                 .Throws(dependencyException);

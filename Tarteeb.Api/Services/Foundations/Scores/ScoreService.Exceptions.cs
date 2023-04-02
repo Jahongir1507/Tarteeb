@@ -46,12 +46,18 @@ namespace Tarteeb.Api.Services.Foundations.Scores
 
                 throw CreateAndLogCriticalDependencyException(failedScoreStorageException);
             }
-            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsScoreException = new AlreadyExistsScoreException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsScoreException);
+            }
+            catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
             {
                 var invalidScoreReferenceException =
                     new InvalidScoreReferenceException(foreignKeyConstraintConflictException);
 
-                throw CreateAndLogDependencyValidationException(invalidScoreReferenceException);
+                throw CreateAndDependencyValidationException(invalidScoreReferenceException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
@@ -133,6 +139,14 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker.LogError(scoreServiceException);
 
             return scoreServiceException;
+        }
+
+        private Exception CreateAndDependencyValidationException(Xeption exception)
+        {
+            var scoreDependencyValidationException = new ScoreDependencyValidationException(exception);
+            this.loggingBroker.LogError(scoreDependencyValidationException);
+
+            return scoreDependencyValidationException;
         }
     }
 }

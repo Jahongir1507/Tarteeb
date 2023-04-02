@@ -1,4 +1,4 @@
-//=================================
+﻿//=================================
 // Copyright (c) Coalition of Good-Hearted Engineers
 // Free to use to bring order in your workplace
 //=================================
@@ -11,7 +11,7 @@ namespace Tarteeb.Api.Models.Foundations.Scores.Exceptions
     public class InvalidScoreReferenceException : Xeption
     {
         public InvalidScoreReferenceException(Exception innerException)
-            : base(message: "Invalid score reference error occured.", innerException)
+            : base(message: "Invalid score reference error occurred.", innerException)
         { } 
     }
 }

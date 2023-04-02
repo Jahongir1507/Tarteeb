@@ -4,6 +4,9 @@
 //=================================
 
 using System;
+using System.Threading.Tasks;
+using Tarteeb.Api.Models.Foundations.Emails.Exceptions;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
@@ -13,6 +16,7 @@ namespace Tarteeb.Api.Services.Orchestrations
 {
     public partial class UserSecurityOrchestrationService
     {
+        private delegate ValueTask<User> ReturningUserFunction();
         private delegate UserToken ReturningUserTokenFunction();
 
         private UserToken TryCatch(ReturningUserTokenFunction returningUserTokenFunction)
@@ -39,10 +43,57 @@ namespace Tarteeb.Api.Services.Orchestrations
             }
             catch (Exception exception)
             {
-                var failedUserTokenOrchestrationException =
-                    new FailedUserTokenOrchestrationException(exception);
+                var failedUserOrchestrationException =
+                    new FailedUserOrchestrationException(exception);
 
-                throw CreateAndLogServiceException(failedUserTokenOrchestrationException);
+                throw CreateAndLogServiceException(failedUserOrchestrationException);
+            }
+        }
+
+        private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
+        {
+            try
+            {
+                return await returningUserFunction();
+            }
+            catch (EmailDependencyException emailDependencyException)
+            {
+                throw CreateAndLogDependencyException(emailDependencyException);
+            }
+            catch (EmailServiceException emailServiceException)
+            {
+                throw CreateAndLogDependencyException(emailServiceException);
+            }
+            catch (UserDependencyException eserDependencyException)
+            {
+                throw CreateAndLogDependencyException(eserDependencyException);
+            }
+            catch (UserServiceException eserServiceException)
+            {
+                throw CreateAndLogDependencyException(eserServiceException);
+            }
+            catch (EmailDependencyValidationException emailDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(emailDependencyValidationException);
+            }
+            catch (EmailValidationException emailValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(emailValidationException);
+            }
+            catch (UserDependencyValidationException eserDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(eserDependencyValidationException);
+            }
+            catch (UserValidationException eserValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(eserValidationException);
+            }
+            catch (Exception exception)
+            {
+                var failedUserOrchestrationException =
+                    new FailedUserOrchestrationException(exception);
+
+                throw CreateAndLogServiceException(failedUserOrchestrationException);
             }
         }
 
@@ -54,18 +105,30 @@ namespace Tarteeb.Api.Services.Orchestrations
             return userTokenOrchestrationValidationException;
         }
 
-        private UserTokenOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        private UserOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var userTokenOrchestrationDependencyException = new UserTokenOrchestrationDependencyException(exception);
+            var userOrchestrationDependencyValidationException =
+                new UserOrchestrationDependencyValidationException(exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(userOrchestrationDependencyValidationException);
+
+            return userOrchestrationDependencyValidationException; ;
+        }
+
+        private UserOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var userTokenOrchestrationDependencyException =
+                new UserOrchestrationDependencyException(exception.InnerException as Xeption);
+
             this.loggingBroker.LogError(userTokenOrchestrationDependencyException);
 
             return userTokenOrchestrationDependencyException;
         }
 
-        private UserTokenOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
+        private UserOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
         {
             var userTokenOrchestrationServiceException =
-                new UserTokenOrchestrationServiceException(exception);
+                new UserOrchestrationServiceException(exception);
 
             this.loggingBroker.LogError(userTokenOrchestrationServiceException);
 

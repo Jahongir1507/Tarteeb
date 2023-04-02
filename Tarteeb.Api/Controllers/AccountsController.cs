@@ -39,11 +39,11 @@ namespace Tarteeb.Api.Controllers
             {
                 return NotFound(userTokenOrchestrationValidationException.InnerException);
             }
-            catch (UserTokenOrchestrationDependencyException userTokenOrchestrationDependencyException)
+            catch (UserOrchestrationDependencyException userTokenOrchestrationDependencyException)
             {
                 return InternalServerError(userTokenOrchestrationDependencyException.InnerException);
             }
-            catch (UserTokenOrchestrationServiceException userTokenOrchestrationServiceException)
+            catch (UserOrchestrationServiceException userTokenOrchestrationServiceException)
             {
                 return InternalServerError(userTokenOrchestrationServiceException.InnerException);
             }

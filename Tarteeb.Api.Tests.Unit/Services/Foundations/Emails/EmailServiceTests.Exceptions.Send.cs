@@ -21,6 +21,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
         {
             // given
             Email someEmail = CreateRandomEmail();
+
             PostmarkResponse serverErrorResponse =
                 CreatePostmarkResponse(PostmarkStatus.ServerError);
 

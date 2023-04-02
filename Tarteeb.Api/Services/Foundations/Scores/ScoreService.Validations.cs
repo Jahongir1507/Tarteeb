@@ -25,7 +25,6 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 (Rule: IsInvalid(score.UserId), nameof(Score.UserId)),
                 (Rule: IsInvalid(score.CreatedDate), nameof(Score.CreatedDate)),
                 (Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
-                //(Rule: IsInvalid(score.UpdatedDate), nameof(Score.UpdatedDate)),
                 (Rule: IsNotRecent(score.UpdatedDate), nameof(Score.UpdatedDate)),
 
                 (Rule: IsSame(
@@ -33,6 +32,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                     secondDate: score.CreatedDate,
                     secondDateName: nameof(Score.CreatedDate)),
                     Parameter: nameof(Score.UpdatedDate)));
+
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -74,7 +74,7 @@ namespace Tarteeb.Api.Services.Foundations.Scores
                 Message = $"Date is not the same as {secondDateName}"
             };
 
-        private dynamic IsSame(
+        private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
@@ -110,6 +110,19 @@ namespace Tarteeb.Api.Services.Foundations.Scores
         private static void ValidateAgainstStorageScoreOnModify(Score inputScore, Score storageScore)
         {
             ValidateStorageScoreExists(storageScore, inputScore.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputScore.CreatedDate,
+                    secondDate: storageScore.CreatedDate,
+                    secondDateName: nameof(Time.CreatedDate)),
+                Parameter: nameof(Time.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputScore.UpdatedDate,
+                    secondDate: storageScore.UpdatedDate,
+                    secondDateName: nameof(Time.UpdatedDate)),
+                Parameter: nameof(Time.UpdatedDate)));
         }
 
         private void ValidateScoreId(Guid scoreId) =>

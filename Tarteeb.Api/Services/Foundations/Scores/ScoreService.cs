@@ -9,7 +9,6 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Scores;
-using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Scores
 {
@@ -29,26 +28,13 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Score> ModifyScoreAsync(Score score) =>
-         TryCatch(async () =>
-         {
-             ValidateScoreOnModify(score);
-
-             Score maybeScore =
-             await this.storageBroker.SelectScoreByIdAsync(score.Id);
-
-             ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
-
-             return await this.storageBroker.UpdateScoreAsync(score);
-         });
-
         public ValueTask<Score> AddScoreAsync(Score score) =>
-            TryCatch(async () =>
-            {
-                    ValidateScoreOnModify(score);
+        TryCatch(async () =>
+        {
+            ValidateScoreOnModify(score);
 
-                return await this.storageBroker.InsertScoreAsync(score);
-            });
+            return await this.storageBroker.InsertScoreAsync(score);
+        });
 
         public ValueTask<Score> RetrieveScoreByIdAsync(Guid scoreId) =>
         TryCatch(async () =>
@@ -74,6 +60,19 @@ namespace Tarteeb.Api.Services.Foundations.Scores
             ValidateStorageScoreExists(maybeScore, scoreId);
 
             return await this.storageBroker.DeleteScoreAsync(maybeScore);
+        });
+
+        public ValueTask<Score> ModifyScoreAsync(Score score) =>
+        TryCatch(async () =>
+        {
+            ValidateScoreOnModify(score);
+
+            Score maybeScore =
+            await this.storageBroker.SelectScoreByIdAsync(score.Id);
+
+            ValidateAgainstStorageScoreOnModify(inputScore: score, storageScore: maybeScore);
+
+            return await this.storageBroker.UpdateScoreAsync(score);
         });
     }
 }

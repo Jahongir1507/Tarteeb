@@ -4,6 +4,7 @@
 //=================================
 
 using System.Threading.Tasks;
+using PostmarkDotNet;
 using Tarteeb.Api.Brokers.Emails;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Models.Foundations.Emails;
@@ -23,11 +24,19 @@ namespace Tarteeb.Api.Services.Foundations.Emails
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Email> SendEmailAsync(Email email)
+        public ValueTask<Email> SendEmailAsync(Email email) =>
+        TryCatch(async () =>
         {
-            await this.emailBroker.SendEmail(email);
+            ValidateEmailNotNull(email);
+            PostmarkResponse postmarkResponse = await this.emailBroker.SendEmail(email);
 
-            return email;
-        }
+            return postmarkResponse.Status switch
+            {
+                PostmarkStatus.UserError => throw new System.NotImplementedException(),
+                PostmarkStatus.ServerError => throw new System.NotImplementedException(),
+                PostmarkStatus.Success => email,
+                _ => throw new System.NotImplementedException(),
+            };
+        });
     }
 }

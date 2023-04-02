@@ -25,7 +25,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
             Email expectedEmail = inputEmail.DeepClone();
 
             PostmarkResponse randomPostmarkResponse =
-                CreatePostmarkResponse();
+                CreatePostmarkResponse(PostmarkStatus.Success);
 
             PostmarkResponse receivedPostmarkResponse =
                 randomPostmarkResponse;

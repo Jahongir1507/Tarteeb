@@ -47,14 +47,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
                     .GetValue();
         }
 
-        private static PostmarkResponse CreatePostmarkResponse()
+        private static PostmarkResponse CreatePostmarkResponse(PostmarkStatus postmarkStatus)
         {
             return new PostmarkResponse
             {
                 ErrorCode = 200,
                 Message = string.Empty,
                 MessageID = Guid.NewGuid(),
-                Status = PostmarkStatus.Success,
+                Status = postmarkStatus,
                 SubmittedAt = GetRandomDateTime(),
                 To = GetRandomString()
             };

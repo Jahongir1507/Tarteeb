@@ -74,7 +74,7 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid Id)
+        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid userId)
         {
             try
             {

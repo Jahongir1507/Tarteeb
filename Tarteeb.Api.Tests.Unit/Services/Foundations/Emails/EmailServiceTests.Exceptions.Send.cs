@@ -47,9 +47,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Emails
             actualEmailDependencyException.Should().BeEquivalentTo(
                 expectedEmailDependencyException);
 
+
+            this.emailBrokerMock.Verify(broker =>
+                broker.SendEmail(It.IsAny<Email>()), Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptionAs(expectedEmailDependencyException))),
-                    Times.Once);
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedEmailDependencyException))),
+                        Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.emailBrokerMock.VerifyNoOtherCalls();

@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
 using PostmarkDotNet;
 using Tarteeb.Api.Brokers.Emails;
@@ -32,8 +33,8 @@ namespace Tarteeb.Api.Services.Foundations.Emails
 
             return postmarkResponse.Status switch
             {
+                PostmarkStatus.ServerError => ConvertToMeaningfulServerError(postmarkResponse),
                 PostmarkStatus.UserError => throw new System.NotImplementedException(),
-                PostmarkStatus.ServerError => throw new System.NotImplementedException(),
                 PostmarkStatus.Success => email,
                 _ => throw new System.NotImplementedException(),
             };

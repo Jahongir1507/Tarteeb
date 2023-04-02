@@ -58,6 +58,19 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             };
         }
 
+        public static TheoryData<Xeption> UserEmailDependencyValidationExceptions()
+        {
+            var someInnerException = new Xeption();
+
+            return new TheoryData<Xeption>
+            {
+                new EmailDependencyValidationException(someInnerException),
+                new EmailValidationException(someInnerException),
+                new UserDependencyValidationException(someInnerException),
+                new UserValidationException(someInnerException)
+            };
+        }
+
         public static TheoryData<Xeption> UserDependencyExceptions()
         {
             var someInnerException = new Xeption();

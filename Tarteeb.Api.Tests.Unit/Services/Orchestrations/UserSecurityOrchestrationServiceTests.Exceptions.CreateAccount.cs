@@ -55,5 +55,45 @@ namespace Tarteeb.Api.Tests.Unit.Services.Orchestrations
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.emailServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(UserEmailDependencyValidationExceptions))]
+        public async Task ShoudThrowDependencyValidationExceptionOnCreateAccountIfDependencyValidationErrorOccursAndLogItAsync(
+            Xeption dependencyException)
+        {
+            // given
+            User someUser = CreateRandomUser();
+
+            var expectedUserOrchestrationDependencyValidationException =
+                new UserOrchestrationDependencyValidationException(dependencyException);
+
+            this.userServiceMock.Setup(service => service.AddUserAsync(
+                It.IsAny<User>())).ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<User> createUserAccountTask = this.userSecurityOrchestrationService
+                .CreateUserAccountAsync(someUser);
+
+            UserOrchestrationDependencyValidationException actualUserOrchestrationDependencyValidationException =
+                await Assert.ThrowsAsync<UserOrchestrationDependencyValidationException>(createUserAccountTask.AsTask);
+
+            // then
+            actualUserOrchestrationDependencyValidationException.Should().BeEquivalentTo(
+                expectedUserOrchestrationDependencyValidationException);
+
+            this.userServiceMock.Verify(service =>
+                service.AddUserAsync(It.IsAny<User>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(
+                broker => broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserOrchestrationDependencyValidationException))), Times.Once);
+
+            this.emailServiceMock.Verify(service =>
+                service.SendEmailAsync(It.IsAny<Email>()), Times.Never);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.emailServiceMock.VerifyNoOtherCalls();
+        }
     }
 }

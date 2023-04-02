@@ -3,8 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using Tarteeb.Api.Models.Foundations.Users;
 using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Tarteeb.Api.Models.Orchestrations.UserTokens;
 using Tarteeb.Api.Models.Orchestrations.UserTokens.Exceptions;
@@ -20,6 +22,36 @@ namespace Tarteeb.Api.Controllers
 
         public AccountsController(IUserSecurityOrchestrationService userSecurityOrchestrationService) =>
             this.userSecurityOrchestrationService = userSecurityOrchestrationService;
+
+
+        [HttpPost]
+        public async ValueTask<ActionResult<User>> SignUpAsync(User user)
+        {
+            try
+            {
+                User createdUserAccount = await this.userSecurityOrchestrationService
+                    .CreateUserAccountAsync(user);
+
+                return Created(createdUserAccount);
+            }
+            catch (UserOrchestrationDependencyValidationException userOrchestrationDependencyValidationException)
+                when (userOrchestrationDependencyValidationException.InnerException is AlreadyExistsUserException)
+            {
+                return Conflict(userOrchestrationDependencyValidationException.InnerException);
+            }
+            catch (UserOrchestrationDependencyValidationException userOrchestrationDependencyValidationException)
+            {
+                return BadGateway(userOrchestrationDependencyValidationException.InnerException);
+            }
+            catch (UserOrchestrationDependencyException userOrchestrationDependencyException)
+            {
+                return InternalServerError(userOrchestrationDependencyException.InnerException);
+            }
+            catch (UserOrchestrationServiceException userOrchestrationServiceException)
+            {
+                return InternalServerError(userOrchestrationServiceException.InnerException);
+            }
+        }
 
         [HttpGet]
         public ActionResult<UserToken> Login(string email, string password)
@@ -48,5 +80,6 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(userTokenOrchestrationServiceException.InnerException);
             }
         }
+
     }
 }

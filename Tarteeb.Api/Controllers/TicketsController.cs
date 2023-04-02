@@ -75,7 +75,7 @@ namespace Tarteeb.Api.Controllers
         }
 
         [HttpGet("{ticketId}")]
-        public async ValueTask<ActionResult<Ticket>> GetTicketByIdAsync(Guid id)
+        public async ValueTask<ActionResult<Ticket>> GetTicketByIdAsync(Guid ticketId)
         {
             try
             {

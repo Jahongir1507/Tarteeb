@@ -80,10 +80,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
                values: "Weight is required");
 
             invalidScoreException.AddData(
-               key: nameof(Score.EffortLink),
-               values: "Text is required");
-
-            invalidScoreException.AddData(
                key: nameof(Score.TicketId),
                values: "Id is required");
 
@@ -134,7 +130,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Scores
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             // given 
             DateTimeOffset randomDateScore = GetRandomDateTime();

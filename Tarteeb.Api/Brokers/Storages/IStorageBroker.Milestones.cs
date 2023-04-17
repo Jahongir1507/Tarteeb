@@ -14,5 +14,6 @@ namespace Tarteeb.Api.Brokers.Storages
         ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone);
         IQueryable<Milestone> SelectAllMilestones();
         ValueTask<Milestone> UpdateMilestoneAsync(Milestone milestone);
+        ValueTask<Milestone> DeleteMilestoneAsync(Milestone milestone);
     }
 }

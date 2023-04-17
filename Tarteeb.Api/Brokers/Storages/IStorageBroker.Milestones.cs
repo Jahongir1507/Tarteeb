@@ -4,16 +4,13 @@
 //=================================
 
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Milestones;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
-    public partial class StorageBroker
+    public partial interface IStorageBroker
     {
-        DbSet<Milestone> Milestones { get; set; }
+        ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone);
 
-        public async ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone) =>
-            await InsertAsync(milestone);
     }
 }

@@ -11,6 +11,5 @@ namespace Tarteeb.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone);
-
     }
 }

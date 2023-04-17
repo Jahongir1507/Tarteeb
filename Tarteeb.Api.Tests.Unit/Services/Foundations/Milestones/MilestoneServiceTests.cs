@@ -1,12 +1,20 @@
-﻿using System;
+﻿//=================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free to use to bring order in your workplace
+//=================================
+
+using System;
+using System.Linq.Expressions;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Milestones;
+using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
 using Tarteeb.Api.Models.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Milestones;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 {
@@ -29,6 +37,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static DateTimeOffset GetRandomDateTime() =>
            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();

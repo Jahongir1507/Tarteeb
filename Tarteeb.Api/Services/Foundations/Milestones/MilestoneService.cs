@@ -27,9 +27,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             this.loggingBroker = loggingBroker;
         }
        
-        public ValueTask<Milestone> AddMilestoneAsync(Milestone milestone)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async ValueTask<Milestone> AddMilestoneAsync(Milestone milestone) =>
+            await storageBroker.InsertMilestoneAsync(milestone);
     }
 }

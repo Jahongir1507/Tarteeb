@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tarteeb.Api.Brokers.Storages;
 
@@ -11,9 +12,11 @@ using Tarteeb.Api.Brokers.Storages;
 namespace Tarteeb.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    partial class StorageBrokerModelSnapshot : ModelSnapshot
+    [Migration("20230416132531_CreatedMilestoneTable")]
+    partial class CreatedMilestoneTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,8 +50,6 @@ namespace Tarteeb.Api.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssigneeId");
 
                     b.ToTable("Milestones");
                 });
@@ -243,17 +244,6 @@ namespace Tarteeb.Api.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Tarteeb.Api.Models.Foundations.Milestones.Milestone", b =>
-                {
-                    b.HasOne("Tarteeb.Api.Models.Foundations.Users.User", "Assignee")
-                        .WithMany()
-                        .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignee");
                 });
 
             modelBuilder.Entity("Tarteeb.Api.Models.Foundations.Scores.Score", b =>

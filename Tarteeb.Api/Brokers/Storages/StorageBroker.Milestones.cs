@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Milestones;
@@ -15,5 +16,11 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone) =>
             await InsertAsync(milestone);
+
+        public IQueryable<Milestone> SelectAllMilestones() =>
+            SelectAll<Milestone>();
+
+        public async ValueTask<Milestone> UpdateMilestoneAsync(Milestone milestone) =>
+            await UpdateAsync<Milestone>(milestone);
     }
 }

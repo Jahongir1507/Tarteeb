@@ -4,16 +4,12 @@
 //=================================
 
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Milestones;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
-    public partial class StorageBroker
+    public partial interface IStorageBroker
     {
-        DbSet<Milestone> Milestones { get; set; }
-
-        public IQueryable<Milestone> SelectAllMilestones() =>
-            SelectAll<Milestone>();
+        IQueryable<Milestone> SelectAllMilestones();
     }
 }

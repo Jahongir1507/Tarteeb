@@ -14,6 +14,9 @@ namespace Tarteeb.Api.Brokers.Storages
     {
         DbSet<Milestone> Milestones { get; set; }
 
+        public async ValueTask<Milestone> InsertMilestoneAsync(Milestone milestone) =>
+            await InsertAsync(milestone);
+
         public IQueryable<Milestone> SelectAllMilestones() =>
             SelectAll<Milestone>();
 

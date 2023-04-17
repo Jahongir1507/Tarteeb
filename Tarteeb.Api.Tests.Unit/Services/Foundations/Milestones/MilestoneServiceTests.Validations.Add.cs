@@ -3,11 +3,8 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OData.UriParser;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;

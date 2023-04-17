@@ -11,7 +11,7 @@ using Tarteeb.Api.Models.Foundations.Milestones;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
-    public class MilestoneService : IMilestoneService
+    public partial class MilestoneService : IMilestoneService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -27,7 +27,12 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Milestone> AddMilestoneAsync(Milestone milestone) =>
-            await storageBroker.InsertMilestoneAsync(milestone);
+        public ValueTask<Milestone> AddMilestoneAsync(Milestone milestone) =>
+        TryCatch(async () =>
+        {
+            ValidateMilestone(milestone);
+           
+            return await storageBroker.InsertMilestoneAsync(milestone);
+        });
     }
 }

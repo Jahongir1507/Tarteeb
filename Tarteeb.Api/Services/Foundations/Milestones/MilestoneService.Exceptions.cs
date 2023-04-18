@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
 using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
@@ -56,6 +57,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                     new InvalidMilestoneReferenceException(foreignKeyConstraintConflictException);
 
                 throw CreateAndDependencyValidationException(invalidMilestoneReferenceException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedMilestoneException = 
+                    new LockedMilestoneException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedMilestoneException);
             }
         }
 

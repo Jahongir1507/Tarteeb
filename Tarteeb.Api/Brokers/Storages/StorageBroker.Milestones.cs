@@ -22,5 +22,8 @@ namespace Tarteeb.Api.Brokers.Storages
 
         public async ValueTask<Milestone> UpdateMilestoneAsync(Milestone milestone) =>
             await UpdateAsync<Milestone>(milestone);
+
+        public async ValueTask<Milestone> DeleteMilestoneAsync(Milestone milestone) =>
+            await DeleteAsync(milestone);
     }
 }

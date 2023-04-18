@@ -56,6 +56,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             };
         }
 
+        private static string GetRandomString() =>
+          new MnemonicString().GetValue();
+
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 

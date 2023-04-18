@@ -4,6 +4,7 @@
 //=================================
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -52,6 +53,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldTrowDependencyValidationExceptionOnAddIfDuplicateErrorOccursAndLogItAsync()
+        {
+            // given
+            Milestone someMilestone = CreateRandomMilestone();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var alreadyExistsMilestoneException =
+                new AlreadyExistsMilestoneException(duplicateKeyException);
+
+            var expectedMilestoneDependencyValidationException =
+                new MilestoneDependencyValidationException(alreadyExistsMilestoneException);
+
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTime())
+                .Throws(duplicateKeyException);
+
+            // when
+            ValueTask<Milestone> addMilestoneTask = this.milestoneService.AddMilestoneAsync(someMilestone);
+
+            MilestoneDependencyValidationException actualMilestoneDependencyValidationException =
+                await Assert.ThrowsAsync<MilestoneDependencyValidationException>(addMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneDependencyValidationException.Should().BeEquivalentTo(
+                expectedMilestoneDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
+                expectedMilestoneDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertMilestoneAsync(
+               It.IsAny<Milestone>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

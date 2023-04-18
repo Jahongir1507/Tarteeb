@@ -71,6 +71,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
         private Milestone CreateRandomMilestone() =>
             CreateMilestoneFiller(dates: GetRandomDateTime()).Create();
 
+        private static string GetRandomMessage() =>
+           new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static int GetRandomNumber() =>
+           new IntRange(min: 2, max: 10).GetValue();
+
         private SqlException CreateSqlException() =>
             (SqlException) FormatterServices.GetUninitializedObject(typeof(SqlException));
 

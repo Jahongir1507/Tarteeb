@@ -10,6 +10,7 @@ using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
 using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
+using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
@@ -49,6 +50,21 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
 
                 throw CreateAndLogMilestoneDependencValidationException(failedMilestoneDependencyValidationException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidMilestoneReferenceException =
+                    new InvalidMilestoneReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndDependencyValidationException(invalidMilestoneReferenceException);
+            }
+        }
+
+        private MilestoneDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var milestoneDependencyValidationException = new MilestoneDependencyValidationException(exception);
+            this.loggingBroker.LogError(milestoneDependencyValidationException);
+
+            return milestoneDependencyValidationException;
         }
 
         private MilestoneDependencyException CreateAndLogCriticalDependencyException(Xeption exception)

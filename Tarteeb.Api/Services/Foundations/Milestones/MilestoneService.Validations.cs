@@ -4,10 +4,9 @@
 //=================================
 
 using System;
-using System.Data;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Users;
+using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -24,9 +23,23 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 (Rule: IsInvalid(milestone.Deadline), Parameter: nameof(milestone.Deadline)),
                 (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(milestone.CreatedDate)),
                 (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(milestone.UpdatedDate)),
-                (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(milestone.AssigneeId))
-                );
+                (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(milestone.AssigneeId)),
+
+                (Rule: IsNotSame(
+                      firstDate: milestone.CreatedDate,
+                      secondDate: milestone.UpdatedDate,
+                      secondDateName: nameof(Milestone.UpdatedDate)),
+                Parameter: nameof(Milestone.CreatedDate)));
         }
+
+        private static dynamic IsNotSame
+          (DateTimeOffset firstDate,
+          DateTimeOffset secondDate,
+          string secondDateName) => new
+          {
+              Condition = firstDate != secondDate,
+              Message = $"Date is not same as {secondDateName}."
+          };
 
         private static dynamic IsInvalid(Guid id) => new
         {

@@ -139,7 +139,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             invalidMilestoneException.AddData(
                 key: nameof(Milestone.CreatedDate),
-                values: $"Date is not the same as {nameof(Milestone.UpdatedDate)}");
+                values: $"Date is not same as {nameof(Milestone.UpdatedDate)}.");
 
             var expectedMilestoneValidationException =
                 new MilestoneValidationException(invalidMilestoneException);
@@ -157,7 +157,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             actualMilestoneValidationException.Should().BeEquivalentTo(expectedMilestoneValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(
                 It.Is(SameExceptionAs(expectedMilestoneValidationException))), Times.Once);

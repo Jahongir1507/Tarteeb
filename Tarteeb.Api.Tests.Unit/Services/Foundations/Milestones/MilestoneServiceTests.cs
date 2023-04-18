@@ -10,11 +10,10 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Milestones;
-using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams;
 using Tarteeb.Api.Services.Foundations.Milestones;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 {
@@ -37,6 +36,24 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
+
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
+        }
+
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 

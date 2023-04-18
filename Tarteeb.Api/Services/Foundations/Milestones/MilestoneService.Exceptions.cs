@@ -10,8 +10,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams.Exceptions;
-using Tarteeb.Api.Models.Foundations.Tickets.Exceptions;
 using Xeptions;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
@@ -60,11 +58,26 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
-                var lockedMilestoneException = 
+                var lockedMilestoneException =
                     new LockedMilestoneException(dbUpdateConcurrencyException);
 
                 throw CreateAndDependencyValidationException(lockedMilestoneException);
             }
+            catch (Exception serviceException)
+            {
+                var failedMilestoneServiceException = new FailedMilestoneServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedMilestoneServiceException);
+            }
+        }
+
+        private MilestoneServiceException CreateAndLogServiceException(
+          Exception exception)
+        {
+            var milestoneServiceException = new MilestoneServiceException(exception);
+            this.loggingBroker.LogError(milestoneServiceException);
+
+            return milestoneServiceException;
         }
 
         private MilestoneDependencyValidationException CreateAndDependencyValidationException(Xeption exception)

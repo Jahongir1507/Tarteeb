@@ -9,11 +9,9 @@ using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Users.Exceptions;
 using Xunit;
 
 namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
@@ -207,11 +205,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             ValueTask<Milestone> addMilestoneTask =
                 this.milestoneService.AddMilestoneAsync(someMilestone);
 
-            MilestoneDependencyValidationException actualMilestoneDependencyValidationException =
-                await Assert.ThrowsAsync<MilestoneDependencyValidationException>(addMilestoneTask.AsTask);
+            MilestoneServiceException actualMilestoneServiceException =
+                await Assert.ThrowsAsync<MilestoneServiceException>(addMilestoneTask.AsTask);
 
             // then
-            actualMilestoneDependencyValidationException.Should().BeEquivalentTo(
+            actualMilestoneServiceException.Should().BeEquivalentTo(
                 expectedMilestoneServiceException);
 
             this.dateTimeBrokerMock.Verify(broker =>

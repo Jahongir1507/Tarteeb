@@ -186,6 +186,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Milestone someMilestone = CreateRandomMilestone();
+            var serviceException = new Exception();
 
+            var failedMilestoneServiceException =
+                new FailedMilestoneServiceException(serviceException);
+
+            var expectedMilestoneServiceException =
+                new MilestoneServiceException(failedMilestoneServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Milestone> addMilestoneTask =
+                this.milestoneService.AddMilestoneAsync(someMilestone);
+
+            MilestoneDependencyValidationException actualMilestoneDependencyValidationException =
+                await Assert.ThrowsAsync<MilestoneDependencyValidationException>(addMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneDependencyValidationException.Should().BeEquivalentTo(
+                expectedMilestoneServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedMilestoneServiceException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertMilestoneAsync(It.IsAny<Milestone>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

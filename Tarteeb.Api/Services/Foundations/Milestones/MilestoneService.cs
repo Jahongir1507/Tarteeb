@@ -31,7 +31,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
         TryCatch(async () =>
         {
             ValidateMilestone(milestone);
-           
+
             return await this.storageBroker.InsertMilestoneAsync(milestone);
         });
     }

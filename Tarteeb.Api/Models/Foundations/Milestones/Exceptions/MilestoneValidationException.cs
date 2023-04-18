@@ -11,6 +11,6 @@ namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
     {
         public MilestoneValidationException(Xeption innerException)
             : base(message: "Milestone validation error occurred, fix the errors and try again.", innerException)
-        {}
+        { }
     }
 }

@@ -6,8 +6,6 @@
 using System;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams;
-using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -26,7 +24,8 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(milestone.UpdatedDate)),
                 (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(milestone.AssigneeId)),
                 (Rule: IsNotRecent(milestone.CreatedDate), Parameter: nameof(milestone.CreatedDate)),
-            (Rule: IsNotSame(
+
+                (Rule: IsNotSame(
                       firstDate: milestone.CreatedDate,
                       secondDate: milestone.UpdatedDate,
                       secondDateName: nameof(Milestone.UpdatedDate)),

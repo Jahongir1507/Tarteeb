@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using PostmarkDotNet.Model;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
@@ -13,8 +12,6 @@ namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
     {
         public FailedMilestoneServiceException(Exception innerException)
             : base(message: "Milestone service error occurred, contact support.", innerException)
-        {
-            
-        }
+        { }
     }
 }

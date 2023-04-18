@@ -3,7 +3,6 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using PostmarkDotNet.Model;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
@@ -12,6 +11,6 @@ namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
     {
         public NullMilestoneException()
             : base(message: "Milestone is null.")
-        {}
+        { }
     }
 }

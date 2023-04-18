@@ -4,7 +4,6 @@
 //=================================
 
 using System;
-using PostmarkDotNet.Model;
 using Xeptions;
 
 namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
@@ -13,6 +12,6 @@ namespace Tarteeb.Api.Models.Foundations.Milestones.Exceptions
     {
         public FailedMilestoneStorageException(Exception innerException)
             : base(message: "Failed milestone storage error occurred, contact support.", innerException)
-        {}
+        { }
     }
 }

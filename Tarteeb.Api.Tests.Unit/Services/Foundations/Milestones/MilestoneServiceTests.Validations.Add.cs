@@ -108,7 +108,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
-                    Times.Never);
+                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -155,7 +155,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             actualMilestoneValidationException.Should().BeEquivalentTo(expectedMilestoneValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(
                 It.Is(SameExceptionAs(expectedMilestoneValidationException))), Times.Once);

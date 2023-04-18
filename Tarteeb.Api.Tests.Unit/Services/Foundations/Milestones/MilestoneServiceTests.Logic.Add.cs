@@ -38,12 +38,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             actualMilestone.Should().BeEquivalentTo(expectedMilestone);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Never);
+                broker.GetCurrentDateTime(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertMilestoneAsync(inputMilestone), Times.Once);
 
-            storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }

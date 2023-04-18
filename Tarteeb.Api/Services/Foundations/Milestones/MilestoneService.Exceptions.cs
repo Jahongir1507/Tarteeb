@@ -28,6 +28,10 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             {
                 throw CreateAndLogValidationException(invalidMilestoneException);
             }
+            catch (MilestoneValidationException milestoneValidationException)
+            {
+                throw CreateAndLogValidationException(milestoneValidationException);
+            }
         }
 
         private MilestoneValidationException CreateAndLogValidationException(Xeption exception)

@@ -7,6 +7,7 @@ using System;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
 using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -24,8 +25,8 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(milestone.CreatedDate)),
                 (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(milestone.UpdatedDate)),
                 (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(milestone.AssigneeId)),
-
-                (Rule: IsNotSame(
+                (Rule: IsNotRecent(milestone.CreatedDate), Parameter: nameof(milestone.CreatedDate)),
+            (Rule: IsNotSame(
                       firstDate: milestone.CreatedDate,
                       secondDate: milestone.UpdatedDate,
                       secondDateName: nameof(Milestone.UpdatedDate)),
@@ -40,6 +41,20 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
               Condition = firstDate != secondDate,
               Message = $"Date is not same as {secondDateName}."
           };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
 
         private static dynamic IsInvalid(Guid id) => new
         {

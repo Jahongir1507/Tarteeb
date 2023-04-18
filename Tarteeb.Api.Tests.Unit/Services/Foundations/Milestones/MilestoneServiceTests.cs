@@ -5,6 +5,8 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -62,6 +64,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
         private Milestone CreateRandomMilestone(DateTimeOffset date) =>
           CreateMilestoneFiller(date).Create();
+
+        private Milestone CreateRandomMilestone() =>
+            CreateMilestoneFiller(dates: GetRandomDateTime()).Create();
+
+        private SqlException CreateSqlException() =>
+            (SqlException) FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Filler<Milestone> CreateMilestoneFiller(DateTimeOffset dates)
         {

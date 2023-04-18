@@ -3,7 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
@@ -40,6 +42,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
 
                 throw CreateAndLogCriticalDependencyException(failedMilestoneStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedMilestoneDependencyValidationException =
+                    new AlreadyExistsMilestoneException(duplicateKeyException);
+
+                throw CreateAndLogMilestoneDependencValidationException(failedMilestoneDependencyValidationException);
+            }
         }
 
         private MilestoneDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -56,6 +65,15 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             this.loggingBroker.LogError(milestoneValidationException);
 
             return milestoneValidationException;
+        }
+
+        private MilestoneDependencyValidationException CreateAndLogMilestoneDependencValidationException(
+            Xeption exception)
+        {
+            var milestoneDependencyValidationException = new MilestoneDependencyValidationException(exception);
+            this.loggingBroker.LogError(milestoneDependencyValidationException);
+
+            return milestoneDependencyValidationException;
         }
     }
 }

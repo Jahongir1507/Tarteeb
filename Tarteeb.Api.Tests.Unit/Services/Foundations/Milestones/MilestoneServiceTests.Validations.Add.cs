@@ -107,7 +107,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
-                    Times.Once());
+                    Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

@@ -24,14 +24,18 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             {
                 throw CreateAndLogValidationException(nullMilestoneException);
             }
+            catch (InvalidMilestoneException invalidMilestoneException)
+            {
+                throw CreateAndLogValidationException(invalidMilestoneException);
+            }
         }
 
         private MilestoneValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var milestoneValidationExpcetion = new MilestoneValidationException(exception);
-            this.loggingBroker.LogError(milestoneValidationExpcetion);
+            var milestoneValidationException = new MilestoneValidationException(exception);
+            this.loggingBroker.LogError(milestoneValidationException);
 
-            return milestoneValidationExpcetion;
+            return milestoneValidationException;
         }
     }
 }

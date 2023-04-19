@@ -78,7 +78,7 @@ namespace Tarteeb.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors("MyPolice");
+            app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
             

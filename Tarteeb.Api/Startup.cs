@@ -41,6 +41,15 @@ namespace Tarteeb.Api
         {
             services.AddControllers().AddOData(options => options.Select().Filter().OrderBy());
             services.AddDbContext<StorageBroker>();
+            services.AddCors(option =>
+            {
+                option.AddPolicy("MyPolicy", config =>
+                {
+                    config.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
             RegisterBrokers(services);
             AddFoundationServices(services);
             AddProcessingServices(services);
@@ -69,9 +78,10 @@ namespace Tarteeb.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("MyPolice");
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());
         }

@@ -12,7 +12,7 @@ namespace Tarteeb.Api.Models.Foundations.Milestones
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public string Discription { get; set; }
+        public string Description { get; set; }
         public DateTimeOffset Deadline { get; set; }
 
         public DateTimeOffset CreatedDate { get; set; }

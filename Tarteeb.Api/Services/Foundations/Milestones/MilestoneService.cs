@@ -36,9 +36,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             return await this.storageBroker.InsertMilestoneAsync(milestone);
         });
 
-        public IQueryable<Milestone> RetrieveAllMilestones()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Milestone> RetrieveAllMilestones() =>
+            storageBroker.SelectAllMilestones();
     }
 }

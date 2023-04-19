@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -17,6 +18,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
     public partial class MilestoneService
     {
         private delegate ValueTask<Milestone> ReturningMilestoneFunction();
+        private delegate IQueryable<Milestone> ReturnigMilestonesFunction();
 
         private async ValueTask<Milestone> TryCatch(ReturningMilestoneFunction returningMilestoneFunction)
         {
@@ -71,6 +73,20 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             }
         }
 
+        private IQueryable<Milestone> TryCatch(ReturnigMilestonesFunction returnigMilestonesFunction)
+        {
+            try
+            {
+                return returnigMilestonesFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedMilestoneStorageException = new FailedMilestoneStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedMilestoneStorageException);
+            }
+
+        }
         private MilestoneServiceException CreateAndLogServiceException(
           Exception exception)
         {

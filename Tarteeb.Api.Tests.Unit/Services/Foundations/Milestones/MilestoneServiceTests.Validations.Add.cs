@@ -72,10 +72,6 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 values: "Text is required");
 
             invalidMilestoneException.AddData(
-                key: nameof(Milestone.Discription),
-                values: "Text is required");
-
-            invalidMilestoneException.AddData(
                 key: nameof(Milestone.Deadline),
                 values: "Date is required");
 

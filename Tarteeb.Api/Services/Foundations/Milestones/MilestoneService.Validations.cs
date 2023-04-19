@@ -18,7 +18,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             Validate(
                 (Rule: IsInvalid(milestone.Id), Parameter: nameof(milestone.Id)),
                 (Rule: IsInvalid(milestone.Title), Parameter: nameof(milestone.Title)),
-                (Rule: IsInvalid(milestone.Discription), Parameter: nameof(milestone.Discription)),
                 (Rule: IsInvalid(milestone.Deadline), Parameter: nameof(milestone.Deadline)),
                 (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(milestone.CreatedDate)),
                 (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(milestone.UpdatedDate)),

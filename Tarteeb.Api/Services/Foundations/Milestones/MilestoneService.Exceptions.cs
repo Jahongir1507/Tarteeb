@@ -88,11 +88,11 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             catch (Exception exception)
             {
                 var failedMilestoneServiceException = new FailedMilestoneServiceException(exception);
-                
+
                 throw CreateAndLogServiceException(failedMilestoneServiceException);
             }
-
         }
+
         private MilestoneServiceException CreateAndLogServiceException(
           Exception exception)
         {

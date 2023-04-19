@@ -37,6 +37,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
         });
 
         public IQueryable<Milestone> RetrieveAllMilestones() =>
-            storageBroker.SelectAllMilestones();
+           TryCatch(() => storageBroker.SelectAllMilestones());
     }
 }

@@ -33,6 +33,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             MilestoneDependencyException actualMilestoneDependencyException =
                 Assert.Throws<MilestoneDependencyException>(retrieveAllMilestoneAction);
+
             //then
             actualMilestoneDependencyException.Should().BeEquivalentTo(expectedMilestoneDependencyException);
 

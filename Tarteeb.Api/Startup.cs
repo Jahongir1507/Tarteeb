@@ -43,7 +43,7 @@ namespace Tarteeb.Api
             services.AddDbContext<StorageBroker>();
             services.AddCors(option =>
             {
-                option.AddPolicy("Mypolicy", config =>
+                option.AddPolicy("MyPolicy", config =>
                 {
                     config.AllowAnyOrigin()
                         .AllowAnyMethod()

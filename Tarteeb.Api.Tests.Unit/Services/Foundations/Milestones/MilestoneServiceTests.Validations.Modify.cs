@@ -48,7 +48,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnModifyIfMilestoneIsInvalidAndLogItAsync(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnModifyIfMilestoneIsInvalidAndLogItAsync(
+            string invalidString)
         {
             // given 
             var invalidMilestone = new Milestone
@@ -67,6 +68,11 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 key: nameof(Milestone.Title),
                 values: "Text is required");
 
+
+            invalidMilestoneException.AddData(
+                key: nameof(Milestone.Deadline),
+                values: "Date is required");
+
             invalidMilestoneException.AddData(
                 key: nameof(Milestone.CreatedDate),
                 values: "Date is required");
@@ -76,10 +82,14 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                     values: new[]
                     {
                         "Date is required",
-                        "Date is not recent.",
+                        "Date is not recent",
                         $"Date is the same as {nameof(Milestone.CreatedDate)}"
                     }
                 );
+
+            invalidMilestoneException.AddData(
+                key: nameof(Milestone.AssigneeId),
+                values: "Id is required");
 
             var expectedMilestoneValidationException =
                 new MilestoneValidationException(invalidMilestoneException);

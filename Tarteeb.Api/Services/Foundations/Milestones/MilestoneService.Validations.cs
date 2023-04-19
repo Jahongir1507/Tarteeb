@@ -6,7 +6,6 @@
 using System;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
-using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -39,8 +38,11 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             Validate(
                 (Rule: IsInvalid(milestone.Id), Parameter: nameof(Milestone.Id)),
                 (Rule: IsInvalid(milestone.Title), Parameter: nameof(Milestone.Title)),
+                (Rule: IsInvalid(milestone.Deadline), Parameter: nameof(Milestone.Deadline)),
                 (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(Milestone.CreatedDate)),
                 (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(Milestone.UpdatedDate)),
+                (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(Milestone.AssigneeId)),
+                (Rule: IsNotRecent(milestone.UpdatedDate), Parameter: nameof(Milestone.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: milestone.UpdatedDate,

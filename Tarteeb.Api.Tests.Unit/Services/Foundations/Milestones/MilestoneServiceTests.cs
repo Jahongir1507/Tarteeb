@@ -4,6 +4,7 @@
 //=================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -37,6 +38,12 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 this.storageBrokerMock.Object,
                 this.dateTimeBrokerMock.Object,
                 this.loggingBrokerMock.Object);
+        }
+
+        private static IQueryable<Milestone> CreateRandomMilestones()
+        {
+            return CreateMilestoneFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
 
         public static TheoryData<int> InvalidSeconds()

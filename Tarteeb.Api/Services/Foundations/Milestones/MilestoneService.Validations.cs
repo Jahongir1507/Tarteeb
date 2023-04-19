@@ -6,6 +6,7 @@
 using System;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
+using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -31,6 +32,23 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 Parameter: nameof(Milestone.CreatedDate)));
         }
 
+        private void ValidateMilestoneOnModify(Milestone milestone)
+        {
+            ValidateMilestoneNotNull(milestone);
+
+            Validate(
+                (Rule: IsInvalid(milestone.Id), Parameter: nameof(Milestone.Id)),
+                (Rule: IsInvalid(milestone.Title), Parameter: nameof(Milestone.Title)),
+                (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(Milestone.CreatedDate)),
+                (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(Milestone.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: milestone.UpdatedDate,
+                    secondDate: milestone.CreatedDate,
+                    secondDateName: nameof(milestone.CreatedDate)),
+                Parameter: nameof(milestone.UpdatedDate)));
+        }
+
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,
           DateTimeOffset secondDate,
@@ -39,6 +57,15 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
               Condition = firstDate != secondDate,
               Message = $"Date is not same as {secondDateName}."
           };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {

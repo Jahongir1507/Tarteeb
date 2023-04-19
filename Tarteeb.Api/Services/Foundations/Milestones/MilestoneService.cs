@@ -8,6 +8,7 @@ using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Models.Foundations.Milestones;
+using Tarteeb.Api.Models.Foundations.Teams;
 
 namespace Tarteeb.Api.Services.Foundations.Milestones
 {
@@ -35,7 +36,12 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             return await this.storageBroker.InsertMilestoneAsync(milestone);
         });
 
-        public async ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone) =>
-            await this.storageBroker.UpdateMilestoneAsync(milestone);
+        public  ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone) =>
+           TryCatch(async () =>
+        {
+            ValidateMilestoneOnModify(milestone);
+
+            return  await this.storageBroker.UpdateMilestoneAsync(milestone);
+        });
     }
 }

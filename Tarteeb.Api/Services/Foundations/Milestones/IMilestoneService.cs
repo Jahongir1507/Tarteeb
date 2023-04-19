@@ -11,5 +11,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
     public interface IMilestoneService
     {
         ValueTask<Milestone> AddMilestoneAsync(Milestone milestone);
+        ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone);
     }
 }

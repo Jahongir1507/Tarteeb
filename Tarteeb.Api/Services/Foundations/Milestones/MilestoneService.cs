@@ -37,17 +37,15 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             return await this.storageBroker.InsertMilestoneAsync(milestone);
         });
 
-        public IQueryable<Milestone> RetrieveAllMilestones()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Milestone> RetrieveAllMilestones() =>
+            storageBroker.SelectAllMilestones();
 
-        public  ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone) =>
-           TryCatch(async () =>
-        {
-            ValidateMilestoneOnModify(milestone);
+        public ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone) =>
+          TryCatch(async () =>
+          {
+              ValidateMilestoneOnModify(milestone);
 
-            return  await this.storageBroker.UpdateMilestoneAsync(milestone);
-        });
+              return await this.storageBroker.UpdateMilestoneAsync(milestone);
+          });
     }
 }

@@ -14,7 +14,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
     public partial class MilestoneServiceTests
     {
         [Fact]
-        public void ShoulRetrieveAllMilestones()
+        public void ShouldRetrieveAllMilestones()
         {
             //given
             IQueryable<Milestone> randomMilestones = CreateRandomMilestones();

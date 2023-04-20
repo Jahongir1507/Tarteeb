@@ -115,12 +115,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             ValidateStorageMilestoneExist(storageMilestone, inputMilestone.Id);
 
             Validate(
-             (Rule: IsNotSame(
-                 firstDate: inputMilestone.CreatedDate,
-                 secondDate: storageMilestone.CreatedDate,
-                 secondDateName: nameof(Milestone.CreatedDate)),
-             Parameter: nameof(Milestone.CreatedDate)),
-
              (Rule: IsSame(
                      firstDate: inputMilestone.UpdatedDate,
                      secondDate: storageMilestone.UpdatedDate,

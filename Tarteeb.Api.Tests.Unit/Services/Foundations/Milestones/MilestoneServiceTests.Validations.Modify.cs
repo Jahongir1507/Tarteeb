@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
@@ -256,6 +257,59 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedMilestoneValidationException))), Times.Once());
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given 
+            int randomNumber = GetRandomNegativeNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Milestone randomMilestone = CreateRandomModifyMilestone(randomDateTime);
+            Milestone invalidMilestone = randomMilestone.DeepClone();
+            Milestone storageMilestone = invalidMilestone.DeepClone();
+            storageMilestone.CreatedDate = storageMilestone.CreatedDate.AddMinutes(randomMinutes);
+            storageMilestone.UpdatedDate = storageMilestone.UpdatedDate.AddMinutes(randomMinutes);
+            var invalidMilestoneException = new InvalidMilestoneException();
+            Guid milestoneId = invalidMilestone.Id;
+
+            invalidMilestoneException.AddData(
+             key: nameof(Milestone.CreatedDate),
+             values: $"Date is not same as {nameof(Milestone.CreatedDate)}.");
+
+            var expectedMilestoneValidationException =
+                new MilestoneValidationException(invalidMilestoneException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(milestoneId)).ReturnsAsync(storageMilestone);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Milestone> modifyMilestoneTask =
+                this.milestoneService.ModifyMilestoneAsync(invalidMilestone);
+
+            MilestoneValidationException actualMilestoneValidationException =
+                await Assert.ThrowsAsync<MilestoneValidationException>(modifyMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneValidationException.Should().BeEquivalentTo(expectedMilestoneValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(invalidMilestone.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedMilestoneValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

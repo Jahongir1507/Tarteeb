@@ -22,7 +22,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             Milestone nullMilestone = null;
             var nullMilestoneException = new NullMilestoneException();
 
-            var expectedMilestoneValidationException = 
+            var expectedMilestoneValidationException =
                 new MilestoneValidationException(nullMilestoneException);
 
             //when
@@ -172,7 +172,8 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
         [Theory]
         [MemberData(nameof(InvalidSeconds))]
-        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(
+            int minutes)
         {
             // given
             DateTimeOffset dateTime = GetRandomDateTime();
@@ -214,6 +215,51 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnMofifyIsMilestoneDoesNotExistAndLogItAsync()
+        {
+            //given
+            int randomNegativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Milestone randomMilestone = CreateRandomMilestone(randomDateTime);
+            Milestone nonExistMilestone = randomMilestone;
+            nonExistMilestone.CreatedDate = randomDateTime.AddMinutes(randomNegativeMinutes);
+            Milestone nullMilestone = null;
+            var notFoundMilestoneException = new NotFoundMilestoneException(nonExistMilestone.Id);
+
+            var expectedMilestoneValidationException =
+                new MilestoneValidationException(notFoundMilestoneException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(nonExistMilestone.Id)).ReturnsAsync(nullMilestone);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Milestone> modifyMilestoneTask = this.milestoneService.ModifyMilestoneAsync(nonExistMilestone);
+
+            MilestoneValidationException actualMilestoneValidationException =
+                await Assert.ThrowsAsync<MilestoneValidationException>(modifyMilestoneTask.AsTask);
+
+            //then
+            actualMilestoneValidationException.Should()
+                .BeEquivalentTo(expectedMilestoneValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(nonExistMilestone.Id), Times.Once());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once());
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedMilestoneValidationException))), Times.Once());
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

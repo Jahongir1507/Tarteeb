@@ -101,6 +101,33 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             Message = "Date is required"
         };
 
+        private static void ValidateStorageMilestoneExist(Milestone maybeMilestone, Guid milestoneId)
+        {
+            if (maybeMilestone is null)
+            {
+                throw new NotFoundMilestoneException(milestoneId);
+            }
+        }
+
+        private static void ValidateAgainstStorageMilestoneOnModify(
+           Milestone inputMilestone, Milestone storageMilestone)
+        {
+            ValidateStorageMilestoneExist(storageMilestone, inputMilestone.Id);
+
+            Validate(
+             (Rule: IsNotSame(
+                 firstDate: inputMilestone.CreatedDate,
+                 secondDate: storageMilestone.CreatedDate,
+                 secondDateName: nameof(Milestone.CreatedDate)),
+             Parameter: nameof(Milestone.CreatedDate)),
+
+             (Rule: IsSame(
+                     firstDate: inputMilestone.UpdatedDate,
+                     secondDate: storageMilestone.UpdatedDate,
+                     secondDateName: nameof(Milestone.UpdatedDate)),
+             Parameter: nameof(Milestone.UpdatedDate)));
+        }
+
         private static void ValidateMilestoneNotNull(Milestone milestone)
         {
             if (milestone is null)

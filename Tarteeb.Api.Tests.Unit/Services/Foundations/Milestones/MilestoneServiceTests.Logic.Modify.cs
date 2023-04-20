@@ -32,6 +32,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
                 broker.GetCurrentDateTime()).Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(milestoneId))
+                    .ReturnsAsync(storageMilestone);
+
+            this.storageBrokerMock.Setup(broker =>
                 broker.UpdateMilestoneAsync(inputMilestone)).ReturnsAsync(updatedMilestone);
 
             // when
@@ -43,6 +47,9 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(milestoneId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateMilestoneAsync(inputMilestone), Times.Once);

@@ -4,6 +4,7 @@
 //=================================
 
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
 using Tarteeb.Api.Brokers.Loggings;
@@ -45,6 +46,11 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
           TryCatch(async () =>
           {
               ValidateMilestoneOnModify(milestone);
+
+              var maybeMilestone = 
+                await this.storageBroker.SelectMilestoneByIdAsync(milestone.Id);
+
+              ValidateAgainstStorageMilestoneOnModify(milestone, maybeMilestone);
 
               return await this.storageBroker.UpdateMilestoneAsync(milestone);
           });

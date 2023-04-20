@@ -183,7 +183,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             invalidMilestoneException.AddData(
                     key: nameof(Milestone.UpdatedDate),
-                    values: "Date is not resent");
+                    values: "Date is not recent");
 
             var expectedMilestoneValidationException =
                 new MilestoneValidationException(invalidMilestoneException);

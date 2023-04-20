@@ -169,5 +169,51 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset dateTime = GetRandomDateTime();
+            Milestone randomMilestone = CreateRandomMilestone(dateTime);
+            Milestone inputMilestone = randomMilestone;
+            inputMilestone.UpdatedDate = dateTime.AddMinutes(minutes);
+            var invalidMilestoneException = new InvalidMilestoneException();
+
+            invalidMilestoneException.AddData(
+                    key: nameof(Milestone.UpdatedDate),
+                    values: "Date is not resent");
+
+            var expectedMilestoneValidationException =
+                new MilestoneValidationException(invalidMilestoneException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(dateTime);
+
+            // when
+            ValueTask<Milestone> modifyMilestoneTask =
+                this.milestoneService.ModifyMilestoneAsync(inputMilestone);
+
+            MilestoneValidationException actualMilestoneValidationException =
+                await Assert.ThrowsAsync<MilestoneValidationException>(modifyMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneValidationException.Should().BeEquivalentTo(expectedMilestoneValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedMilestoneValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

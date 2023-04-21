@@ -32,7 +32,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             // when
             ValueTask<Milestone> removeMilestoneByIdTask =
                 this.milestoneService.RemoveMilestoneByIdAsync(invalidMilestoneId);
-                
+
             MilestoneValidationException actualMilestoneValidationException =
                 await Assert.ThrowsAsync<MilestoneValidationException>(
                     removeMilestoneByIdTask.AsTask);
@@ -50,6 +50,42 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfMilestoneIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid randomMilestoneId = Guid.NewGuid();
+            Guid inputMilestoneId = randomMilestoneId;
+            Milestone noMilestone = null;
+            var notFoundMilestoneException = new NotFoundMilestoneException(inputMilestoneId);
+
+            var expectedMilestoneValidationException =
+                new MilestoneValidationException(notFoundMilestoneException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noMilestone);
+
+            //when
+            ValueTask<Milestone> onRemoveMilestoneTask = this.milestoneService.RemoveMilestoneByIdAsync(inputMilestoneId);
+
+            MilestoneValidationException actualMilestoneValidationException =
+                await Assert.ThrowsAsync<MilestoneValidationException>(onRemoveMilestoneTask.AsTask);
+
+            //then
+            actualMilestoneValidationException.Should()
+                 .BeEquivalentTo(expectedMilestoneValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedMilestoneValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }

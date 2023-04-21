@@ -63,12 +63,29 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                          secondDateName: nameof(Milestone.CreatedDate)),
                  Parameter: nameof(Milestone.CreatedDate)),
 
-            (Rule: IsSame(
-                  firstDate: inputMilestone.UpdatedDate,
-                  secondDate: storageMilestone.UpdatedDate,
-                  secondDateName: nameof(Milestone.UpdatedDate)),
-          Parameter: nameof(Milestone.UpdatedDate)));
+                (Rule: IsSame(
+                      firstDate: inputMilestone.UpdatedDate,
+                      secondDate: storageMilestone.UpdatedDate,
+                      secondDateName: nameof(Milestone.UpdatedDate)),
+              Parameter: nameof(Milestone.UpdatedDate)));
         }
+
+        private static void ValidateStorageMilestoneExist(Milestone maybeMilestone, Guid milestoneId)
+        {
+            if (maybeMilestone is null)
+            {
+                throw new NotFoundMilestoneException(milestoneId);
+            }
+        }
+
+        private static void ValidateMilestoneNotNull(Milestone milestone)
+        {
+            if (milestone is null)
+            {
+                throw new NullMilestoneException();
+            }
+        }
+
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,
           DateTimeOffset secondDate,
@@ -118,23 +135,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             Condition = date == default,
             Message = "Date is required"
         };
-
-        private static void ValidateStorageMilestoneExist(Milestone maybeMilestone, Guid milestoneId)
-        {
-            if (maybeMilestone is null)
-            {
-                throw new NotFoundMilestoneException(milestoneId);
-            }
-        }
-
-
-        private static void ValidateMilestoneNotNull(Milestone milestone)
-        {
-            if (milestone is null)
-            {
-                throw new NullMilestoneException();
-            }
-        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
@@ -63,6 +64,58 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Milestone randomMilestone = CreateRandomMilestone(randomDateTime);
+            Milestone someMilestone = randomMilestone;
+            Guid MilestoneId = someMilestone.Id;
+            someMilestone.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedMilestoneException =
+                new FailedMilestoneStorageException(databaseUpdateException);
+
+            var expectedMilestoneDependencyException =
+                new MilestoneDependencyException(failedMilestoneException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(MilestoneId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Milestone> modifyMilestoneTask =
+                this.milestoneService.ModifyMilestoneAsync(someMilestone);
+
+            MilestoneDependencyException actualMilestoneDependencyException =
+                 await Assert.ThrowsAsync<MilestoneDependencyException>(
+                     modifyMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneDependencyException.Should().BeEquivalentTo(
+                expectedMilestoneDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(MilestoneId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedMilestoneDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

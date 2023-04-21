@@ -40,12 +40,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
         public IQueryable<Milestone> RetrieveAllMilestones() =>
            TryCatch(() => storageBroker.SelectAllMilestones());
 
-        public async ValueTask<Milestone> RemoveMilestoneByIdAsync(Guid milestoneId)
+        public  ValueTask<Milestone> RemoveMilestoneByIdAsync(Guid milestoneId) =>
+        TryCatch(async () =>
         {
+            ValidateMilestoneId(milestoneId);
             var maybeMilestone = await this.storageBroker.SelectMilestoneByIdAsync(milestoneId);
 
             return await this.storageBroker.DeleteMilestoneAsync(maybeMilestone);
-        }
-        
+        });
     }
 }

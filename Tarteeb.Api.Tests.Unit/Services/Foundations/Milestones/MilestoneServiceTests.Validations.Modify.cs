@@ -315,7 +315,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
-       
+
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
         {
@@ -366,7 +366,5 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
-        
-   
     }
 }

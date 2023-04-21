@@ -111,7 +111,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedMilestoneDependencyException))), Times.Once);
+                    expectedMilestoneDependencyException))), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

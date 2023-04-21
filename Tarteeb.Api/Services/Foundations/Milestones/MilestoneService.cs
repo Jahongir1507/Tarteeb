@@ -45,6 +45,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
         {
             ValidateMilestoneId(milestoneId);
             var maybeMilestone = await this.storageBroker.SelectMilestoneByIdAsync(milestoneId);
+            ValidateStorageMilestoneExist(maybeMilestone, milestoneId);
 
             return await this.storageBroker.DeleteMilestoneAsync(maybeMilestone);
         });

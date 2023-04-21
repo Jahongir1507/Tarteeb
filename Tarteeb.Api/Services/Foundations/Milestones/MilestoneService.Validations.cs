@@ -61,7 +61,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                          firstDate: inputMilestone.CreatedDate,
                          secondDate: storageMilestone.CreatedDate,
                          secondDateName: nameof(Milestone.CreatedDate)),
-                 Parameter: nameof(Milestone.CreatedDate)));
+                 Parameter: nameof(Milestone.CreatedDate)),
+
+            (Rule: IsSame(
+                  firstDate: inputMilestone.UpdatedDate,
+                  secondDate: storageMilestone.UpdatedDate,
+                  secondDateName: nameof(Milestone.UpdatedDate)),
+          Parameter: nameof(Milestone.UpdatedDate)));
         }
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,

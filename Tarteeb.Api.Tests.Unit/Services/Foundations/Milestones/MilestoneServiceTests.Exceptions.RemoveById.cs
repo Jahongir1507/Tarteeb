@@ -29,6 +29,10 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             var expectedMilestoneDependencyValidationException =
                 new MilestoneDependencyValidationException(lockedMilestoneException);
 
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
+
             // when
             ValueTask<Milestone> removeMilestoneByIdTask =
                 this.milestoneService.RemoveMilestoneByIdAsync(someMilestoneId);

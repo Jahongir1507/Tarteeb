@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Tarteeb.Api.Models.Foundations.Milestones;
@@ -54,6 +55,47 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteMilestoneAsync(It.IsAny<Milestone>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+      
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someMilestoneId = Guid.NewGuid();
+            SqlException sqlException = CreateSqlException();
+
+            var failedMilestoneStorageException =
+                new FailedMilestoneStorageException(sqlException);
+
+            var expectedMilestoneDependencyException =
+                new MilestoneDependencyException(failedMilestoneStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(sqlException);
+
+            // when
+            ValueTask<Milestone> deleteMilestoneTask =
+                this.milestoneService.RemoveMilestoneByIdAsync(someMilestoneId);
+
+            MilestoneDependencyException actualMilestoneDependencyException =
+                await Assert.ThrowsAsync<MilestoneDependencyException>(
+                    deleteMilestoneTask.AsTask);
+
+            // then
+            actualMilestoneDependencyException.Should().BeEquivalentTo(
+                expectedMilestoneDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedMilestoneDependencyException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

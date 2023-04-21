@@ -117,5 +117,57 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Milestone randomMilestone = CreateRandomMilestone(randomDateTime);
+            Milestone someMilestone = randomMilestone;
+            someMilestone.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid milestoneId = someMilestone.Id;
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedMilestoneException =
+                new LockedMilestoneException(dbUpdateConcurrencyException);
+
+            var expectedMilestoneDependencyValidationException =
+                new MilestoneDependencyValidationException(lockedMilestoneException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectMilestoneByIdAsync(milestoneId))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Milestone> modifyMilestoneTask =
+                this.milestoneService.ModifyMilestoneAsync(someMilestone);
+
+            MilestoneDependencyValidationException actulaMilestoneDependencyValidationException =
+                await Assert.ThrowsAsync<MilestoneDependencyValidationException>(
+                    modifyMilestoneTask.AsTask);
+
+            // then
+            actulaMilestoneDependencyValidationException.Should().BeEquivalentTo(
+                expectedMilestoneDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectMilestoneByIdAsync(milestoneId), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedMilestoneDependencyValidationException))),Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

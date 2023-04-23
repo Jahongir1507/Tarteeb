@@ -30,7 +30,46 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                       secondDateName: nameof(Milestone.UpdatedDate)),
                 Parameter: nameof(Milestone.CreatedDate)));
         }
+        
+        private void ValidateMilestoneOnModify(Milestone milestone)
+        {
+            ValidateMilestoneNotNull(milestone);
 
+            Validate(
+                (Rule: IsInvalid(milestone.Id), Parameter: nameof(Milestone.Id)),
+                (Rule: IsInvalid(milestone.Title), Parameter: nameof(Milestone.Title)),
+                (Rule: IsInvalid(milestone.Deadline), Parameter: nameof(Milestone.Deadline)),
+                (Rule: IsInvalid(milestone.CreatedDate), Parameter: nameof(Milestone.CreatedDate)),
+                (Rule: IsInvalid(milestone.UpdatedDate), Parameter: nameof(Milestone.UpdatedDate)),
+                (Rule: IsInvalid(milestone.AssigneeId), Parameter: nameof(Milestone.AssigneeId)),
+                (Rule: IsNotRecent(milestone.UpdatedDate), Parameter: nameof(Milestone.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: milestone.UpdatedDate,
+                    secondDate: milestone.CreatedDate,
+                    secondDateName: nameof(milestone.CreatedDate)),
+                Parameter: nameof(milestone.UpdatedDate)));
+        }
+
+        private static void ValidateAgainstStorageMilestoneOnModify(
+           Milestone inputMilestone, Milestone storageMilestone)
+        {
+            ValidateStorageMilestoneExist(storageMilestone, inputMilestone.Id);
+
+            Validate(
+                 (Rule: IsNotSame(
+                         firstDate: inputMilestone.CreatedDate,
+                         secondDate: storageMilestone.CreatedDate,
+                         secondDateName: nameof(Milestone.CreatedDate)),
+                 Parameter: nameof(Milestone.CreatedDate)),
+
+                (Rule: IsSame(
+                      firstDate: inputMilestone.UpdatedDate,
+                      secondDate: storageMilestone.UpdatedDate,
+                      secondDateName: nameof(Milestone.UpdatedDate)),
+              Parameter: nameof(Milestone.UpdatedDate)));
+        }
+        
         private void ValidateMilestoneId(Guid milestoneId) =>
           Validate((Rule: IsInvalid(milestoneId), Parameter: nameof(Milestone.Id)));
 
@@ -42,6 +81,14 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             }
         }
 
+        private static void ValidateMilestoneNotNull(Milestone milestone)
+        {
+            if (milestone is null)
+            {
+                throw new NullMilestoneException();
+            }
+        }
+        
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,
           DateTimeOffset secondDate,
@@ -50,6 +97,15 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
               Condition = firstDate != secondDate,
               Message = $"Date is not same as {secondDateName}."
           };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
@@ -82,14 +138,6 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             Condition = date == default,
             Message = "Date is required"
         };
-
-        private static void ValidateMilestoneNotNull(Milestone milestone)
-        {
-            if (milestone is null)
-            {
-                throw new NullMilestoneException();
-            }
-        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

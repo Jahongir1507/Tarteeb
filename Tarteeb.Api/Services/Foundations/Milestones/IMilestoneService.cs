@@ -14,6 +14,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
     {
         ValueTask<Milestone> AddMilestoneAsync(Milestone milestone);
         IQueryable<Milestone> RetrieveAllMilestones();
+        ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone);
         ValueTask<Milestone> RemoveMilestoneByIdAsync(Guid milestoneId);
     }
 }

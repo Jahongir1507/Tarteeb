@@ -34,6 +34,10 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
             {
                 throw CreateAndLogValidationException(invalidMilestoneException);
             }
+            catch (NotFoundMilestoneException notFoundMilestoneException)
+            {
+                throw CreateAndLogValidationException(notFoundMilestoneException);
+            }
             catch (MilestoneValidationException milestoneValidationException)
             {
                 throw CreateAndLogValidationException(milestoneValidationException);
@@ -65,9 +69,11 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
 
                 throw CreateAndDependencyValidationException(lockedMilestoneException);
             }
-            catch (NotFoundMilestoneException innerException)
+            catch (DbUpdateException dbUpdateException)
             {
-                throw CreateAndLogValidationException(innerException);
+                var failedMilestoneStorageException = new FailedMilestoneStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedMilestoneStorageException);
             }
             catch (Exception serviceException)
             {
@@ -95,6 +101,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
 
                 throw CreateAndLogServiceException(failedMilestoneServiceException);
             }
+        }
+
+        private MilestoneDependencyException CreateAndLogDependencyException(Xeption innerException)
+        {
+            var milestoneDependencyException = new MilestoneDependencyException(innerException);
+
+            return milestoneDependencyException;
         }
 
         private MilestoneServiceException CreateAndLogServiceException(

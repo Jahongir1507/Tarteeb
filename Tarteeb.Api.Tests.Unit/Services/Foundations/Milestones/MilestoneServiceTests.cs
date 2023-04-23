@@ -72,7 +72,7 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
-        private Milestone CreateRandomMilestone(DateTimeOffset date) =>
+        private static Milestone CreateRandomMilestone(DateTimeOffset date) =>
             CreateMilestoneFiller(date).Create();
 
         private Milestone CreateRandomMilestone() =>
@@ -86,6 +86,20 @@ namespace Tarteeb.Api.Tests.Unit.Services.Foundations.Milestones
 
         private SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static Milestone CreateRandomModifyMilestone(DateTimeOffset randomDate)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            Milestone randomMilestone = CreateRandomMilestone(randomDate);
+
+            randomMilestone.CreatedDate =
+                randomMilestone.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomMilestone;
+        }
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static Filler<Milestone> CreateMilestoneFiller(DateTimeOffset dates)
         {

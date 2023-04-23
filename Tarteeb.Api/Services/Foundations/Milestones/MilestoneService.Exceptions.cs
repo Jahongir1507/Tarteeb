@@ -65,6 +65,10 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
 
                 throw CreateAndDependencyValidationException(lockedMilestoneException);
             }
+            catch (NotFoundMilestoneException innerException)
+            {
+                throw CreateAndLogValidationException(innerException);
+            }
             catch (Exception serviceException)
             {
                 var failedMilestoneServiceException = new FailedMilestoneServiceException(serviceException);

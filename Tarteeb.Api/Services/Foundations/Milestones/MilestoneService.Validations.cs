@@ -31,6 +31,17 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 Parameter: nameof(Milestone.CreatedDate)));
         }
 
+        private void ValidateMilestoneId(Guid milestoneId) =>
+          Validate((Rule: IsInvalid(milestoneId), Parameter: nameof(Milestone.Id)));
+
+        private static void ValidateStorageMilestoneExist(Milestone maybeMileston, Guid milestoneId)
+        {
+            if (maybeMileston is null)
+            {
+                throw new NotFoundMilestoneException(milestoneId);
+            }
+        }
+
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,
           DateTimeOffset secondDate,

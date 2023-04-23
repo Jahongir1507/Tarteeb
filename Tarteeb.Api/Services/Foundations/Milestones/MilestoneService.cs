@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Tarteeb.Api.Brokers.DateTimes;
@@ -37,7 +38,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
         });
 
         public IQueryable<Milestone> RetrieveAllMilestones() =>
-        TryCatch(() => storageBroker.SelectAllMilestones());
+          TryCatch(() => storageBroker.SelectAllMilestones());
 
         public ValueTask<Milestone> ModifyMilestoneAsync(Milestone milestone) =>
           TryCatch(async () =>
@@ -50,6 +51,16 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
               ValidateAgainstStorageMilestoneOnModify(milestone, maybeMilestone);
 
               return await this.storageBroker.UpdateMilestoneAsync(milestone);
+          });
+
+        public  ValueTask<Milestone> RemoveMilestoneByIdAsync(Guid milestoneId) =>
+          TryCatch(async () =>
+          {
+              ValidateMilestoneId(milestoneId);
+              var maybeMilestone = await this.storageBroker.SelectMilestoneByIdAsync(milestoneId);
+              ValidateStorageMilestoneExist(maybeMilestone, milestoneId);
+
+              return await this.storageBroker.DeleteMilestoneAsync(maybeMilestone);
           });
     }
 }

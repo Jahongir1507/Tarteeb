@@ -30,7 +30,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                       secondDateName: nameof(Milestone.UpdatedDate)),
                 Parameter: nameof(Milestone.CreatedDate)));
         }
-
+        
         private void ValidateMilestoneOnModify(Milestone milestone)
         {
             ValidateMilestoneNotNull(milestone);
@@ -69,10 +69,13 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                       secondDateName: nameof(Milestone.UpdatedDate)),
               Parameter: nameof(Milestone.UpdatedDate)));
         }
+        
+        private void ValidateMilestoneId(Guid milestoneId) =>
+          Validate((Rule: IsInvalid(milestoneId), Parameter: nameof(Milestone.Id)));
 
-        private static void ValidateStorageMilestoneExist(Milestone maybeMilestone, Guid milestoneId)
+        private static void ValidateStorageMilestoneExist(Milestone maybeMileston, Guid milestoneId)
         {
-            if (maybeMilestone is null)
+            if (maybeMileston is null)
             {
                 throw new NotFoundMilestoneException(milestoneId);
             }
@@ -85,7 +88,7 @@ namespace Tarteeb.Api.Services.Foundations.Milestones
                 throw new NullMilestoneException();
             }
         }
-
+        
         private static dynamic IsNotSame
           (DateTimeOffset firstDate,
           DateTimeOffset secondDate,

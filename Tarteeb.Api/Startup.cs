@@ -19,6 +19,7 @@ using Tarteeb.Api.Brokers.Loggings;
 using Tarteeb.Api.Brokers.Storages;
 using Tarteeb.Api.Brokers.Tokens;
 using Tarteeb.Api.Services.Foundations.Emails;
+using Tarteeb.Api.Services.Foundations.Milestones;
 using Tarteeb.Api.Services.Foundations.Scores;
 using Tarteeb.Api.Services.Foundations.Securities;
 using Tarteeb.Api.Services.Foundations.Teams;
@@ -81,7 +82,7 @@ namespace Tarteeb.Api
             app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());
         }
@@ -105,6 +106,7 @@ namespace Tarteeb.Api
             services.AddTransient<IScoreService, ScoreService>();
             services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IMilestoneService, MilestoneService>();
         }
 
         private static void AddProcessingServices(IServiceCollection services) =>

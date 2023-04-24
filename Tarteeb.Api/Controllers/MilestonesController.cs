@@ -50,5 +50,38 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(milestoneServiceException.InnerException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<Milestone>> PutMilestoneAsync(Milestone milestone)
+        {
+            try
+            {
+                Milestone modifiedMilestone =
+                    await this.milestoneServices.ModifyMilestoneAsync(milestone);
+
+                return Ok(modifiedMilestone);
+            }
+            catch (MilestoneValidationException milestoneValidationException)
+                when (milestoneValidationException.InnerException is NotFoundMilestoneException)
+            {
+                return NotFound(milestoneValidationException.InnerException);
+            }
+            catch (MilestoneValidationException milestoneValidationException)
+            {
+                return BadRequest(milestoneValidationException.InnerException);
+            }
+            catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
+            {
+                return BadRequest(milestoneDependencyValidationException.InnerException);
+            }
+            catch (MilestoneDependencyException milestoneDependencyException)
+            {
+                return InternalServerError(milestoneDependencyException.InnerException);
+            }
+            catch (MilestoneServiceException milestoneServiceException)
+            {
+                return InternalServerError(milestoneServiceException.InnerException);
+            }
+        }
     }
 }

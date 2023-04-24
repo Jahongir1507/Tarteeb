@@ -3,8 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
@@ -40,6 +42,26 @@ namespace Tarteeb.Api.Controllers
             catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
             {
                 return BadRequest(milestoneDependencyValidationException.InnerException);
+            }
+            catch (MilestoneDependencyException milestoneDependencyException)
+            {
+                return InternalServerError(milestoneDependencyException.InnerException);
+            }
+            catch (MilestoneServiceException milestoneServiceException)
+            {
+                return InternalServerError(milestoneServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [EnableQuery]
+        public ActionResult<IQueryable<Milestone>> GetAllMilestones()
+        {
+            try
+            {
+                IQueryable<Milestone> allMilesones = this.milestoneServices.RetrieveAllMilestones();
+
+                return Ok(allMilesones);
             }
             catch (MilestoneDependencyException milestoneDependencyException)
             {

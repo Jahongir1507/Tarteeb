@@ -3,6 +3,7 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -72,7 +73,7 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(milestoneServiceException.InnerException);
             }
         }
-            
+
         [HttpPut]
         public async ValueTask<ActionResult<Milestone>> PutMilestoneAsync(Milestone milestone)
         {
@@ -96,6 +97,43 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(milestoneDependencyValidationException.InnerException);
             }
         }
+
+        [HttpDelete("{milestoneId}")]
+        public async ValueTask<ActionResult<Milestone>> DeleteMilestoneByIdAsync(Guid milestoneId)
+        {
+            try
+            {
+                Milestone deletedMilestone =
+                    await this.milestoneServices.RemoveMilestoneByIdAsync(milestoneId);
+
+                return Ok(deletedMilestone);
+            }
+            catch (MilestoneValidationException milestoneValidationException)
+                when (milestoneValidationException.InnerException is NotFoundMilestoneException)
+            {
+                return NotFound(milestoneValidationException.InnerException);
+            }
+            catch (MilestoneValidationException milestoneValidationException)
+            {
+                return BadRequest(milestoneValidationException.InnerException);
+            }
+            catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
+                when (milestoneDependencyValidationException.InnerException is LockedMilestoneException)
+            {
+                return Locked(milestoneDependencyValidationException.InnerException);
+            }
+            catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
+            {
+                return BadRequest(milestoneDependencyValidationException.InnerException);
+            }
+            catch (MilestoneDependencyException milestoneDependencyException)
+            {
+                return InternalServerError(milestoneDependencyException.InnerException);
+            }
+            catch (MilestoneServiceException milestoneServiceException)
+            {
+                return InternalServerError(milestoneServiceException.InnerException);
+            }
+        }
     }
 }
-    

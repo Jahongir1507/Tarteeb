@@ -52,7 +52,7 @@ namespace Tarteeb.Api.Controllers
                 return InternalServerError(milestoneServiceException.InnerException);
             }
         }
-        
+
         [HttpGet]
         [EnableQuery]
         public ActionResult<IQueryable<Milestone>> GetAllMilestones()
@@ -70,7 +70,8 @@ namespace Tarteeb.Api.Controllers
             catch (MilestoneServiceException milestoneServiceException)
             {
                 return InternalServerError(milestoneServiceException.InnerException);
-            } 
+            }
+        }
             
         [HttpPut]
         public async ValueTask<ActionResult<Milestone>> PutMilestoneAsync(Milestone milestone)
@@ -79,8 +80,8 @@ namespace Tarteeb.Api.Controllers
             {
                 Milestone modifiedMilestone =
                     await this.milestoneServices.ModifyMilestoneAsync(milestone);
-
                 return Ok(modifiedMilestone);
+
             }
             catch (MilestoneValidationException milestoneValidationException)
                 when (milestoneValidationException.InnerException is NotFoundMilestoneException)
@@ -98,3 +99,4 @@ namespace Tarteeb.Api.Controllers
         }
     }
 }
+    

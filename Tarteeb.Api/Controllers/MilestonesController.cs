@@ -81,7 +81,6 @@ namespace Tarteeb.Api.Controllers
                 Milestone modifiedMilestone =
                     await this.milestoneServices.ModifyMilestoneAsync(milestone);
                 return Ok(modifiedMilestone);
-
             }
             catch (MilestoneValidationException milestoneValidationException)
                 when (milestoneValidationException.InnerException is NotFoundMilestoneException)

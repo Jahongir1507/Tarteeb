@@ -13,6 +13,8 @@ namespace Tarteeb.Api.Brokers.Storages
         public void ConfigureUserEmail(EntityTypeBuilder<User> builder)
         {
             builder.HasIndex(user => user.Email).IsUnique();
+            builder.HasIndex(user => user.GitHubUsername).IsUnique();
+            builder.HasIndex(user => user.TelegramUsername).IsUnique();
         }
     }
 }

@@ -35,6 +35,11 @@ namespace Tarteeb.Api.Controllers
                 return BadRequest(milestoneValidationException.InnerException);
             }
             catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
+               when (milestoneDependencyValidationException.InnerException is InvalidMilestoneReferenceException)
+            {
+                return FailedDependency(milestoneDependencyValidationException.InnerException);
+            }
+            catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
                 when (milestoneDependencyValidationException.InnerException is AlreadyExistsMilestoneException)
             {
                 return Conflict(milestoneDependencyValidationException.InnerException);
@@ -81,6 +86,11 @@ namespace Tarteeb.Api.Controllers
                 Milestone modifiedMilestone =
                     await this.milestoneServices.ModifyMilestoneAsync(milestone);
                 return Ok(modifiedMilestone);
+            }
+            catch (MilestoneDependencyValidationException milestoneDependencyValidationException)
+               when (milestoneDependencyValidationException.InnerException is InvalidMilestoneReferenceException)
+            {
+                return FailedDependency(milestoneDependencyValidationException.InnerException);
             }
             catch (MilestoneValidationException milestoneValidationException)
                 when (milestoneValidationException.InnerException is NotFoundMilestoneException)

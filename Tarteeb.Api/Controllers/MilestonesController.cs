@@ -3,8 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using RESTFulSense.Controllers;
 using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Milestones.Exceptions;
@@ -51,6 +53,26 @@ namespace Tarteeb.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [EnableQuery]
+        public ActionResult<IQueryable<Milestone>> GetAllMilestones()
+        {
+            try
+            {
+                IQueryable<Milestone> allMilesones = this.milestoneServices.RetrieveAllMilestones();
+
+                return Ok(allMilesones);
+            }
+            catch (MilestoneDependencyException milestoneDependencyException)
+            {
+                return InternalServerError(milestoneDependencyException.InnerException);
+            }
+            catch (MilestoneServiceException milestoneServiceException)
+            {
+                return InternalServerError(milestoneServiceException.InnerException);
+            }
+        }
+            
         [HttpPut]
         public async ValueTask<ActionResult<Milestone>> PutMilestoneAsync(Milestone milestone)
         {
@@ -58,7 +80,6 @@ namespace Tarteeb.Api.Controllers
             {
                 Milestone modifiedMilestone =
                     await this.milestoneServices.ModifyMilestoneAsync(milestone);
-
                 return Ok(modifiedMilestone);
             }
             catch (MilestoneValidationException milestoneValidationException)
@@ -74,14 +95,7 @@ namespace Tarteeb.Api.Controllers
             {
                 return BadRequest(milestoneDependencyValidationException.InnerException);
             }
-            catch (MilestoneDependencyException milestoneDependencyException)
-            {
-                return InternalServerError(milestoneDependencyException.InnerException);
-            }
-            catch (MilestoneServiceException milestoneServiceException)
-            {
-                return InternalServerError(milestoneServiceException.InnerException);
-            }
         }
     }
 }
+    

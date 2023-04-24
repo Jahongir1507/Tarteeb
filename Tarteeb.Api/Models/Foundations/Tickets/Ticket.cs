@@ -5,6 +5,7 @@
 
 using System;
 using System.Text.Json.Serialization;
+using Tarteeb.Api.Models.Foundations.Milestones;
 using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Models.Foundations.Tickets
@@ -19,7 +20,7 @@ namespace Tarteeb.Api.Models.Foundations.Tickets
         public TicketStatus Status { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        
+
         public Guid? AssigneeId { get; set; }
         [JsonIgnore]
         public User Assignee { get; set; }
@@ -31,5 +32,9 @@ namespace Tarteeb.Api.Models.Foundations.Tickets
         public Guid UpdatedUserId { get; set; }
         [JsonIgnore]
         public User UpdatedUser { get; set; }
+
+        public Guid MilestoneId { get; set; }
+        [JsonIgnore]
+        public Milestone Milestone { get; set; }
     }
 }

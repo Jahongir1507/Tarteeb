@@ -4,8 +4,10 @@
 //=================================
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Tarteeb.Api.Models.Foundations.Teams;
+using Tarteeb.Api.Models.Foundations.Tickets;
 
 namespace Tarteeb.Api.Models.Foundations.Users
 {
@@ -28,5 +30,7 @@ namespace Tarteeb.Api.Models.Foundations.Users
         public Guid TeamId { get; set; }
         [JsonIgnore]
         public Team Team { get; set; }
+        [JsonIgnore]
+        public ICollection<Ticket> Tickets { get; set; }
     }
 }

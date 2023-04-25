@@ -22,18 +22,12 @@ namespace Tarteeb.Api.Models.Foundations.Tickets
         public DateTimeOffset UpdatedDate { get; set; }
 
         public Guid? AssigneeId { get; set; }
-        [JsonIgnore]
-        public User Assignee { get; set; }
 
         public Guid CreatedUserId { get; set; }
-        [JsonIgnore]
-        public User CreatedUser { get; set; }
-
         public Guid UpdatedUserId { get; set; }
         [JsonIgnore]
-        public User UpdatedUser { get; set; }
-
-        public Guid MilestoneId { get; set; }
+        public User User { get; set; }
+        public Guid? MilestoneId { get; set; }
         [JsonIgnore]
         public Milestone Milestone { get; set; }
     }

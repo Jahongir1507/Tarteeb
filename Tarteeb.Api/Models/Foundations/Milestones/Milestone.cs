@@ -3,7 +3,10 @@
 // Free to use to bring order in your workplace
 //=================================
 
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Models.Foundations.Milestones
@@ -19,6 +22,9 @@ namespace Tarteeb.Api.Models.Foundations.Milestones
         public DateTimeOffset UpdatedDate { get; set; }
 
         public Guid AssigneeId { get; set; }
+        [JsonIgnore]
         public User Assignee { get; set; }
+        [JsonIgnore]
+        public ICollection<Ticket> Tickets { get; set; }
     }
 }

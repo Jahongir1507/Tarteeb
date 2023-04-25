@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Brokers.Storages
@@ -30,9 +31,6 @@ namespace Tarteeb.Api.Brokers.Storages
         public async ValueTask<User> DeleteUserAsync(User user) =>
             await DeleteAsync(user);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            ConfigureUserEmail(modelBuilder.Entity<User>());
-        }
+
     }
 }

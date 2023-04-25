@@ -12,8 +12,8 @@ using Tarteeb.Api.Brokers.Storages;
 namespace Tarteeb.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20230424140823_MadeUniqueGithub&TelegramUsername")]
-    partial class MadeUniqueGithubTelegramUsername
+    [Migration("20230425151806_changeTelegramUsername&GithubUsernameToAcceptNull")]
+    partial class changeTelegramUsernameGithubUsernameToAcceptNull
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,13 +245,13 @@ namespace Tarteeb.Api.Migrations
 
                     b.HasIndex("GitHubUsername")
                         .IsUnique()
-                        .HasFilter("[GitHubUsername] IS NOT NULL");
+                        .HasFilter("[GitHubUsername] NULL");
 
                     b.HasIndex("TeamId");
 
                     b.HasIndex("TelegramUsername")
                         .IsUnique()
-                        .HasFilter("[TelegramUsername] IS NOT NULL");
+                        .HasFilter("[TelegramUsername] NULL");
 
                     b.ToTable("Users");
                 });

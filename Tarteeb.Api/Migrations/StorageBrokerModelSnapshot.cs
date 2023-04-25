@@ -242,13 +242,13 @@ namespace Tarteeb.Api.Migrations
 
                     b.HasIndex("GitHubUsername")
                         .IsUnique()
-                        .HasFilter("[GitHubUsername] IS NOT NULL");
+                        .HasFilter("[GitHubUsername] NULL");
 
                     b.HasIndex("TeamId");
 
                     b.HasIndex("TelegramUsername")
                         .IsUnique()
-                        .HasFilter("[TelegramUsername] IS NOT NULL");
+                        .HasFilter("[TelegramUsername] NULL");
 
                     b.ToTable("Users");
                 });

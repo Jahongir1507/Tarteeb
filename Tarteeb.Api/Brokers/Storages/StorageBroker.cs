@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Tarteeb.Api.Models.Foundations.Tickets;
+using Tarteeb.Api.Models.Foundations.Users;
 
 namespace Tarteeb.Api.Brokers.Storages
 {
@@ -69,6 +71,11 @@ namespace Tarteeb.Api.Brokers.Storages
                 this.configuration.GetConnectionString(name: "DefaultConnection");
 
             optionsBuilder.UseSqlServer(connectionString);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            ConfigureUserEmail(modelBuilder.Entity<User>());
+            ConfigurationTickets(modelBuilder.Entity<Ticket>());
         }
     }
 }

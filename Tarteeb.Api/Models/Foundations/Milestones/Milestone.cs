@@ -3,9 +3,9 @@
 // Free to use to bring order in your workplace
 //=================================
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Tarteeb.Api.Models.Foundations.Tickets;
 using Tarteeb.Api.Models.Foundations.Users;
 
